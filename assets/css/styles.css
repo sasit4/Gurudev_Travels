@@ -1,3 +1,8 @@
+
+
+
+
+
 html {
   scroll-padding-top: 5rem;
 }
@@ -30,16 +35,31 @@ html {
 
 /* -------------------------------------------------------- Navbar  section start  -------------------------------------------------------- */
 
+
+
+
+
 #navbar {
-  padding: .7rem 1.25rem;
-  transition: var(--nav-transition);
+    width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+
 }
 
 #navbar nav {
+   width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 0;
+  box-sizing: border-box;
   position: relative;
   min-height: 4.2rem;
   padding: .55rem .8rem;
-  border-radius: var(--nav-radius);
   background: rgba(255, 255, 255, .07);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -50,7 +70,7 @@ html {
 }
 
 #navbar nav::before {
-  content: "";
+  content: none;
   position: absolute;
   inset: -1px;
   border-radius: 999px;
@@ -216,20 +236,106 @@ html {
 /* ===== MOBILE ===== */
 
 @media (max-width: 767px) {
-
   #navbar {
-    padding: .55rem .7rem;
+    padding: .55rem 0;
   }
 
   #navbar nav {
     min-height: 3.8rem;
     padding: .45rem .6rem;
-    border-radius: 1.25rem;
+    border-radius: 0;
   }
 }
 
-/* -------------------------------------------------------- navbar section ends -------------------------------------------------------- */
 
+
+
+
+/* =========================================
+   GURUDEV TRAVELS - MOBILE MENU ONLY
+========================================= */
+
+@media (max-width: 1023px) {
+
+  /* Mobile dropdown background */
+  #navbar #mobileMenu {
+    padding: 16px 20px;
+    border-radius: 0 0 18px 18px;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Home, About Us, Fleet, Explore, etc. */
+  #navbar #mobileMenu a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 15px;
+    margin: 5px 0;
+
+    border: 1px solid transparent;
+    border-radius: 11px;
+
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  /* Tap and hover animation */
+  #navbar #mobileMenu a:hover,
+  #navbar #mobileMenu a:focus-visible,
+  #navbar #mobileMenu a:active {
+    transform: translateX(5px);
+    outline: none;
+  }
+
+  /* LIGHT MODE */
+  html:not(.dark) #navbar #mobileMenu {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  }
+
+  html:not(.dark) #navbar #mobileMenu a {
+    color: #0f172a;
+  }
+
+  html:not(.dark) #navbar #mobileMenu a:hover,
+  html:not(.dark) #navbar #mobileMenu a:focus-visible,
+  html:not(.dark) #navbar #mobileMenu a:active {
+    background: #eaf3ff;
+    color: #1769d2;
+    border-color: #bfdbfe;
+  }
+
+  /* DARK MODE */
+  html.dark #navbar #mobileMenu {
+    background: #0b1728;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  html.dark #navbar #mobileMenu a {
+    color: #f1f5f9;
+  }
+
+  html.dark #navbar #mobileMenu a:hover,
+  html.dark #navbar #mobileMenu a:focus-visible,
+  html.dark #navbar #mobileMenu a:active {
+    background: rgba(36, 128, 235, 0.18);
+    color: #60a5fa;
+    border-color: rgba(96, 165, 250, 0.4);
+  }
+}
+
+
+/* -------------------------------------------------------- navbar section ends -------------------------------------------------------- */
 
 
 
@@ -337,6 +443,8 @@ html {
 }
 
 /*------------------------------------------------------------ booking section ends ---------------------------------------------------------*/
+
+
 
 
 
@@ -785,7 +893,7 @@ html {
 
 
 
-/* ---------------------------------------------------- GURUDEV TRAVELS — ABOUT SECTION --------------------------------------------------- */
+/* ------------------------------------------------------------  ABOUT SECTION --------------------------------------------------*/
 
 .about-section {
   position: relative;
@@ -849,7 +957,7 @@ html {
 .about-title span {
   display: block;
   margin-top: 8px;
-  background: linear-gradient(100deg, #60a5fa, #22d3ee, #3cc788 ,#58f6af);
+  background: linear-gradient(100deg, #60a5fa, #22d3ee, #3cc788, #58f6af);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -865,9 +973,9 @@ html {
 }
 
 
-/* ============================================================
+/* ==== 
    BUTTON
-   ============================================================ */
+   ==== *\ 
 
 .about-button {
   display: inline-flex;
@@ -925,7 +1033,7 @@ html {
   color: #cbd5e1;
   font-size: 12px;
   font-weight: 600;
-  transition: transform .3s ease,  border-color .3s ease, background .3s ease;
+  transition: transform .3s ease, border-color .3s ease, background .3s ease;
 }
 
 .about-feature:hover {
@@ -983,12 +1091,12 @@ html {
   border: 1px solid rgba(56, 189, 248, .10);
   border-radius: 16px;
   background: rgba(8, 24, 42, .65);
-  transition:  transform .3s ease,   border-color .3s ease;
+  transition: transform .3s ease, border-color .3s ease;
 }
 
 .about-extra-item:hover {
   transform: translateY(-4px);
- border-color: rgba(56, 189, 248, .28);
+  border-color: rgba(56, 189, 248, .28);
 }
 
 .about-extra-icon {
@@ -1089,7 +1197,7 @@ html {
   width: 360px;
   height: 360px;
   border-radius: 50%;
-  background: radial-gradient(circle,  rgba(36, 128, 235, .20),  transparent 68%);
+  background: radial-gradient(circle, rgba(36, 128, 235, .20), transparent 68%);
   filter: blur(8px);
 }
 
@@ -1159,7 +1267,7 @@ html {
   padding: 17px 20px;
   border: 1px solid rgba(56, 189, 248, .18);
   border-radius: 18px;
-  background: linear-gradient(135deg,   rgba(10, 31, 58, .92),   rgba(3, 14, 30, .94));
+  background: linear-gradient(135deg, rgba(10, 31, 58, .92), rgba(3, 14, 30, .94));
   box-shadow: 0 20px 45px rgba(0, 0, 0, .32);
 }
 
@@ -1218,6 +1326,235 @@ html {
   color: #7f91a6;
   font-size: 9px;
 }
+
+
+
+
+
+
+/* ==================================================
+   ABOUT SECTION - FOUR VEHICLE CARDS
+   ================================================== */
+
+.about-vehicles-visual {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    align-content: center;
+    width: 100%;
+    min-width: 0;
+}
+
+.about-vehicles-heading {
+    grid-column: 1 / -1;
+    margin-bottom: 4px;
+}
+
+.about-vehicles-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #2480eb;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+.about-vehicles-heading h3 {
+    margin: 0;
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.about-vehicles-heading h3 span {
+    display: block;
+    color: #2480eb;
+}
+
+.about-vehicles-heading p {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #64748b;
+}
+
+.about-vehicle-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #0f172a;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
+}
+
+.about-vehicle-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(36, 128, 235, 0.5);
+    box-shadow: 0 18px 38px rgba(36, 128, 235, 0.14);
+}
+
+.about-vehicle-image {
+    display: grid;
+    place-items: center;
+    min-height: 130px;
+    padding: 12px;
+    background: #f1f5f9;
+}
+
+.about-vehicle-image img {
+    display: block;
+    width: 100%;
+    height: 130px;
+    object-fit: contain;
+}
+
+.about-vehicle-content {
+    padding: 15px;
+}
+
+.about-vehicle-number {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: #2480eb;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.about-vehicle-content h4 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    font-weight: 800;
+}
+
+.about-vehicle-content p {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.65;
+    color: #64748b;
+}
+
+.about-vehicle-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 14px;
+    color: #2480eb;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.about-vehicle-link span {
+    transition: transform 0.2s ease;
+}
+
+.about-vehicle-link:hover span {
+    transform: translateX(4px);
+}
+
+/* Dark mode - adapts to the existing theme toggle */
+
+html.dark .about-vehicle-card {
+    background: rgba(15, 23, 42, 0.92);
+    color: #f1f5f9;
+    border-color: rgba(148, 163, 184, 0.2);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .about-vehicle-image {
+    background: #1e293b;
+}
+
+html.dark .about-vehicle-content p,
+html.dark .about-vehicles-heading p {
+    color: #cbd5e1;
+}
+
+html.dark .about-vehicle-card:hover {
+    border-color: rgba(96, 165, 250, 0.65);
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+    .about-vehicles-visual {
+        gap: 14px;
+    }
+
+    .about-vehicle-content {
+        padding: 12px;
+    }
+
+    .about-vehicle-image {
+        min-height: 110px;
+    }
+
+    .about-vehicle-image img {
+        height: 110px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+    .about-vehicles-visual {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .about-vehicles-heading h3 {
+        font-size: 1.45rem;
+    }
+
+    .about-vehicle-card {
+        border-radius: 14px;
+    }
+
+    .about-vehicle-image {
+        min-height: 90px;
+        padding: 7px;
+    }
+
+    .about-vehicle-image img {
+        height: 90px;
+    }
+
+    .about-vehicle-content {
+        padding: 10px;
+    }
+
+    .about-vehicle-content h4 {
+        font-size: 0.92rem;
+    }
+
+    .about-vehicle-content p {
+        font-size: 0.78rem;
+    }
+
+    .about-vehicle-link {
+        font-size: 0.74rem;
+        gap: 4px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about-vehicle-card,
+    .about-vehicle-link span {
+        transition: none;
+    }
+}
+
+
+
+
 
 
 /* ====== LIGHT MODE Dark Mode above remains unchanged. =====  */
@@ -1309,11 +1646,8 @@ html:not(.dark) .about-stat-card {
     linear-gradient(135deg,
       rgba(255, 255, 255, .96),
       rgba(239, 246, 255, .94));
-
   border-color: rgba(148, 163, 184, .25);
-
-  box-shadow:
-    0 20px 45px rgba(15, 23, 42, .12);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, .12);
 }
 
 html:not(.dark) .about-stat-card span {
@@ -1323,9 +1657,7 @@ html:not(.dark) .about-stat-card span {
 html:not(.dark) .about-journey-card {
   background: rgba(255, 255, 255, .92);
   border-color: rgba(148, 163, 184, .24);
-
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, .12);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, .12);
 }
 
 html:not(.dark) .about-journey-card strong {
@@ -1470,7 +1802,7 @@ html:not(.dark) .about-journey-card div span {
   }
 }
 
-/* ============================================================ ABOUT REVEAL ANIMATION ============================================================ */
+/* ====  ABOUT REVEAL ANIMATION =====  */
 .about-reveal {
   opacity: 0;
   transform: translateY(25px);
@@ -1490,6 +1822,7 @@ html:not(.dark) .about-journey-card div span {
   }
 }
 
+/* ------------------------------------------------------ about section ends ------------------------------------------------------ */
 
 
 
@@ -1497,29 +1830,10 @@ html:not(.dark) .about-journey-card div span {
 
 
 
+/* ------------------------------------------------------   fleet-section start ------------------------------------------------------ */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ---------------------------------------------------   fleet-section start ----------------------------------------------- */
-
-
-
-/* =========================================================
-   PREMIUM FLEET SECTION
-========================================================= */
+/* ===== PREMIUM FLEET SECTION =====  */
 
 .fleet-section {
   position: relative;
@@ -1538,9 +1852,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================
-   HEADING
-========================= */
+/* ==== HEADING ====  */
 
 .fleet-heading {
   max-width: 700px;
@@ -1581,7 +1893,7 @@ html:not(.dark) .about-journey-card div span {
 .fleet-heading h2 span {
   display: block;
   margin-top: 8px;
-  background: linear-gradient(100deg, #60a5fa, #22d3ee, #3cc788,#6effbe);
+  background: linear-gradient(100deg, #60a5fa, #22d3ee, #3cc788, #6effbe);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1604,9 +1916,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================
-   MAIN CARD
-========================= */
+/* ====  MAIN CARD ====  */
 
 .fleet-card {
   position: relative;
@@ -1629,9 +1939,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================
-   IMAGE SIDE
-========================= */
+/* ==== IMAGE SIDE ===== */
 
 .fleet-car-side {
   position: relative;
@@ -1716,22 +2024,17 @@ html:not(.dark) .about-journey-card div span {
   left: 28px;
   bottom: 28px;
   z-index: 4;
-
   display: inline-flex;
   align-items: center;
   gap: 8px;
-
   padding: 10px 15px;
   border-radius: 999px;
-
   background: rgba(255, 255, 255, .82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-
   color: #334155;
   font-size: 12px;
   font-weight: 700;
-
   box-shadow: 0 10px 30px rgba(15, 23, 42, .10);
 }
 
@@ -1749,9 +2052,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================
-   DETAILS
-========================= */
+/* ==== DETAILS ===== */
 
 .fleet-details {
   display: flex;
@@ -1799,9 +2100,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================
-   FEATURES
-========================= */
+/* ====  FEATURES ===== */
 
 .fleet-features {
   display: grid;
@@ -1818,9 +2117,7 @@ html:not(.dark) .about-journey-card div span {
   border-radius: 16px;
   background: #f8fafc;
   border: 1px solid #eef2f7;
-  transition:
-    transform .25s ease,
-    border-color .25s ease;
+  transition: transform .25s ease, border-color .25s ease;
 }
 
 .dark .fleet-feature {
@@ -1837,10 +2134,8 @@ html:not(.dark) .about-journey-card div span {
   width: 39px;
   height: 39px;
   flex: 0 0 39px;
-
   display: grid;
   place-items: center;
-
   border-radius: 12px;
   background: rgba(36, 128, 235, .09);
   font-size: 18px;
@@ -1867,19 +2162,14 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================
-   BOTTOM
-========================= */
-
+/* ====  BOTTOM ===== */
 .fleet-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-
   margin-top: 32px;
   padding-top: 25px;
-
   border-top: 1px solid #e2e8f0;
 }
 
@@ -1904,29 +2194,22 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================
-   BOOK BUTTON
-========================= */
+/* ==== BOOK BUTTON ===== */
 
 .fleet-book-btn {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-
   padding: 13px 15px 13px 20px;
   border-radius: 15px;
-
   color: #ffffff;
   background: linear-gradient(135deg,
       #2480eb,
       #3cc788);
-
   font-size: 13px;
   font-weight: 800;
   text-decoration: none;
-
   box-shadow: 0 10px 25px rgba(36, 128, 235, .20);
-
   transition:
     transform .25s ease,
     box-shadow .25s ease;
@@ -1940,21 +2223,69 @@ html:not(.dark) .about-journey-card div span {
 .fleet-book-arrow {
   width: 31px;
   height: 31px;
-
   display: grid;
   place-items: center;
-
   border-radius: 10px;
   background: rgba(255, 255, 255, .18);
-
   font-size: 18px;
 }
 
 
-/* =========================================================
-   TABLET
-========================================================= */
 
+
+
+/* Fleet carousel dots and transition */
+
+.fleet-card {
+    transition: opacity 0.2s ease;
+    margin-bottom: 22px;
+}
+
+.fleet-card.fleet-changing {
+    opacity: 0.55;
+}
+
+.fleet-slider-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto 20px;
+}
+
+.fleet-dot {
+    width: 11px;
+    height: 11px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.fleet-dot.active {
+    background: #2480eb;
+    transform: scale(1.25);
+    box-shadow: 0 0 0 5px rgba(36, 128, 235, 0.13);
+}
+
+.fleet-dot:focus-visible {
+    outline: 2px solid #2480eb;
+    outline-offset: 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fleet-card,
+    .fleet-dot {
+        transition: none;
+    }
+}
+
+
+
+
+/* ====  TABLET ===== */
 @media (max-width: 991px) {
 
   .fleet-section {
@@ -1980,10 +2311,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================================================
-   MOBILE
-========================================================= */
-
+/* ===== MOBILE ===== */
 @media (max-width: 640px) {
 
   .fleet-section {
@@ -2072,10 +2400,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
+/* =====  SMALL MOBILE ==== */
 @media (max-width: 380px) {
 
   .fleet-section {
@@ -2151,10 +2476,6 @@ html:not(.dark) .about-journey-card div span {
   }
 }
 
-
-
-
-
 /* ---------------------------------------------------   fleet-section end ----------------------------------------------- */
 
 
@@ -2163,88 +2484,38 @@ html:not(.dark) .about-journey-card div span {
 
 
 
+/* --------------------------------------------------- DESTINATION start --------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ========================================================= DESTINATION CAROUSEL ========================================================= */
-
+/* ====  DESTINATION CAROUSEL  ===== */
 #discover {
   position: relative;
   overflow: hidden;
   padding: 105px 0 95px;
-  background:
-    radial-gradient(circle at 8% 30%,
+  background: radial-gradient(circle at 8% 30%,
       rgba(36, 128, 235, 0.10),
       transparent 28%),
     radial-gradient(circle at 92% 70%,
       rgba(60, 199, 136, 0.09),
-      transparent 28%),
-    #f8fafc;
+      transparent 28%), #f8fafc;
 }
 
 .dark #discover {
-  background:
-    radial-gradient(circle at 8% 30%,
+  background: radial-gradient(circle at 8% 30%,
       rgba(36, 128, 235, 0.13),
       transparent 28%),
     radial-gradient(circle at 92% 70%,
       rgba(60, 199, 136, 0.10),
-      transparent 28%),
-    #07111f;
+      transparent 28%), #07111f;
 }
 
 
-/* =========================================================
-   INTRO
-========================================================= */
-
+/* ==== INTRO ====  */
 .discover-intro {
   position: relative;
   z-index: 5;
-
   max-width: 760px;
-
   margin: 0 auto 55px;
-
   padding: 0 20px;
-
   text-align: center;
 }
 
@@ -2253,43 +2524,28 @@ html:not(.dark) .about-journey-card div span {
   align-items: center;
   justify-content: center;
   gap: 12px;
-
   color: #2480eb;
-
   font-size: 11px;
   font-weight: 800;
-
   letter-spacing: 0.18em;
 }
 
 .discover-kicker-line {
   width: 32px;
   height: 1px;
-
-  background: linear-gradient(90deg,
-      transparent,
-      #2480eb);
+  background: linear-gradient(90deg, transparent, #2480eb);
 }
 
 .discover-kicker-line:last-child {
-  background: linear-gradient(90deg,
-      #3cc788,
-      transparent);
+  background: linear-gradient(90deg, #3cc788, transparent);
 }
 
 .discover-title {
   margin-top: 18px;
-
   color: #0f172a;
-
-  font-size: clamp(2.5rem,
-      5vw,
-      4.7rem);
-
+  font-size: clamp(2.5rem, 5vw, 4.7rem);
   font-weight: 900;
-
   line-height: 0.98;
-
   letter-spacing: -0.055em;
 }
 
@@ -2299,29 +2555,18 @@ html:not(.dark) .about-journey-card div span {
 
 .discover-title span {
   display: block;
-
   margin-top: 5px;
-
-  background:
-    linear-gradient(100deg,
-      #2480eb,
-      #3cc788);
-
+  background: linear-gradient(100deg, #2480eb, #3cc788);
   -webkit-background-clip: text;
   background-clip: text;
-
   -webkit-text-fill-color: transparent;
 }
 
 .discover-description {
   max-width: 560px;
-
   margin: 20px auto 0;
-
   color: #64748b;
-
   font-size: 15px;
-
   line-height: 1.7;
 }
 
@@ -2330,37 +2575,21 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================================================
-   MAIN CAROUSEL
-========================================================= */
-
+/* ====   MAIN CAROUSEL ====  */
 .dest-carousel {
   position: relative;
-
   display: flex;
-
   align-items: center;
-
   gap: 18px;
-
   width: 100%;
-
-  padding:
-    35px max(5vw, 24px) 55px;
-
+  padding: 35px max(5vw, 24px) 55px;
   overflow-x: auto;
   overflow-y: visible;
-
   scroll-behavior: smooth;
-
   scroll-snap-type: x mandatory;
-
   scrollbar-width: none;
-
   -ms-overflow-style: none;
-
   perspective: 1400px;
-
   overscroll-behavior-x: contain;
 }
 
@@ -2369,37 +2598,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee */
-/* =========================================================
-           DESTINATION SECTION
-           ========================================================= */
-
+/* ====   DESTINATION SECTION ====  */
 .destination-section {
   width: 100%;
   padding: 80px 20px;
@@ -2430,10 +2629,7 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-/* =========================================================
-           CAROUSEL
-           ========================================================= */
-
+/* ==== CAROUSEL ====  */
 .destination-carousel {
   max-width: 1250px;
   margin: auto;
@@ -2443,51 +2639,36 @@ html:not(.dark) .about-journey-card div span {
   position: relative;
   height: 540px;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   perspective: 1200px;
 }
 
 
-/* =========================================================
-           MAIN CARDS
-           ========================================================= */
-
+/* ==== MAIN CARDS ====  */
 .dest-main-card {
   position: absolute;
-
   width: 245px;
   height: 390px;
-
   border-radius: 22px;
   overflow: hidden;
-
   background: rgba(255, 255, 255, 0.12);
-
   border: 1px solid rgba(255, 255, 255, 0.35);
-
-  box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.30);
-
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.30);
   transition:
     transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.85s ease,
     filter 0.85s ease,
     width 0.85s ease,
     height 0.85s ease;
-
   backdrop-filter: blur(8px);
 }
 
 
 
 
-/* =========================================================
-   SMOOTH CAROUSEL MOVEMENT
-   ========================================================= */
+/* ==== SMOOTH CAROUSEL MOVEMENT ====  */
 
 .dest-main-card {
   will-change: transform, opacity, filter;
@@ -2532,213 +2713,135 @@ html:not(.dark) .about-journey-card div span {
 }
 
 
-
-
 .dest-main-card img {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
   display: block;
 }
 
-
-/* =========================================================
-           LEFT SIDE
-           ========================================================= */
+/* ==== LEFT SIDE ====  */
 
 .dest-main-card[data-position="-2"] {
-  transform:
-    translateX(-470px) scale(0.78) rotateY(15deg);
-
+  transform: translateX(-470px) scale(0.78) rotateY(15deg);
   opacity: 0.75;
   filter: brightness(0.70);
-
   z-index: 1;
 }
 
-
 .dest-main-card[data-position="-1"] {
-  transform:
-    translateX(-245px) scale(0.88) rotateY(10deg);
-
+  transform: translateX(-245px) scale(0.88) rotateY(10deg);
   opacity: 0.90;
   filter: brightness(0.82);
-
   z-index: 2;
 }
 
 
-/* =========================================================
-           CENTER IMAGE
-           ========================================================= */
+/* ==== CENTER IMAGE ====  */
 
 .dest-main-card[data-position="0"] {
-
   width: 365px;
   height: 520px;
-
-  transform:
-    translateX(0) scale(1) rotateY(0deg);
-
+  transform: translateX(0) scale(1) rotateY(0deg);
   opacity: 1;
   filter: brightness(1);
-
   z-index: 5;
-
   box-shadow:
     0 35px 80px rgba(0, 0, 0, 0.40),
     0 0 40px rgba(139, 92, 246, 0.20);
 }
 
 
-/* =========================================================
-           RIGHT SIDE
-           ========================================================= */
+/* ==== RIGHT SIDE ====  */
 
 .dest-main-card[data-position="1"] {
-  transform:
-    translateX(245px) scale(0.88) rotateY(-10deg);
-
+  transform: translateX(245px) scale(0.88) rotateY(-10deg);
   opacity: 0.90;
   filter: brightness(0.82);
-
   z-index: 2;
 }
 
 
 .dest-main-card[data-position="2"] {
-  transform:
-    translateX(470px) scale(0.78) rotateY(-15deg);
-
+  transform: translateX(470px) scale(0.78) rotateY(-15deg);
   opacity: 0.75;
   filter: brightness(0.70);
-
   z-index: 1;
 }
 
 
-/* =========================================================
-           CENTER CARD DARK GRADIENT
-           ========================================================= */
+/* ==== CENTER CARD DARK GRADIENT ====  */
 
 .dest-main-card[data-position="0"]::after {
-
   content: "";
-
   position: absolute;
-
   left: 0;
   right: 0;
   bottom: 0;
-
   height: 58%;
-
   background: linear-gradient(to top,
       rgba(0, 0, 0, 0.90),
       rgba(0, 0, 0, 0.50),
       transparent);
-
   z-index: 1;
-
   pointer-events: none;
 }
 
 
-/* =========================================================
-           CENTER CARD CONTENT
-           ========================================================= */
+/* ==== CENTER CARD CONTENT ====  */
 
 .dest-overlay {
-
   position: absolute;
-
   left: 0;
   right: 0;
   bottom: 0;
-
   padding: 30px 25px 25px;
-
   color: white;
-
   z-index: 2;
-
   text-align: left;
 }
 
 
-/* =========================================================
-           PLACE NAME
-           ========================================================= */
+/* ==== PLACE NAME ====  */
 
 .dest-place-name {
-
   margin: 0 0 10px;
-
   font-size: 32px;
   font-weight: 800;
-
   color: white;
-
   letter-spacing: 0.3px;
-
-  text-shadow:
-    0 3px 10px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
 }
 
 
-/* =========================================================
-           DESCRIPTION
-           ========================================================= */
+/* ==== DESCRIPTION ====  */
 
 .dest-description {
-
   margin: 0 0 18px;
-
   font-size: 13px;
-
   line-height: 1.5;
-
   color: rgba(255, 255, 255, 0.92);
-
   max-width: 300px;
-
-  text-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 
-/* =========================================================
-           VIEW DETAILS BUTTON
-           ========================================================= */
+/* ==== VIEW DETAILS BUTTON ====  */
 
 .dest-view-btn {
-
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
-
   gap: 8px;
-
   padding: 10px 18px;
-
   border: 1px solid rgba(255, 255, 255, 0.45);
-
   border-radius: 25px;
-
   background: rgba(255, 255, 255, 0.16);
-
   backdrop-filter: blur(10px);
-
   color: white;
-
   font-size: 12px;
   font-weight: 700;
-
   cursor: pointer;
-
   transition:
     transform 0.3s ease,
     background 0.3s ease,
@@ -2747,227 +2850,144 @@ html:not(.dark) .about-journey-card div span {
 
 
 .dest-view-btn span {
-
   font-size: 17px;
-
-  transition:
-    transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 
 .dest-view-btn:hover {
-
   transform: translateY(-3px);
-
   background: rgba(255, 255, 255, 0.28);
-
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 
 .dest-view-btn:hover span {
-
   transform: translateX(4px);
 }
 
 
-/* =========================================================
-           BOTTOM CONTROLS
-           ========================================================= */
+/* ==== BOTTOM CONTROLS ====  */
 
 .dest-bottom {
-
   width: 690px;
   max-width: 95%;
-
   height: 105px;
-
   margin: -5px auto 0;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   gap: 22px;
-
   padding: 15px 22px;
-
   border-radius: 60px;
-
   background: rgba(30, 30, 30, 0.35);
-
   border: 1px solid rgba(255, 255, 255, 0.20);
-
   backdrop-filter: blur(15px);
-
   position: relative;
-
   z-index: 10;
 }
 
 
-/* =========================================================
-           ARROWS
-           ========================================================= */
+/* ==== ARROWS ====  */
 
 .dest-arrow {
-
   width: 48px;
   height: 48px;
-
   flex-shrink: 0;
-
   border-radius: 50%;
-
   border: 1px solid rgba(255, 255, 255, 0.30);
-
   background: rgba(255, 255, 255, 0.08);
-
   color: white;
-
   font-size: 25px;
-
   cursor: pointer;
-
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
 
 .dest-arrow:hover {
-
   transform: scale(1.12);
-
   background: rgba(255, 255, 255, 0.20);
 }
 
 
-/* =========================================================
-           THUMBNAILS
-           ========================================================= */
+/* ==== THUMBNAILS ====  */
 
 .dest-thumbnails {
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   gap: 20px;
-
   flex: 1;
 }
 
 
 .dest-thumb {
-
   width: 62px;
   height: 75px;
-
   padding: 0;
-
   border: none;
-
   background: transparent;
-
   cursor: pointer;
-
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   gap: 5px;
-
   opacity: 0.65;
-
-  transition:
-    transform 0.35s ease,
-    opacity 0.35s ease;
+  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
 
 .dest-thumb img {
-
   width: 52px;
   height: 52px;
-
   border-radius: 50%;
-
   object-fit: cover;
-
   border: 2px solid transparent;
-
-  transition:
-    transform 0.35s ease,
-    border 0.35s ease;
+  transition: transform 0.35s ease, border 0.35s ease;
 }
 
 
 .dest-thumb span {
-
   color: white;
-
   font-size: 10px;
-
   white-space: nowrap;
 }
 
 
 .dest-thumb:hover {
-
   opacity: 1;
-
   transform: translateY(-4px);
 }
 
 
 .dest-thumb.active {
-
   opacity: 1;
 }
 
 
 .dest-thumb.active img {
-
   width: 60px;
   height: 60px;
-
   border: 2px solid white;
-
-  box-shadow:
-    0 0 0 4px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
 }
 
 
-/* =========================================================
-           RESPONSIVE
-           ========================================================= */
+/* ====  RESPONSIVE ====  */
 
 @media (max-width: 1000px) {
 
   .dest-main-card[data-position="-2"],
   .dest-main-card[data-position="2"] {
-
     display: none;
   }
 
-
   .dest-main-card[data-position="-1"] {
-
-    transform:
-      translateX(-210px) scale(0.82);
+    transform: translateX(-210px) scale(0.82);
   }
 
-
   .dest-main-card[data-position="1"] {
-
-    transform:
-      translateX(210px) scale(0.82);
+    transform: translateX(210px) scale(0.82);
   }
 }
 
@@ -2975,119 +2995,67 @@ html:not(.dark) .about-journey-card div span {
 @media (max-width: 700px) {
 
   .destination-section {
-
     padding: 60px 10px;
   }
 
-
   .destination-heading h2 {
-
     font-size: 32px;
   }
 
-
   .dest-stage {
-
     height: 450px;
   }
 
-
   .dest-main-card[data-position="-1"],
   .dest-main-card[data-position="1"] {
-
     display: none;
   }
 
-
   .dest-main-card[data-position="0"] {
-
     width: 300px;
     height: 420px;
   }
 
-
   .dest-overlay {
-
-    padding:
-      25px 20px 20px;
+    padding: 25px 20px 20px;
   }
 
-
   .dest-place-name {
-
     font-size: 27px;
   }
 
-
   .dest-description {
-
     font-size: 12px;
-
     max-width: 260px;
   }
 
-
   .dest-bottom {
-
     width: 100%;
-
     gap: 8px;
-
     padding: 10px;
   }
 
-
   .dest-thumbnails {
-
     gap: 5px;
   }
 
-
   .dest-thumb {
-
     width: 50px;
   }
 
-
   .dest-thumb:nth-child(1),
   .dest-thumb:nth-child(5) {
-
     display: none;
   }
 
-
   .dest-arrow {
-
     width: 40px;
     height: 40px;
   }
 }
 
 
-
-
-
-
-
-
-
-
-/* =========================================================
-   DESTINATION CARD
-========================================================= */
-
-
-
-/* =========================================================
-   PREMIUM ACTIVE / HOVER FEEL
-========================================================= */
-
-
-
-/* =========================================================
-   CAROUSEL EDGE FADE
-========================================================= */
-
+/* ====  CAROUSEL EDGE FADE ====  */
 #discover {
   --fade-bg: #f8fafc;
 }
@@ -3096,85 +3064,24 @@ html:not(.dark) .about-journey-card div span {
   --fade-bg: #07111f;
 }
 
-/* 
-.dest-carousel::before,
-.dest-carousel::after {
 
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  bottom: 0;
-
-  width: 70px;
-
-  z-index: 10;
-
-  pointer-events: none;
-}
-
-.dest-carousel::before {
-
-  left: 0;
-
-  background:
-    linear-gradient(
-      90deg,
-      var(--fade-bg),
-      transparent
-    );
-}
-
-.dest-carousel::after {
-
-  right: 0;
-
-  background:
-    linear-gradient(
-      270deg,
-      var(--fade-bg),
-      transparent
-    );
-} */
-
-
-/* =========================================================
-   EXISTING ARROW BUTTONS
-========================================================= */
+/* ==== EXISTING ARROW BUTTONS ====  */
 /* unwanted */
 #discover .carousel-btn {
-
   position: relative;
-
   z-index: 20;
-
   display: grid;
-
   place-items: center;
-
   width: 54px;
   height: 54px;
-
   border-radius: 50%;
-
-  border:
-    1px solid rgba(36, 128, 235, .14);
-
-  background:
-    rgba(255, 255, 255, .92);
-
+  border: 1px solid rgba(36, 128, 235, .14);
+  background: rgba(255, 255, 255, .92);
   color: #0f172a;
-
   font-size: 20px;
-
   font-weight: 800;
-
   cursor: pointer;
-
-  box-shadow:
-    0 12px 32px rgba(15, 23, 42, .12);
-
+  box-shadow: 0 12px 32px rgba(15, 23, 42, .12);
   transition:
     transform .3s ease,
     background .3s ease,
@@ -3183,344 +3090,131 @@ html:not(.dark) .about-journey-card div span {
 }
 
 .dark #discover .carousel-btn {
-
-  background:
-    rgba(15, 23, 42, .85);
-
+  background: rgba(15, 23, 42, .85);
   color: #ffffff;
-
-  border-color:
-    rgba(255, 255, 255, .10);
+  border-color: rgba(255, 255, 255, .10);
 }
 
 #discover .carousel-btn:hover {
 
-  transform:
-    translateY(-4px);
-
+  transform: translateY(-4px);
   color: #ffffff;
-
-  background:
-    linear-gradient(135deg,
+  background: linear-gradient(135deg,
       #2480eb,
       #3cc788);
-
   box-shadow:
     0 16px 35px rgba(36, 128, 235, .28);
 }
 
 #discover .carousel-btn:active {
-
   transform:
     scale(.94);
 }
 
 
-/* =========================================================
-   COLLAGE BELOW
-========================================================= */
+/* ==== COLLAGE BELOW ====  */
 
 #discover>.max-w-6xl.mx-auto.px-5.mt-10 {
-
   margin-top: 65px;
 }
 
 #discover>.max-w-6xl.mx-auto.px-5.mt-10 img {
-
   display: block;
-
   width: 100%;
-
   border-radius: 32px;
-
-  border:
-    1px solid rgba(36, 128, 235, .12);
-
-  box-shadow:
-    0 30px 75px rgba(15, 23, 42, .13);
+  border: 1px solid rgba(36, 128, 235, .12);
+  box-shadow: 0 30px 75px rgba(15, 23, 42, .13);
 }
 
 
-/* =========================================================
-   TABLET
-========================================================= */
+/* ==== TABLET ====  */
 
 @media (max-width: 1024px) {
 
   #discover {
-
-    padding:
-      85px 0 80px;
+    padding: 85px 0 80px;
   }
 
-  /* 
-  .dest-carousel {
-
-    gap: 16px;
-
-    padding:
-      30px 28px 48px;
-  }
-
-  .dest-carousel .dest-card {
-
-    flex-basis: 285px;
-
-    width: 285px;
-
-    height: 415px;
-  } */
 }
 
 
-/* =========================================================
-   MOBILE
-========================================================= */
-
+/* ====  MOBILE ====  */
 @media (max-width: 640px) {
 
   #discover {
-
-    padding:
-      70px 0 65px;
+    padding: 70px 0 65px;
   }
 
   .discover-intro {
-
     margin-bottom: 35px;
   }
 
   .discover-kicker {
-
     font-size: 9px;
-
-    letter-spacing:
-      .13em;
+    letter-spacing: .13em;
   }
 
   .discover-kicker-line {
-
     width: 20px;
   }
 
   .discover-title {
-
-    font-size:
-      clamp(2.35rem, 12vw, 3.3rem);
-
+    font-size: clamp(2.35rem, 12vw, 3.3rem);
     line-height: .98;
   }
 
   .discover-description {
-
     padding: 0 12px;
-
     font-size: 14px;
   }
 
-  /* 
-  .dest-carousel {
-
-    gap: 14px;
-
-    padding:
-      20px 20px 45px;
-
-    scroll-padding-left: 20px;
-  }
-
-  .dest-carousel .dest-card {
-
-    flex:
-      0 0 82vw;
-
-    width: 82vw;
-
-    height: 420px;
-
-    border-radius: 28px;
-  }
-
-  .dest-carousel .dest-label {
-
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-
-    padding: 17px;
-
-    border-radius: 20px;
-  }
-
-  .dest-carousel .dest-label h3 {
-
-    font-size:
-      1.35rem;
-  }
-
-  .dest-carousel .dest-label span {
-
-    font-size:
-      .68rem;
-  } */
 
   #discover .carousel-btn {
-
     width: 46px;
     height: 46px;
-
     font-size: 17px;
   }
 
   #discover>.max-w-6xl.mx-auto.px-5.mt-10 {
-
     margin-top: 40px;
   }
 
   #discover>.max-w-6xl.mx-auto.px-5.mt-10 img {
-
     border-radius: 22px;
   }
 }
 
 
-/* =========================================================
-   SMALL PHONES
-========================================================= */
+/* ==== SMALL PHONES ====  */
 
 @media (max-width: 380px) {
 
   .dest-carousel .dest-card {
-
     flex-basis: 84vw;
-
     width: 84vw;
-
     height: 390px;
   }
 
   .dest-carousel .dest-label h3 {
-
-    font-size:
-      1.25rem;
+    font-size: 1.25rem;
   }
 }
 
 
-/* =========================================================
-   TOUCH DEVICES
-========================================================= */
-
+/* ==== TOUCH DEVICES ====  */
 @media (hover: none) {
 
   .dest-carousel .dest-card:hover {
-
     transform: none;
-
-    box-shadow:
-      0 25px 55px rgba(15, 23, 42, .15);
+    box-shadow: 0 25px 55px rgba(15, 23, 42, .15);
   }
 
   .dest-carousel .dest-card:hover img {
-
     transform: scale(1.015);
-
     filter: saturate(.92);
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-
-
-.dest-card {
-  position: relative;
-  flex: 0 0 auto;
-  width: 15rem;
-  height: 20rem;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  scroll-snap-align: start;
-  box-shadow: 0 18px 40px -22px rgba(2, 6, 23, .5);
-  transition: transform .25s;
-}
-
-.dest-card:hover {
-  transform: translateY(-6px);
-}
-
-.dest-card img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.dest-card.img-fallback {
-  background: linear-gradient(135deg, #1c69d8, #16a06b);
-}
-
-.dest-card.img-fallback::after {
-  content: "📍";
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
-  opacity: .85;
-}
-
-.dest-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(2, 6, 23, .8), transparent 55%);
-}
-
-.dest-label {
-  position: absolute;
-  left: 1.1rem;
-  bottom: 1.1rem;
-  color: #fff;
-  z-index: 2;
-} */
 
 /* Scroll-up button */
 .scrollup {
@@ -3549,11 +3243,11 @@ html:not(.dark) .about-journey-card div span {
   pointer-events: auto;
 }
 
-/* ============================================================
+/* ====  
    Responsive — phone first, then the desktop refinements.
    The layout itself is Tailwind's (sm:/lg: classes in index.html);
    what lives here are the fixes Tailwind utilities can't express.
-   ============================================================ */
+   ==== *\ 
 
 /* Nothing should ever scroll sideways — decorative blurs and the
    destinations carousel are the usual culprits. */
@@ -3793,477 +3487,432 @@ section.hero {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =====================================================
-   TRIP COST CALCULATOR
-   Compatible with Dark Mode and Light Mode
-===================================================== */
-
+/* ----------------------------------------------------------------- TRIP COST CALCULATOR ----------------------------------------------------------------- */
 .trip-calculator-section {
-    --trip-bg: #f5f8ff;
-    --trip-card: #ffffff;
-    --trip-text: #142238;
-    --trip-muted: #64748b;
-    --trip-border: #dce5f0;
-    --trip-input: #ffffff;
-    --trip-primary: #2480eb;
-    --trip-primary-hover: #1768c7;
-    --trip-accent: #3cc788;
-    --trip-shadow: 0 15px 45px rgba(24, 55, 95, 0.08);
-
-    padding: 90px 20px;
-    background: var(--trip-bg);
-    color: var(--trip-text);
-    transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+  --trip-bg: #f5f8ff; 
+  --trip-card: #ffffff;
+  --trip-text: #142238;
+  --trip-muted: #64748b;
+  --trip-border: #dce5f0;
+  --trip-input: #ffffff;
+  --trip-primary: #2480eb;
+  --trip-primary-hover: #1768c7;
+  --trip-accent: #3cc788;
+  --trip-shadow: 0 15px 45px rgba(24, 55, 95, 0.08);
+  padding: 90px 20px;
+  background: var(--trip-bg);
+  color: var(--trip-text);
+  transition:background-color 0.3s ease,color 0.3s ease;
 }
 
 /* Dark Theme */
 
 html.dark .trip-calculator-section {
-    --trip-bg: #07111f;
-    --trip-card: #0d1b2d;
-    --trip-text: #f1f5f9;
-    --trip-muted: #a7b4c8;
-    --trip-border: #26374d;
-    --trip-input: #101f33;
-    --trip-primary: #2480eb;
-    --trip-primary-hover: #4094f5;
-    --trip-accent: #3cc788;
-    --trip-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
+  --trip-bg: #07111f;
+  --trip-card: #0d1b2d;
+  --trip-text: #f1f5f9;
+  --trip-muted: #a7b4c8;
+  --trip-border: #26374d;
+  --trip-input: #101f33;
+  --trip-primary: #2480eb;
+  --trip-primary-hover: #4094f5;
+  --trip-accent: #3cc788;
+  --trip-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
 }
 
 /* Main Container */
 
 .trip-calculator-container {
-    width: 100%;
-    max-width: 1150px;
-    margin: 0 auto;
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
 }
 
 /* Heading */
 
 .trip-calculator-heading {
-    max-width: 700px;
-    margin: 0 auto 45px;
-    text-align: center;
+  max-width: 700px;
+  margin: 0 auto 45px;
+  text-align: center;
 }
 
 .trip-calculator-tag {
-    display: inline-block;
-    margin-bottom: 12px;
-    color: var(--trip-primary);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 2px;
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--trip-primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
 }
 
 .trip-calculator-heading h2 {
-    margin: 0 0 15px;
-    color: var(--trip-text);
-    font-size: 60px;
-    font-weight: 900;
-    line-height: 1.2;
-    display: block;
+  margin: 0 0 15px;
+  color: var(--trip-text);
+  font-size: 60px;
+  font-weight: 900;
+  line-height: 1.2;
+  display: block;
   margin-top: 5px;
-  background:
-    linear-gradient(100deg,
+  background:  linear-gradient(100deg,
       #2480eb,
       #3cc788);
-
   -webkit-background-clip: text;
   background-clip: text;
-
   -webkit-text-fill-color: transparent;
 }
 
 .trip-calculator-heading p {
-    margin: 0;
-    color: var(--trip-muted);
-    font-size: 16px;
-    line-height: 1.8;
+  margin: 0;
+  color: var(--trip-muted);
+  font-size: 16px;
+  line-height: 1.8;
 }
 
 /* Grid */
 
 .trip-calculator-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
-    gap: 28px;
-    align-items: start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 28px;
+  align-items: start;
 }
 
 /* Form and Result Cards */
 
 .trip-calculator-form,
 .trip-calculator-result {
-    min-width: 0;
-    padding: 30px;
-    border: 1px solid var(--trip-border);
-    border-radius: 22px;
-    background: var(--trip-card);
-    box-shadow: var(--trip-shadow);
-    transition:
-        background-color 0.3s ease,
-        border-color 0.3s ease;
+  min-width: 0;
+  padding: 30px;
+  border: 1px solid var(--trip-border);
+  border-radius: 22px;
+  background: var(--trip-card);
+  box-shadow: var(--trip-shadow);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .trip-calculator-form h3,
 .trip-calculator-result h3 {
-    margin: 0 0 25px;
-    color: var(--trip-text);
-    font-size: 22px;
-    font-weight: 750;
+  margin: 0 0 25px;
+  color: var(--trip-text);
+  font-size: 22px;
+  font-weight: 750;
 }
 
 /* Fields */
 
 .trip-field {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .trip-field label {
-    display: block;
-    margin-bottom: 9px;
-    color: var(--trip-text);
-    font-size: 14px;
-    font-weight: 650;
+  display: block;
+  margin-bottom: 9px;
+  color: var(--trip-text);
+  font-size: 14px;
+  font-weight: 650;
 }
 
 .trip-field input,
 .trip-field select {
-    display: block;
-    width: 100%;
-    min-height: 48px;
-    padding: 12px 14px;
-    border: 1px solid var(--trip-border);
-    border-radius: 10px;
-    outline: none;
-    background: var(--trip-input);
-    color: var(--trip-text);
-    font: inherit;
-    font-size: 14px;
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--trip-border);
+  border-radius: 10px;
+  outline: none;
+  background: var(--trip-input);
+  color: var(--trip-text);
+  font: inherit;
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .trip-field input::placeholder {
-    color: var(--trip-muted);
-    opacity: 0.8;
+  color: var(--trip-muted);
+  opacity: 0.8;
 }
 
 .trip-field input:focus,
 .trip-field select:focus {
-    border-color: var(--trip-primary);
-    box-shadow: 0 0 0 3px rgba(36, 128, 235, 0.14);
+  border-color: var(--trip-primary);
+  box-shadow: 0 0 0 3px rgba(36, 128, 235, 0.14);
 }
 
 .trip-field select option {
-    background: var(--trip-card);
-    color: var(--trip-text);
+  background: var(--trip-card);
+  color: var(--trip-text);
 }
 
 /* Add Stop */
 
 .trip-stop-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .trip-stop-row input {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .trip-remove-stop {
-    flex-shrink: 0;
-    width: 44px;
-    border: 1px solid var(--trip-border);
-    border-radius: 10px;
-    background: transparent;
-    color: #ef5350;
-    cursor: pointer;
-    font-size: 20px;
+  flex-shrink: 0;
+  width: 44px;
+  border: 1px solid var(--trip-border);
+  border-radius: 10px;
+  background: transparent;
+  color: #ef5350;
+  cursor: pointer;
+  font-size: 20px;
 }
 
 .trip-add-stop {
-    margin-top: 2px;
-    padding: 8px 0;
-    border: none;
-    background: transparent;
-    color: var(--trip-primary);
-    font: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
+  margin-top: 2px;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  color: var(--trip-primary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .trip-add-stop:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Buttons */
 
 .trip-calculate-button,
 .trip-whatsapp-button {
-    display: block;
-    width: 100%;
-    min-height: 50px;
-    padding: 13px 18px;
-    border: none;
-    border-radius: 11px;
-    color: #ffffff;
-    font: inherit;
-    font-size: 15px;
-    font-weight: 750;
-    cursor: pointer;
-    transition:
-        background-color 0.2s ease,
-        transform 0.2s ease,
-        opacity 0.2s ease;
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  padding: 13px 18px;
+  border: none;
+  border-radius: 11px;
+  color: #ffffff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .trip-calculate-button {
-    margin-top: 8px;
-    background: var(--trip-primary);
+  margin-top: 8px;
+  background: var(--trip-primary);
 }
 
 .trip-calculate-button:hover {
-    background: var(--trip-primary-hover);
-    transform: translateY(-2px);
+  background: var(--trip-primary-hover);
+  transform: translateY(-2px);
 }
 
 .trip-calculate-button:disabled {
-    cursor: wait;
-    opacity: 0.65;
-    transform: none;
+  cursor: wait;
+  opacity: 0.65;
+  transform: none;
 }
 
 /* Status Message */
 
 .trip-calculator-message {
-    min-height: 20px;
-    margin: 12px 0 0;
-    color: var(--trip-muted);
-    font-size: 13px;
-    line-height: 1.6;
+  min-height: 20px;
+  margin: 12px 0 0;
+  color: var(--trip-muted);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .trip-calculator-message.trip-error {
-    color: #ef5350;
+  color: #ef5350;
 }
 
 .trip-calculator-message.trip-success {
-    color: #16885b;
+  color: #16885b;
 }
 
 html.dark .trip-calculator-message.trip-success {
-    color: #58dca2;
+  color: #58dca2;
 }
 
 /* Result Card */
 
 .trip-calculator-result {
-    position: sticky;
-    top: 25px;
+  position: sticky;
+  top: 25px;
 }
 
 .trip-result-icon {
-    display: grid;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 18px;
-    place-items: center;
-    border-radius: 15px;
-    background: rgba(36, 128, 235, 0.12);
-    color: var(--trip-primary);
-    font-size: 25px;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 18px;
+  place-items: center;
+  border-radius: 15px;
+  background: rgba(36, 128, 235, 0.12);
+  color: var(--trip-primary);
+  font-size: 25px;
 }
 
 .trip-calculator-result h3 {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .trip-result-intro {
-    margin: 0 0 24px;
-    color: var(--trip-muted);
-    font-size: 14px;
-    line-height: 1.7;
+  margin: 0 0 24px;
+  color: var(--trip-muted);
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 /* Result Rows */
 
 .trip-result-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 15px;
-    padding: 15px 0;
-    border-bottom: 1px solid var(--trip-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--trip-border);
 }
 
 .trip-result-row span {
-    color: var(--trip-muted);
-    font-size: 14px;
-    line-height: 1.6;
+  color: var(--trip-muted);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .trip-result-row strong {
-    max-width: 55%;
-    color: var(--trip-text);
-    font-size: 14px;
-    text-align: right;
-    overflow-wrap: anywhere;
+  max-width: 55%;
+  color: var(--trip-text);
+  font-size: 14px;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 /* Total */
 
 .trip-result-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid rgba(60, 199, 136, 0.3);
-    border-radius: 14px;
-    background: rgba(60, 199, 136, 0.09);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid rgba(60, 199, 136, 0.3);
+  border-radius: 14px;
+  background: rgba(60, 199, 136, 0.09);
 }
 
 .trip-result-total span {
-    color: var(--trip-text);
-    font-size: 15px;
-    font-weight: 750;
+  color: var(--trip-text);
+  font-size: 15px;
+  font-weight: 750;
 }
 
 .trip-result-total strong {
-    color: var(--trip-accent);
-    font-size: clamp(20px, 2.5vw, 27px);
-    font-weight: 850;
-    text-align: right;
-    overflow-wrap: anywhere;
+  color: var(--trip-accent);
+  font-size: clamp(20px, 2.5vw, 27px);
+  font-weight: 850;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
 /* Note */
 
 .trip-result-note {
-    margin: 16px 0 20px;
-    color: var(--trip-muted);
-    font-size: 12px;
-    line-height: 1.8;
+  margin: 16px 0 20px;
+  color: var(--trip-muted);
+  font-size: 12px;
+  line-height: 1.8;
 }
 
 /* WhatsApp */
 
 .trip-whatsapp-button {
-    background: #1eae63;
+  background: #1eae63;
 }
 
 .trip-whatsapp-button:hover:not(:disabled) {
-    background: #168d4e;
-    transform: translateY(-2px);
+  background: #168d4e;
+  transform: translateY(-2px);
 }
 
 .trip-whatsapp-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.45;
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 /* Tablet */
 
 @media (max-width: 900px) {
-    .trip-calculator-section {
-        padding: 70px 18px;
-    }
+  .trip-calculator-section {
+    padding: 70px 18px;
+  }
 
-    .trip-calculator-grid {
-        grid-template-columns: 1fr;
-        gap: 22px;
-    }
+  .trip-calculator-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
 
-    .trip-calculator-result {
-        position: static;
-    }
+  .trip-calculator-result {
+    position: static;
+  }
 }
 
 /* Mobile */
 
 @media (max-width: 480px) {
-    .trip-calculator-section {
-        padding: 55px 14px;
-    }
+  .trip-calculator-section {
+    padding: 55px 14px;
+  }
 
-    .trip-calculator-heading {
-        margin-bottom: 30px;
-    }
+  .trip-calculator-heading {
+    margin-bottom: 30px;
+  }
 
-    .trip-calculator-heading p {
-        font-size: 14px;
-    }
+  .trip-calculator-heading p {
+    font-size: 14px;
+  }
 
-    .trip-calculator-form,
-    .trip-calculator-result {
-        padding: 20px 16px;
-        border-radius: 17px;
-    }
+  .trip-calculator-form,
+  .trip-calculator-result {
+    padding: 20px 16px;
+    border-radius: 17px;
+  }
 
-    .trip-calculator-form h3,
-    .trip-calculator-result h3 {
-        font-size: 20px;
-    }
+  .trip-calculator-form h3,
+  .trip-calculator-result h3 {
+    font-size: 20px;
+  }
 
-    .trip-result-row {
-        gap: 10px;
-    }
+  .trip-result-row {
+    gap: 10px;
+  }
 
-    .trip-result-row span,
-    .trip-result-row strong {
-        font-size: 13px;
-    }
+  .trip-result-row span,
+  .trip-result-row strong {
+    font-size: 13px;
+  }
 
-    .trip-result-total {
-        padding: 15px 12px;
-    }
+  .trip-result-total {
+    padding: 15px 12px;
+  }
 }
-/* trip calculation end */
 
+/*----------------------------------------------------------- trip calculation end ----------------------------------------------------------*/
 
 
 
@@ -4273,76 +3922,12 @@ html.dark .trip-calculator-message.trip-success {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================================================
-   GURUDEV TRAVELS - EXPERIENCE SECTION start
-   DARK NAVY THEME
-   ========================================================= */
+/* ----------------------------------------------------------   EXPERIENCE SECTION start ---------------------------------------------------  */
 
 .experience-section {
   position: relative;
   padding: 140px 20px;
   overflow: hidden;
-
   background:
     radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.08), transparent 35%),
     radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.07), transparent 35%),
@@ -4355,18 +3940,13 @@ html.dark .trip-calculator-message.trip-success {
 .experience-section::before {
   content: "";
   position: absolute;
-
   width: 350px;
   height: 350px;
-
   top: -180px;
   right: -100px;
-
   background: rgba(37, 99, 235, 0.08);
-
   filter: blur(100px);
   border-radius: 50%;
-
   pointer-events: none;
 }
 
@@ -4376,21 +3956,16 @@ html.dark .trip-calculator-message.trip-success {
 .experience-container {
   position: relative;
   z-index: 2;
-
   max-width: 1200px;
   margin: auto;
 }
 
 
-/* =========================================================
-   HEADING
-   ========================================================= */
+/* ==== HEADING  ====  */
 
 .experience-heading {
   max-width: 720px;
-
   margin: 0 auto 55px;
-
   text-align: center;
 }
 
@@ -4399,14 +3974,10 @@ html.dark .trip-calculator-message.trip-success {
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 12px;
-
   color: #38bdf8;
-
   font-size: 11px;
   font-weight: 800;
-
   letter-spacing: 3px;
 }
 
@@ -4414,40 +3985,27 @@ html.dark .trip-calculator-message.trip-success {
 .kicker-line {
   width: 35px;
   height: 1px;
-
-  background: linear-gradient(90deg,
-      transparent,
-      #38bdf8);
+  background: linear-gradient(90deg,  transparent, #38bdf8);
 }
 
 
 .experience-kicker .kicker-line:last-child {
-  background: linear-gradient(90deg,
-      #38bdf8,
-      transparent);
+  background: linear-gradient(90deg,  #38bdf8,  transparent);
 }
 
 
 .experience-heading h2 {
   margin: 16px 0 16px;
-
   color: #f8fafc;
-
   font-size: clamp(34px, 5vw, 52px);
-
   line-height: 1.1;
-
   font-weight: 800;
-
   letter-spacing: -1px;
 }
 
 
 .experience-heading h2 span {
-  background: linear-gradient(90deg,
-      #60a5fa,
-      #38bdf8);
-
+  background: linear-gradient(90deg,    #60a5fa,    #38bdf8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -4455,48 +4013,32 @@ html.dark .trip-calculator-message.trip-success {
 
 .experience-heading>p {
   max-width: 650px;
-
   margin: auto;
-
   color: #94a3b8;
-
   font-size: 15px;
-
   line-height: 1.8;
 }
 
 
-/* =========================================================
-   MAIN EXPERIENCE CARD
-   ========================================================= */
+/* ==== MAIN EXPERIENCE CARD ====  */
 
 .experience-card {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   min-height: 520px;
-
   overflow: hidden;
-
   border-radius: 30px;
-
   border: 1px solid rgba(96, 165, 250, 0.16);
-
-  background:
-    linear-gradient(135deg,
+  background:linear-gradient(135deg,
       rgba(15, 29, 52, 0.96),
       rgba(7, 16, 31, 0.98));
-
   box-shadow:
     0 25px 80px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 
-/* =========================================================
-   LEFT CONTENT
-   ========================================================= */
+/* ==== LEFT CONTENT ====  */
 
 .experience-info {
   padding: 55px;
@@ -4508,9 +4050,7 @@ html.dark .trip-calculator-message.trip-success {
 .experience-intro {
   display: flex;
   align-items: center;
-
   gap: 15px;
-
   margin-bottom: 40px;
 }
 
@@ -4518,101 +4058,67 @@ html.dark .trip-calculator-message.trip-success {
 .experience-icon {
   width: 48px;
   height: 48px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   border-radius: 15px;
-
   color: #ffffff;
-
   font-size: 20px;
-
-  background:
-    linear-gradient(135deg,
-      #2563eb,
-      #0891b2);
-
-  box-shadow:
-    0 8px 25px rgba(37, 99, 235, 0.25);
+  background: linear-gradient(135deg,  #2563eb,  #0891b2);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
 }
 
 
 .experience-label {
   display: block;
-
   margin-bottom: 5px;
-
   color: #64748b;
-
   font-size: 10px;
-
   font-weight: 800;
-
   letter-spacing: 2px;
 }
 
 
 .experience-intro h3 {
   margin: 0;
-
   color: #f1f5f9;
-
   font-size: 21px;
-
   font-weight: 800;
 }
 
 
-/* =========================================================
-   STATISTICS
-   ========================================================= */
+/* ==== STATISTICS ====  */
 
 .experience-stats {
   display: grid;
-
   grid-template-columns: repeat(3, 1fr);
-
   gap: 12px;
 }
 
 
 .experience-stat {
   padding: 24px 10px;
-
   text-align: center;
-
   border-radius: 18px;
-
   border: 1px solid rgba(96, 165, 250, 0.10);
-
   background: rgba(15, 31, 54, 0.75);
-
   transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
 
 
 .experience-stat:hover {
   transform: translateY(-6px);
-
   border-color: rgba(56, 189, 248, 0.35);
-
   background: rgba(18, 40, 70, 0.9);
 }
 
 
 .experience-stat h4 {
   margin: 0;
-
   font-size: 35px;
-
   font-weight: 900;
-
   background: linear-gradient(90deg, #60a5fa, #22d3ee);
-
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -4620,18 +4126,13 @@ html.dark .trip-calculator-message.trip-success {
 
 .experience-stat p {
   margin: 8px 0 0;
-
   color: #7f93ad;
-
   font-size: 12px;
-
   line-height: 1.5;
 }
 
 
-/* =========================================================
-   FEATURES
-   ========================================================= */
+/* ==== FEATURES ====  */
 
 .experience-features {
   margin-top: 35px;
@@ -4640,11 +4141,8 @@ html.dark .trip-calculator-message.trip-success {
 
 .experience-feature {
   display: flex;
-
   align-items: center;
-
   gap: 12px;
-
   margin-bottom: 15px;
 }
 
@@ -4652,65 +4150,40 @@ html.dark .trip-calculator-message.trip-success {
 .feature-check {
   width: 29px;
   height: 29px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   border-radius: 50%;
-
   color: #38bdf8;
-
   font-size: 13px;
-
   font-weight: 900;
-
-  background:
-    rgba(56, 189, 248, 0.09);
-
-  border:
-    1px solid rgba(56, 189, 248, 0.16);
+  background: rgba(56, 189, 248, 0.09);
+  border: 1px solid rgba(56, 189, 248, 0.16);
 }
 
 
 .experience-feature p {
   margin: 0;
-
   color: #9aaac0;
-
   font-size: 13px;
-
   line-height: 1.5;
 }
 
 
-/* =========================================================
+/* ====  
    BOTTOM TAG
-   ========================================================= */
-
+   ====  */
 .experience-tag {
   display: inline-flex;
-
   align-items: center;
-
   gap: 8px;
-
   margin-top: 15px;
-
   padding: 8px 13px;
-
   border-radius: 30px;
-
   border: 1px solid rgba(56, 189, 248, 0.12);
-
-  background:
-    rgba(56, 189, 248, 0.05);
-
+  background:  rgba(56, 189, 248, 0.05);
   color: #647d99;
-
   font-size: 11px;
 }
 
@@ -4718,43 +4191,29 @@ html.dark .trip-calculator-message.trip-success {
 .tag-dot {
   width: 7px;
   height: 7px;
-
   border-radius: 50%;
-
   background: #22d3ee;
-
-  box-shadow:
-    0 0 10px rgba(34, 211, 238, 0.7);
+  box-shadow:   0 0 10px rgba(34, 211, 238, 0.7);
 }
 
 
-/* =========================================================
-   RIGHT IMAGE
-   ========================================================= */
+/* ====  RIGHT IMAGE ====  */
 
 .experience-visual {
   position: relative;
-
   min-height: 520px;
-
   overflow: hidden;
-
   background: #030712;
 }
 
 
 .experience-visual img {
   position: absolute;
-
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
-  transition:
-    transform 0.7s ease;
+  transition:transform 0.7s ease;
 }
 
 
@@ -4763,89 +4222,60 @@ html.dark .trip-calculator-message.trip-success {
 }
 
 
-/* =========================================================
-   IMAGE DARK OVERLAY
-   ========================================================= */
+/* ==== IMAGE DARK OVERLAY ====  */
 
 .experience-image-dark {
   position: absolute;
-
   inset: 0;
-
-  background:
-    linear-gradient(to top,
+  background:linear-gradient(to top,
       rgba(2, 8, 23, 0.95),
       rgba(2, 8, 23, 0.20) 65%,
       rgba(2, 8, 23, 0.10));
 }
 
 
-/* =========================================================
-   FLOATING GLASS CARD
-   ========================================================= */
+/* ==== FLOATING GLASS CARD ====  */
 
 .experience-floating {
   position: absolute;
-
   left: 30px;
   right: 30px;
-
   bottom: 30px;
-
   padding: 24px;
-
   border-radius: 20px;
-
-  border:
-    1px solid rgba(125, 211, 252, 0.18);
-
-  background:
-    rgba(3, 15, 32, 0.58);
-
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  background: rgba(3, 15, 32, 0.58);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-
-  box-shadow:
-    0 15px 45px rgba(0, 0, 0, 0.30);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.30);
 }
 
 
 .experience-floating>span {
   color: #38bdf8;
-
   font-size: 9px;
-
   font-weight: 800;
-
   letter-spacing: 2px;
 }
 
 
 .experience-floating h3 {
   margin: 8px 0;
-
   color: #ffffff;
-
   font-size: 27px;
-
   line-height: 1.2;
-
   font-weight: 800;
 }
 
 
 .experience-floating p {
   margin: 0;
-
   color: #94a3b8;
-
   font-size: 12px;
 }
 
 
-/* =========================================================
-   TABLET
-   ========================================================= */
+/* ==== TABLET ====  */
 
 @media (max-width: 900px) {
 
@@ -4867,9 +4297,7 @@ html.dark .trip-calculator-message.trip-success {
 }
 
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+/* ====  MOBILE ====  */
 
 @media (max-width: 600px) {
 
@@ -4960,104 +4388,14 @@ html.dark .trip-calculator-message.trip-success {
 }
 
 
+/* -------------------------------------------------------- EXPERIENCE SECTION end --------------------------------------------------------  */
 
 
 
-/* =========================================================
-   GURUDEV TRAVELS - EXPERIENCE SECTION end
-   DARK NAVY THEME
-   ========================================================= */
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*------------------------------------- safety & comfort section --------------------------------------- */
-
-/* ============================================================
-   GURUDEV TRAVELS
-   SAFETY & COMFORT SECTION
-============================================================ */
+/* -------------------------------------------------------- safety & comfort section -------------------------------------------------------- */
 
 .safety-section {
   position: relative;
@@ -5068,7 +4406,6 @@ html.dark .trip-calculator-message.trip-success {
     radial-gradient(circle at 85% 80%, rgba(60, 199, 136, 0.08), transparent 30%);
 }
 
-
 /* Main Container */
 
 .safety-container {
@@ -5077,9 +4414,7 @@ html.dark .trip-calculator-message.trip-success {
 }
 
 
-/* ============================================================
-   HEADING
-============================================================ */
+/* ==== HEADING =====  */
 
 .safety-heading {
   max-width: 720px;
@@ -5092,13 +4427,10 @@ html.dark .trip-calculator-message.trip-success {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-
   margin-bottom: 16px;
-
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 2.4px;
-
   color: #2480eb;
 }
 
@@ -5106,87 +4438,59 @@ html.dark .trip-calculator-message.trip-success {
 .safety-label-line {
   width: 34px;
   height: 2px;
-
   border-radius: 999px;
-
   background: #2480eb;
 }
 
 
 .safety-title {
   margin: 0;
-
   font-size: clamp(38px, 5vw, 64px);
   line-height: 1.05;
   font-weight: 900;
-
   letter-spacing: -2.5px;
-
   color: #ffffff;
 }
 
 
 .safety-title span {
   display: block;
-
   margin-top: 7px;
-
   font-size: .58em;
   font-weight: 700;
-
   letter-spacing: -1px;
-
   color: #3cc788;
 }
 
 
 .safety-description {
   max-width: 620px;
-
   margin: 22px auto 0;
-
   font-size: 15px;
   line-height: 1.8;
-
   color: rgba(255, 255, 255, .62);
 }
 
 
-/* ============================================================
-   FEATURE GRID
-============================================================ */
-
+/* ====  FEATURE GRID =====  */
 .safety-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
 }
 
 
-/* ============================================================
-   CARD
-============================================================ */
+/* ==== CARD =====  */
 
 .safety-card {
   position: relative;
-
   min-height: 310px;
-
   padding: 28px 25px;
-
   border-radius: 22px;
-
   overflow: hidden;
-
   background: linear-gradient(145deg, rgba(15, 34, 59, .92), rgba(5, 17, 31, .96));
-
   border: 1px solid rgba(255, 255, 255, .07);
-
   box-shadow: 0 18px 45px rgba(0, 0, 0, .20);
-
   transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
 }
 
@@ -5195,135 +4499,93 @@ html.dark .trip-calculator-message.trip-success {
 
 .safety-card::before {
   content: "";
-
   position: absolute;
-
   width: 150px;
   height: 150px;
-
   top: -80px;
   right: -70px;
-
   border-radius: 50%;
-
   background: rgba(36, 128, 235, .16);
-
   filter: blur(5px);
-
   transition: transform .45s ease;
 }
 
 
 .safety-card:hover {
   transform: translateY(-8px);
-
-  border-color:
-    rgba(36, 128, 235, .40);
-
-  box-shadow:
-    0 25px 55px rgba(0, 0, 0, .30);
+  border-color: rgba(36, 128, 235, .40);
+  box-shadow: 0 25px 55px rgba(0, 0, 0, .30);
 }
 
 
 .safety-card:hover::before {
-  transform:
-    scale(1.35);
+  transform: scale(1.35);
 }
 
 
-/* ============================================================
-   CARD TOP
-============================================================ */
+/* ==== CARD TOP =====  */
 
 .safety-card-top {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   margin-bottom: 34px;
 }
 
 
 .safety-icon {
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   width: 54px;
   height: 54px;
-
   border-radius: 16px;
-
-  background:
-    linear-gradient(135deg,
+  background: linear-gradient(135deg,
       rgba(36, 128, 235, .18),
       rgba(60, 199, 136, .12));
-
   border: 1px solid rgba(36, 128, 235, .25);
-
   color: #3cc788;
-
   font-size: 22px;
   font-weight: 900;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
 }
 
 
 .safety-number {
   font-size: 11px;
   font-weight: 800;
-
   letter-spacing: 1.5px;
-
-  color:
-    rgba(255, 255, 255, .25);
+  color:  rgba(255, 255, 255, .25);
 }
 
 
-/* ============================================================
-   CARD CONTENT
-============================================================ */
+/* ==== CARD CONTENT =====  */
 
 .safety-card h3 {
   margin: 0 0 12px;
-
   font-size: 21px;
   line-height: 1.25;
-
   font-weight: 800;
-
   color: #ffffff;
 }
 
 
 .safety-card p {
   margin: 0;
-
   font-size: 13px;
   line-height: 1.75;
-
-  color:
-    rgba(255, 255, 255, .58);
+  color: rgba(255, 255, 255, .58);
 }
 
 
-/* ============================================================
-   CARD BOTTOM
-============================================================ */
+/* ==== CARD BOTTOM =====  */
 
 .safety-line {
   width: 100%;
   height: 1px;
-
   margin: 26px 0 15px;
-
-  background:
-    linear-gradient(90deg,
-      rgba(36, 128, 235, .35),
+  background:linear-gradient(90deg,
+     rgba(36, 128, 235, .35),
       transparent);
 }
 
@@ -5331,61 +4593,39 @@ html.dark .trip-calculator-message.trip-success {
 .safety-tag {
   font-size: 9px;
   font-weight: 800;
-
   letter-spacing: 1.6px;
-
-  color:
-    rgba(60, 199, 136, .75);
+  color: rgba(60, 199, 136, .75);
 }
 
 
-/* ============================================================
-   BOTTOM HIGHLIGHT
-============================================================ */
+/* ==== BOTTOM HIGHLIGHT =====  */
 
 .safety-highlight {
   display: flex;
-
   align-items: center;
-
   gap: 20px;
-
   margin-top: 20px;
-
   padding: 24px 28px;
-
   border-radius: 22px;
-
-  background:
-    linear-gradient(110deg,
+  background: linear-gradient(110deg,
       rgba(36, 128, 235, .13),
       rgba(60, 199, 136, .07),
       rgba(255, 255, 255, .025));
-
   border: 1px solid rgba(36, 128, 235, .16);
 }
 
 
 .safety-highlight-icon {
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   flex: 0 0 auto;
-
   width: 52px;
   height: 52px;
-
   border-radius: 50%;
-
-  background:
-    rgba(60, 199, 136, .10);
-
+  background: rgba(60, 199, 136, .10);
   border: 1px solid rgba(60, 199, 136, .20);
-
   color: #3cc788;
-
   font-size: 20px;
 }
 
@@ -5397,26 +4637,19 @@ html.dark .trip-calculator-message.trip-success {
 
 .safety-highlight-content>span {
   display: block;
-
   margin-bottom: 5px;
-
   font-size: 9px;
   font-weight: 800;
-
   letter-spacing: 2px;
-
   color: #2480eb;
 }
 
 
 .safety-highlight-content h3 {
   margin: 0;
-
   font-size: 18px;
   line-height: 1.4;
-
   font-weight: 700;
-
   color: #ffffff;
 }
 
@@ -5426,17 +4659,12 @@ html.dark .trip-calculator-message.trip-success {
 }
 
 
-/* ============================================================
-   JOURNEY DOTS
-============================================================ */
+/* ==== JOURNEY DOTS =====  */
 
 .safety-highlight-route {
   display: flex;
-
   align-items: center;
-
   gap: 7px;
-
   padding-right: 8px;
 }
 
@@ -5444,9 +4672,7 @@ html.dark .trip-calculator-message.trip-success {
 .safety-highlight-route span {
   width: 6px;
   height: 6px;
-
   border-radius: 50%;
-
   background: rgba(255, 255, 255, .18);
 }
 
@@ -5454,28 +4680,20 @@ html.dark .trip-calculator-message.trip-success {
 .safety-highlight-route span:first-child {
   width: 10px;
   height: 10px;
-
   background: #2480eb;
-
-  box-shadow:
-    0 0 15px rgba(36, 128, 235, .50);
+  box-shadow: 0 0 15px rgba(36, 128, 235, .50);
 }
 
 
 .safety-highlight-route span:last-child {
   width: 10px;
   height: 10px;
-
   background: #3cc788;
-
-  box-shadow:
-    0 0 15px rgba(60, 199, 136, .40);
+  box-shadow: 0 0 15px rgba(60, 199, 136, .40);
 }
 
 
-/* ============================================================
-   LIGHT MODE
-============================================================ */
+/* ==== LIGHT MODE =====  */
 
 html:not(.dark) .safety-section {
   background:
@@ -5487,11 +4705,9 @@ html:not(.dark) .safety-section {
       transparent 30%);
 }
 
-
 html:not(.dark) .safety-title {
   color: #0f172a;
 }
-
 
 html:not(.dark) .safety-title span {
   color: #16885a;
@@ -5504,25 +4720,17 @@ html:not(.dark) .safety-description {
 
 
 html:not(.dark) .safety-card {
-  background:
-    linear-gradient(145deg,
+  background: linear-gradient(145deg,
       rgba(255, 255, 255, .96),
       rgba(239, 246, 255, .92));
-
-  border-color:
-    rgba(148, 163, 184, .20);
-
-  box-shadow:
-    0 18px 45px rgba(15, 23, 42, .08);
+  border-color: rgba(148, 163, 184, .20);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, .08);
 }
 
 
 html:not(.dark) .safety-card:hover {
-  border-color:
-    rgba(36, 128, 235, .28);
-
-  box-shadow:
-    0 25px 55px rgba(15, 23, 42, .12);
+  border-color:  rgba(36, 128, 235, .28);
+  box-shadow: 0 25px 55px rgba(15, 23, 42, .12);
 }
 
 
@@ -5537,22 +4745,16 @@ html:not(.dark) .safety-card p {
 
 
 html:not(.dark) .safety-number {
-  color:
-    rgba(15, 23, 42, .25);
+  color:  rgba(15, 23, 42, .25);
 }
 
 
 html:not(.dark) .safety-highlight {
-  background:
-    linear-gradient(110deg,
+  background:  linear-gradient(110deg,
       rgba(239, 246, 255, .95),
       rgba(240, 253, 250, .88));
-
-  border-color:
-    rgba(148, 163, 184, .20);
-
-  box-shadow:
-    0 15px 35px rgba(15, 23, 42, .06);
+  border-color:  rgba(148, 163, 184, .20);
+  box-shadow: 0 15px 35px rgba(15, 23, 42, .06);
 }
 
 
@@ -5561,9 +4763,7 @@ html:not(.dark) .safety-highlight-content h3 {
 }
 
 
-/* ============================================================
-   TABLET
-============================================================ */
+/* ==== TABLET =====  */
 
 @media (max-width: 950px) {
 
@@ -5572,16 +4772,13 @@ html:not(.dark) .safety-highlight-content h3 {
   }
 
   .safety-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns:repeat(2, minmax(0, 1fr));
   }
 
 }
 
 
-/* ============================================================
-   MOBILE
-============================================================ */
+/* ==== MOBILE =====  */
 
 @media (max-width: 600px) {
 
@@ -5589,61 +4786,47 @@ html:not(.dark) .safety-highlight-content h3 {
     padding: 75px 0;
   }
 
-
   .safety-heading {
     margin-bottom: 38px;
   }
-
 
   .safety-title {
     font-size: 40px;
     letter-spacing: -1.8px;
   }
 
-
   .safety-description {
     font-size: 13px;
     line-height: 1.7;
   }
 
-
   .safety-grid {
     grid-template-columns: 1fr;
-
     gap: 14px;
   }
 
-
   .safety-card {
     min-height: auto;
-
     padding: 24px 22px;
   }
-
 
   .safety-card-top {
     margin-bottom: 25px;
   }
 
-
   .safety-card h3 {
     font-size: 19px;
   }
 
-
   .safety-highlight {
     align-items: flex-start;
-
     padding: 20px;
-
     gap: 14px;
   }
-
 
   .safety-highlight-icon {
     width: 44px;
     height: 44px;
-
     font-size: 17px;
   }
 
@@ -5658,83 +4841,28 @@ html:not(.dark) .safety-highlight-content h3 {
   }
 
 }
+/* ------------------------------------------------------ safty comfort section ends --------------------------------------------------- */
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ---------------------------------------------------------------   reviews section -------------------------------------------------*/
-
-/* ============================================================
-   GURUDEV TRAVELS — REVIEWS SECTION
-   Unique / Static / Responsive / Dark + Light
-============================================================ */
+/* -----------------------------------------------------------   reviews section ------------------------------------------------------- */
 
 .reviews-section {
   position: relative;
   padding: 110px 20px;
   overflow: hidden;
-
-  background:
-    radial-gradient(circle at 10% 20%,
+  background:  radial-gradient(circle at 10% 20%,
       rgba(36, 128, 235, .10),
       transparent 30%),
     radial-gradient(circle at 90% 80%,
       rgba(60, 199, 135, .08),
       transparent 30%),
     #07111f;
-
   color: #f8fafc;
 }
-
 
 .reviews-container {
   width: min(1180px, 100%);
@@ -5742,9 +4870,6 @@ html:not(.dark) .safety-highlight-content h3 {
 }
 
 
-/* ============================================================
-   HEADING
-============================================================ */
 
 .reviews-heading {
   text-align: center;
@@ -5758,9 +4883,7 @@ html:not(.dark) .safety-highlight-content h3 {
   align-items: center;
   justify-content: center;
   gap: 12px;
-
   margin-bottom: 15px;
-
   color: #38bdf8;
   font-size: 12px;
   font-weight: 800;
@@ -5771,23 +4894,17 @@ html:not(.dark) .safety-highlight-content h3 {
 .reviews-kicker span {
   width: 35px;
   height: 1px;
-
-  background: linear-gradient(90deg,
-      transparent,
-      #38bdf8);
+  background: linear-gradient(90deg,   transparent,   #38bdf8);
 }
 
 
 .reviews-kicker span:last-child {
-  background: linear-gradient(90deg,
-      #38bdf8,
-      transparent);
+  background: linear-gradient(90deg,   #38bdf8,   transparent);
 }
 
 
 .reviews-heading h2 {
   margin: 0;
-
   font-size: clamp(36px, 5vw, 62px);
   line-height: 1.05;
   font-weight: 900;
@@ -5797,16 +4914,13 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .reviews-heading h2 span {
   display: block;
-
   background:
     linear-gradient(90deg,
       #60a5fa,
       #22d3ee,
       #3cc788);
-
   -webkit-background-clip: text;
   background-clip: text;
-
   -webkit-text-fill-color: transparent;
 }
 
@@ -5814,66 +4928,49 @@ html:not(.dark) .safety-highlight-content h3 {
 .reviews-heading p {
   max-width: 650px;
   margin: 20px auto 0;
-
   color: #8ba5bf;
   line-height: 1.8;
   font-size: 15px;
 }
 
 
-/* ============================================================
-   MAIN GRID
-============================================================ */
+/* ==== MAIN GRID ======  */
 
 .reviews-main-grid {
   display: grid;
   grid-template-columns: 300px 1fr;
   gap: 30px;
   align-items: stretch;
+   margin-top: 0;
 }
 
 
-/* ============================================================
-   RATING SUMMARY
-============================================================ */
+/* ==== RATING SUMMARY =====  */
 
 .reviews-summary-card {
   position: relative;
-
   padding: 28px;
-
   border-radius: 24px;
-
-  background:
-    linear-gradient(145deg,
+  background:linear-gradient(145deg,
       rgba(14, 35, 61, .96),
       rgba(5, 19, 36, .96));
-
   border: 1px solid rgba(56, 189, 248, .15);
-
   box-shadow:
     0 25px 60px rgba(0, 0, 0, .28),
     inset 0 1px 0 rgba(255, 255, 255, .035);
-
   overflow: hidden;
 }
 
 
 .reviews-summary-card::before {
   content: "";
-
   position: absolute;
-
   width: 160px;
   height: 160px;
-
   top: -80px;
   right: -70px;
-
   border-radius: 50%;
-
   background: rgba(36, 128, 235, .12);
-
   filter: blur(5px);
 }
 
@@ -5947,7 +5044,6 @@ html:not(.dark) .safety-highlight-content h3 {
   grid-template-columns: 35px 1fr 30px;
   gap: 8px;
   align-items: center;
-
   font-size: 11px;
 }
 
@@ -5965,11 +5061,8 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .rating-bar {
   height: 6px;
-
   border-radius: 10px;
-
   background: rgba(148, 163, 184, .12);
-
   overflow: hidden;
 }
 
@@ -5977,13 +5070,8 @@ html:not(.dark) .safety-highlight-content h3 {
 .rating-bar span {
   display: block;
   height: 100%;
-
   border-radius: inherit;
-
-  background:
-    linear-gradient(90deg,
-      #2480eb,
-      #22d3ee);
+  background:  linear-gradient(90deg,  #2480eb,  #22d3ee);
 }
 
 
@@ -5993,10 +5081,8 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   align-items: center;
   gap: 11px;
-
   margin-top: 30px;
   padding-top: 20px;
-
   border-top: 1px solid rgba(148, 163, 184, .12);
 }
 
@@ -6004,15 +5090,11 @@ html:not(.dark) .safety-highlight-content h3 {
 .trust-icon {
   display: grid;
   place-items: center;
-
   width: 35px;
   height: 35px;
-
   border-radius: 50%;
-
   background: rgba(60, 199, 135, .12);
   color: #3cc788;
-
   font-weight: 900;
 }
 
@@ -6035,10 +5117,7 @@ html:not(.dark) .safety-highlight-content h3 {
 }
 
 
-/* ============================================================
-   REVIEW DISPLAY
-============================================================ */
-
+/* ====  REVIEW DISPLAY =====  */
 .reviews-display {
   min-width: 0;
 }
@@ -6048,7 +5127,6 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   margin-bottom: 18px;
 }
 
@@ -6063,7 +5141,6 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .reviews-slider-header h3 {
   margin: 5px 0 0;
-
   font-size: 25px;
   font-weight: 800;
 }
@@ -6078,17 +5155,11 @@ html:not(.dark) .safety-highlight-content h3 {
 .review-slider-controls button {
   width: 40px;
   height: 40px;
-
   border-radius: 50%;
-
   border: 1px solid rgba(56, 189, 248, .18);
-
   background: rgba(56, 189, 248, .06);
-
   color: #c7d9e8;
-
   cursor: pointer;
-
   transition:
     transform .25s ease,
     background .25s ease,
@@ -6098,23 +5169,17 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .review-slider-controls button:hover {
   transform: translateY(-3px);
-
   background: #2480eb;
   color: white;
 }
 
 
-/* ============================================================
-   REVIEW CARDS
-============================================================ */
-
+/* ====  REVIEW CARDS ====  */
 .reviews-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-
-  transition: opacity .25s ease,
-    transform .25s ease;
+  transition: opacity .25s ease, transform .25s ease;
 }
 
 
@@ -6126,51 +5191,34 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .review-card {
   position: relative;
-
   min-height: 330px;
-
   padding: 22px;
-
   border-radius: 20px;
-
   background:
     linear-gradient(145deg,
       rgba(15, 39, 66, .94),
       rgba(6, 22, 39, .94));
-
   border: 1px solid rgba(56, 189, 248, .12);
-
-  box-shadow:
-    0 20px 45px rgba(0, 0, 0, .20);
-
+  box-shadow:0 20px 45px rgba(0, 0, 0, .20);
   overflow: hidden;
-
-  transition:
-    transform .3s ease,
-    border-color .3s ease;
+  transition: transform .3s ease,border-color .3s ease;
 }
 
 
 .review-card:hover {
   transform: translateY(-7px);
-
   border-color: rgba(56, 189, 248, .30);
 }
 
 
 .review-card::after {
   content: "“";
-
   position: absolute;
-
   top: -15px;
   right: 15px;
-
   font-size: 100px;
   line-height: 1;
-
   color: rgba(56, 189, 248, .07);
-
   font-family: Georgia, serif;
 }
 
@@ -6181,15 +5229,11 @@ html:not(.dark) .safety-highlight-content h3 {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-
   margin-bottom: 17px;
   padding: 5px 9px;
-
   border-radius: 20px;
-
   background: rgba(60, 199, 135, .10);
   color: #3cc788;
-
   font-size: 9px;
   font-weight: 800;
   letter-spacing: .8px;
@@ -6213,19 +5257,11 @@ html:not(.dark) .safety-highlight-content h3 {
 .reviewer-avatar {
   display: grid;
   place-items: center;
-
   width: 42px;
   height: 42px;
-
   border-radius: 50%;
-
-  background:
-    linear-gradient(135deg,
-      #2480eb,
-      #3cc788);
-
+  background: linear-gradient(135deg, #2480eb, #3cc788);
   color: white;
-
   font-size: 15px;
   font-weight: 900;
 }
@@ -6233,18 +5269,14 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .reviewer-info strong {
   display: block;
-
   font-size: 14px;
 }
 
 
 .reviewer-info small {
   display: block;
-
   margin-top: 3px;
-
   color: #7891a8;
-
   font-size: 10px;
 }
 
@@ -6260,20 +5292,15 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-
   margin: 20px 0 15px;
 }
 
 
 .review-route span {
   padding: 5px 8px;
-
   border-radius: 7px;
-
   background: rgba(36, 128, 235, .09);
-
   color: #8fc7ff;
-
   font-size: 9px;
   font-weight: 700;
 }
@@ -6288,9 +5315,7 @@ html:not(.dark) .safety-highlight-content h3 {
 .review-text-content {
   position: relative;
   z-index: 2;
-
   color: #b8c9d8;
-
   font-size: 13px;
   line-height: 1.75;
 }
@@ -6300,20 +5325,15 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-
   margin-top: 18px;
 }
 
 
 .review-highlight-tag {
   padding: 5px 7px;
-
   border-radius: 6px;
-
   border: 1px solid rgba(148, 163, 184, .10);
-
   color: #8fa6ba;
-
   font-size: 8px;
 }
 
@@ -6322,14 +5342,10 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   margin-top: 18px;
   padding-top: 13px;
-
   border-top: 1px solid rgba(148, 163, 184, .10);
-
   color: #7891a8;
-
   font-size: 9px;
 }
 
@@ -6339,29 +5355,21 @@ html:not(.dark) .safety-highlight-content h3 {
 }
 
 
-/* ============================================================
-   SHARE JOURNEY
-============================================================ */
+/* ====  SHARE JOURNEY ====  */
 
 .share-review-wrapper {
   display: grid;
   grid-template-columns: .85fr 1.15fr;
   gap: 40px;
-
   margin-top: 70px;
   padding: 35px;
-
   border-radius: 28px;
-
   background:
     linear-gradient(135deg,
       rgba(13, 37, 63, .90),
       rgba(5, 19, 35, .94));
-
   border: 1px solid rgba(56, 189, 248, .14);
-
-  box-shadow:
-    0 25px 65px rgba(0, 0, 0, .25);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, .25);
 }
 
 
@@ -6374,17 +5382,14 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .share-review-kicker {
   color: #38bdf8;
-
   font-size: 10px;
   font-weight: 800;
-
   letter-spacing: 1.8px;
 }
 
 
 .share-review-intro h3 {
   margin: 12px 0;
-
   font-size: clamp(32px, 4vw, 48px);
   line-height: 1.05;
 }
@@ -6392,25 +5397,20 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .share-review-intro h3 span {
   display: block;
-
   background:
     linear-gradient(90deg,
       #60a5fa,
       #22d3ee,
       #3cc788);
-
   -webkit-background-clip: text;
   background-clip: text;
-
   -webkit-text-fill-color: transparent;
 }
 
 
 .share-review-intro p {
   max-width: 430px;
-
   color: #8ba5bf;
-
   line-height: 1.7;
 }
 
@@ -6419,27 +5419,20 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-
   margin-top: 20px;
 }
 
 
 .share-review-points span {
   padding: 7px 10px;
-
   border-radius: 8px;
-
   background: rgba(60, 199, 135, .07);
-
   color: #8dddb6;
-
   font-size: 9px;
 }
 
 
-/* ============================================================
-   FORM
-============================================================ */
+/* ====  FORM =====  */
 
 .review-form {
   display: flex;
@@ -6455,14 +5448,10 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .review-form-group label {
   display: block;
-
   margin-bottom: 7px;
-
   color: #a9bfd1;
-
   font-size: 10px;
   font-weight: 700;
-
   letter-spacing: .5px;
 }
 
@@ -6470,25 +5459,15 @@ html:not(.dark) .safety-highlight-content h3 {
 .review-form input,
 .review-form select,
 .review-form textarea {
-
   width: 100%;
-
   border: 1px solid rgba(148, 163, 184, .13);
-
   border-radius: 11px;
-
   padding: 12px 13px;
-
   outline: none;
-
   background: rgba(2, 12, 26, .58);
-
   color: #e5eef7;
-
   font-family: inherit;
-
   font-size: 12px;
-
   transition:
     border-color .25s ease,
     box-shadow .25s ease;
@@ -6499,7 +5478,6 @@ html:not(.dark) .safety-highlight-content h3 {
 .review-form select:focus,
 .review-form textarea:focus {
   border-color: rgba(36, 128, 235, .65);
-
   box-shadow:
     0 0 0 3px rgba(36, 128, 235, .08);
 }
@@ -6530,27 +5508,18 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   align-items: center;
   gap: 4px;
-
   height: 42px;
 }
 
 
 .rating-selector button {
   border: 0;
-
   background: transparent;
-
   color: #405467;
-
   font-size: 24px;
-
   cursor: pointer;
-
   padding: 0 2px;
-
-  transition:
-    color .2s ease,
-    transform .2s ease;
+  transition:color .2s ease,transform .2s ease;
 }
 
 
@@ -6565,12 +5534,9 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .review-character-count {
   position: absolute;
-
   right: 10px;
   bottom: 7px;
-
   color: #60798d;
-
   font-size: 9px;
 }
 
@@ -6586,7 +5552,6 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .highlight-option {
   position: relative;
-
   margin: 0 !important;
 }
 
@@ -6600,28 +5565,19 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .highlight-option span {
   display: block;
-
   padding: 7px 9px;
-
   border-radius: 8px;
-
   border: 1px solid rgba(148, 163, 184, .12);
-
   color: #7891a8;
-
   font-size: 9px;
-
   cursor: pointer;
-
   transition: .2s ease;
 }
 
 
 .highlight-option input:checked+span {
   border-color: rgba(60, 199, 135, .35);
-
   background: rgba(60, 199, 135, .09);
-
   color: #7de1b2;
 }
 
@@ -6632,44 +5588,25 @@ html:not(.dark) .safety-highlight-content h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   margin-top: 5px;
-
   width: 100%;
-
   padding: 13px 16px;
-
   border: 0;
   border-radius: 11px;
-
-  background:
-    linear-gradient(100deg,
-      #2563eb,
-      #0891b2);
-
+  background: linear-gradient(100deg,   #2563eb,   #0891b2);
   color: white;
-
   font-family: inherit;
-
   font-size: 12px;
   font-weight: 800;
-
   cursor: pointer;
-
-  box-shadow:
-    0 10px 25px rgba(37, 99, 235, .22);
-
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, .22);
+  transition: transform .25s ease, box-shadow .25s ease;
 }
 
 
 .submit-review-btn:hover {
   transform: translateY(-2px);
-
-  box-shadow:
-    0 14px 30px rgba(37, 99, 235, .30);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, .30);
 }
 
 
@@ -6677,17 +5614,11 @@ html:not(.dark) .safety-highlight-content h3 {
 
 .review-success-message {
   display: none;
-
   padding: 11px 13px;
-
   border-radius: 10px;
-
   background: rgba(60, 199, 135, .08);
-
   border: 1px solid rgba(60, 199, 135, .20);
-
   color: #72dca9;
-
   font-size: 11px;
 }
 
@@ -6696,12 +5627,43 @@ html:not(.dark) .safety-highlight-content h3 {
   display: block;
 }
 
+/* Reviews section spacing fix */
 
-/* ============================================================
-   LIGHT MODE
-   Dark Mode above remains unchanged
-============================================================ */
+#reviews .reviews-heading {
+  margin-bottom: 50px;
+}
 
+#reviews .share-review-wrapper {
+  margin-top: 0;
+  margin-bottom: 50px;
+}
+
+#reviews .reviews-main-grid {
+  margin-top: 0;
+  gap: 30px;
+}
+
+#reviews .reviews-slider-header {
+  margin-bottom: 22px;
+}
+
+/* Mobile spacing */
+@media (max-width: 600px) {
+  #reviews .reviews-heading {
+    margin-bottom: 35px;
+  }
+
+  #reviews .share-review-wrapper {
+    margin-top: 0;
+    margin-bottom: 35px;
+  }
+
+  #reviews .reviews-main-grid {
+    gap: 25px;
+  }
+}
+
+/* ==== LIGHT MODE Dark Mode above remains unchanged =====  */
 html:not(.dark) .reviews-section {
   background:
     radial-gradient(circle at 10% 20%,
@@ -6711,7 +5673,6 @@ html:not(.dark) .reviews-section {
       rgba(60, 199, 135, .06),
       transparent 30%),
     #f8fafc;
-
   color: #0f172a;
 }
 
@@ -6728,9 +5689,7 @@ html:not(.dark) .review-card {
     linear-gradient(145deg,
       rgba(255, 255, 255, .96),
       rgba(241, 247, 253, .94));
-
   border-color: rgba(148, 163, 184, .20);
-
   box-shadow:
     0 20px 45px rgba(15, 23, 42, .08);
 }
@@ -6793,11 +5752,8 @@ html:not(.dark) .share-review-wrapper {
     linear-gradient(135deg,
       rgba(255, 255, 255, .96),
       rgba(239, 246, 255, .94));
-
   border-color: rgba(148, 163, 184, .22);
-
-  box-shadow:
-    0 20px 50px rgba(15, 23, 42, .09);
+  box-shadow:  0 20px 50px rgba(15, 23, 42, .09);
 }
 
 
@@ -6820,11 +5776,8 @@ html:not(.dark) .review-form-group label {
 html:not(.dark) .review-form input,
 html:not(.dark) .review-form select,
 html:not(.dark) .review-form textarea {
-
   background: rgba(255, 255, 255, .82);
-
   color: #0f172a;
-
   border-color: rgba(148, 163, 184, .28);
 }
 
@@ -6853,20 +5806,15 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* ============================================================
-   RESPONSIVE
-============================================================ */
-
+/* ==== RESPONSIVE =====  */
 @media (max-width: 1050px) {
 
   .reviews-main-grid {
     grid-template-columns: 1fr;
   }
-
   .reviews-summary-card {
     max-width: 100%;
   }
-
   .reviews-cards {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -6879,11 +5827,9 @@ html:not(.dark) .highlight-option input:checked+span {
   .reviews-cards {
     grid-template-columns: 1fr;
   }
-
   .review-card {
     min-height: auto;
   }
-
   .share-review-wrapper {
     grid-template-columns: 1fr;
   }
@@ -6906,6 +5852,7 @@ html:not(.dark) .highlight-option input:checked+span {
   }
 
   .reviews-main-grid {
+    
     gap: 25px;
   }
 
@@ -6920,6 +5867,7 @@ html:not(.dark) .highlight-option input:checked+span {
   .share-review-wrapper {
     padding: 22px;
     gap: 30px;
+    margin-bottom: 40px !important;
   }
 
   .review-form-row {
@@ -6959,7 +5907,7 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/*------------------------------------------------------------ reviews section ends ------------------------------------------------------------ */
+/* ------------------------------------------------------------ reviews section ends ------------------------------------------------------------ */
 
 
 
@@ -6979,16 +5927,11 @@ html:not(.dark) .highlight-option input:checked+span {
 
 
 
-/* =========================================================
-   PREMIUM BOOKING SECTION
-   GURUDEV TRAVELS
-   DARK NAVY / BLACK THEME
-   ========================================================= */
+/* ----------------------------------------------------------  BOOKING SECTION --------------------------------------------------------  */
 
 .booking-section {
   position: relative;
   padding: 120px 20px;
-
   overflow: hidden;
 
 }
@@ -6998,30 +5941,23 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-bg-glow {
   position: absolute;
-
   width: 420px;
   height: 420px;
-
   border-radius: 50%;
-
   filter: blur(120px);
-
   pointer-events: none;
-
   opacity: 0.5;
 }
 
 .booking-glow-one {
   top: -220px;
   left: -150px;
-
   background: rgba(37, 99, 235, 0.18);
 }
 
 .booking-glow-two {
   right: -180px;
   bottom: -220px;
-
   background: rgba(6, 182, 212, 0.13);
 }
 
@@ -7031,24 +5967,16 @@ html:not(.dark) .highlight-option input:checked+span {
 .booking-container {
   position: relative;
   z-index: 2;
-
   max-width: 1180px;
-
   margin: auto;
-
   display: grid;
-
   grid-template-columns: 0.85fr 1.15fr;
-
   gap: 70px;
-
   align-items: center;
 }
 
 
-/* =========================================================
-   LEFT CONTENT
-   ========================================================= */
+/* ==== LEFT CONTENT ====  */
 
 .booking-intro {
   padding-right: 15px;
@@ -7057,17 +5985,11 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-kicker {
   display: flex;
-
   align-items: center;
-
   gap: 10px;
-
   color: #38bdf8;
-
   font-size: 10px;
-
   font-weight: 800;
-
   letter-spacing: 2.5px;
 }
 
@@ -7075,32 +5997,22 @@ html:not(.dark) .highlight-option input:checked+span {
 .booking-kicker span {
   width: 30px;
   height: 1px;
-
   background: #38bdf8;
 }
 
 
 .booking-intro h2 {
   margin: 18px 0 20px;
-
   color: #f8fafc;
-
   font-size: clamp(40px, 5vw, 62px);
-
   line-height: 1.04;
-
   font-weight: 900;
-
   letter-spacing: -2px;
 }
 
 
 .booking-intro h2 span {
-  background:
-    linear-gradient(90deg,
-      #60a5fa,
-      #22d3ee);
-
+  background: linear-gradient(90deg,#60a5fa,#22d3ee);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -7108,20 +6020,14 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-description {
   max-width: 500px;
-
   margin: 0;
-
   color: #8fa2ba;
-
   font-size: 14px;
-
   line-height: 1.9;
 }
 
 
-/* =========================================================
-   BOOKING STEPS
-   ========================================================= */
+/* ==== BOOKING STEPS ====  */
 
 .booking-steps {
   margin-top: 35px;
@@ -7130,9 +6036,7 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-step {
   display: flex;
-
   gap: 15px;
-
   margin-bottom: 20px;
 }
 
@@ -7140,132 +6044,88 @@ html:not(.dark) .highlight-option input:checked+span {
 .booking-step-icon {
   width: 40px;
   height: 40px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   border-radius: 12px;
-
   border: 1px solid rgba(56, 189, 248, 0.18);
-
-  background:
-    rgba(15, 35, 62, 0.8);
-
+  background:rgba(15, 35, 62, 0.8);
   color: #38bdf8;
-
   font-size: 11px;
-
   font-weight: 800;
 }
 
 
 .booking-step h4 {
   margin: 1px 0 4px;
-
   color: #e2e8f0;
-
   font-size: 14px;
-
   font-weight: 700;
 }
 
 
 .booking-step p {
   margin: 0;
-
   color: #64748b;
-
   font-size: 12px;
 }
 
 
-/* =========================================================
-   TRUST
-   ========================================================= */
+/* ==== TRUST ====  */
 
 .booking-trust {
   display: flex;
-
   flex-wrap: wrap;
-
   gap: 10px;
-
   margin-top: 35px;
 }
 
 
 .booking-trust-item {
   display: flex;
-
   align-items: center;
-
   gap: 7px;
-
   padding: 8px 11px;
-
   border-radius: 30px;
-
   border: 1px solid rgba(96, 165, 250, 0.10);
-
-  background:
-    rgba(15, 31, 54, 0.55);
+  background: rgba(15, 31, 54, 0.55);
 }
 
 
 .booking-trust-item span {
   width: 18px;
   height: 18px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
-
   background: rgba(34, 211, 238, 0.10);
-
   color: #22d3ee;
-
   font-size: 10px;
-
   font-weight: 900;
 }
 
 
 .booking-trust-item p {
   margin: 0;
-
   color: #71849c;
-
   font-size: 10px;
-
   font-weight: 600;
 }
 
 
-/* =========================================================
-   BOOKING CARD
-   ========================================================= */
+/* ==== BOOKING CARD ====  */
 
 .booking-card {
   position: relative;
-
   padding: 32px;
-
   border-radius: 30px;
-
   border: 1px solid rgba(96, 165, 250, 0.15);
-
   background:
     linear-gradient(145deg,
       rgba(16, 32, 55, 0.96),
       rgba(5, 14, 28, 0.98));
-
   box-shadow:
     0 30px 90px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -7276,36 +6136,26 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-card-top {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
   gap: 15px;
 }
 
 
 .booking-card-label {
   display: block;
-
   margin-bottom: 5px;
-
   color: #38bdf8;
-
   font-size: 9px;
-
   font-weight: 800;
-
   letter-spacing: 2px;
 }
 
 
 .booking-card-top h3 {
   margin: 0;
-
   color: #f8fafc;
-
   font-size: 26px;
-
   font-weight: 800;
 }
 
@@ -7313,19 +6163,12 @@ html:not(.dark) .highlight-option input:checked+span {
 .booking-card-icon {
   width: 48px;
   height: 48px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   border-radius: 15px;
-
   border: 1px solid rgba(56, 189, 248, 0.15);
-
-  background:
-    rgba(56, 189, 248, 0.07);
-
+  background:  rgba(56, 189, 248, 0.07);
   font-size: 20px;
 }
 
@@ -7334,9 +6177,7 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-divider {
   height: 1px;
-
   margin: 25px 0;
-
   background:
     linear-gradient(90deg,
       transparent,
@@ -7345,15 +6186,11 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
-   FORM
-   ========================================================= */
+/* ==== FORM ====  */
 
 .booking-form {
   display: flex;
-
   flex-direction: column;
-
   gap: 15px;
 }
 
@@ -7365,15 +6202,10 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-label {
   display: block;
-
   margin-bottom: 7px;
-
   color: #a8b7ca;
-
   font-size: 11px;
-
   font-weight: 700;
-
   letter-spacing: 0.3px;
 }
 
@@ -7382,11 +6214,8 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-input-wrap {
   position: relative;
-
   display: flex;
-
   align-items: center;
-
   gap: 8px;
 }
 
@@ -7395,26 +6224,15 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-input {
   width: 100%;
-
   min-height: 45px;
-
   padding: 11px 13px;
-
   outline: none;
-
   border-radius: 12px;
-
   border: 1px solid rgba(96, 165, 250, 0.12);
-
-  background:
-    rgba(3, 12, 25, 0.72);
-
+  background: rgba(3, 12, 25, 0.72);
   color: #e2e8f0;
-
   font-family: inherit;
-
   font-size: 12px;
-
   transition:
     border-color 0.25s ease,
     background 0.25s ease,
@@ -7429,12 +6247,8 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-input:focus {
   border-color: rgba(56, 189, 248, 0.55);
-
-  background:
-    rgba(4, 16, 32, 0.95);
-
-  box-shadow:
-    0 0 0 3px rgba(56, 189, 248, 0.07);
+ background:   rgba(4, 16, 32, 0.95);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.07);
 }
 
 
@@ -7442,11 +6256,8 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-input-icon {
   position: absolute;
-
   left: 13px;
-
   z-index: 2;
-
   font-size: 9px;
 }
 
@@ -7463,7 +6274,6 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-input-wrap .booking-input {
   padding-left: 32px;
-
   padding-right: 50px;
 }
 
@@ -7472,38 +6282,25 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .map-pick-btn {
   position: absolute;
-
   right: 7px;
-
   width: 34px;
   height: 34px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   border: 0;
-
   border-radius: 9px;
-
-  background:
-    rgba(56, 189, 248, 0.08);
-
+  background:  rgba(56, 189, 248, 0.08);
   color: #38bdf8;
-
   cursor: pointer;
-
   transition:
-    background 0.25s ease,
+  background 0.25s ease,
     transform 0.25s ease;
 }
 
 
 .map-pick-btn:hover {
-  background:
-    rgba(56, 189, 248, 0.16);
-
+  background:  rgba(56, 189, 248, 0.16);
   transform: translateY(-1px);
 }
 
@@ -7512,24 +6309,18 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-route-line {
   position: relative;
-
   height: 5px;
-
   margin: -5px 0 -5px 20px;
 }
 
 
 .booking-route-line::before {
   content: "";
-
   position: absolute;
-
   left: 0;
   top: 0;
-
   width: 1px;
   height: 100%;
-
   background:
     repeating-linear-gradient(to bottom,
       rgba(56, 189, 248, 0.5) 0,
@@ -7543,19 +6334,12 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-map-link {
   align-items: center;
-
   gap: 7px;
-
   width: fit-content;
-
   margin-top: -4px;
-
   color: #38bdf8;
-
   font-size: 11px;
-
   font-weight: 700;
-
   text-decoration: none;
 }
 
@@ -7569,7 +6353,6 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-select {
   cursor: pointer;
-
   appearance: auto;
 }
 
@@ -7585,9 +6368,7 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-two-column {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   gap: 12px;
 }
 
@@ -7596,53 +6377,30 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-helper {
   margin: 6px 0 0;
-
   color: #52657d;
-
   font-size: 9px;
 }
 
 
-/* =========================================================
-   SUBMIT BUTTON
-   ========================================================= */
+/* ====  SUBMIT BUTTON ====  */
 
 .booking-submit {
   width: 100%;
-
   min-height: 52px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   gap: 10px;
-
   margin-top: 5px;
-
   border: 0;
-
   border-radius: 13px;
-
-  background:
-    linear-gradient(100deg,
-      #2563eb,
-      #0891b2);
-
+  background: linear-gradient(100deg,#2563eb, #0891b2);
   color: #ffffff;
-
   font-family: inherit;
-
   font-size: 13px;
-
   font-weight: 800;
-
   cursor: pointer;
-
-  box-shadow:
-    0 12px 30px rgba(37, 99, 235, 0.22);
-
+  box-shadow:0 12px 30px rgba(37, 99, 235, 0.22);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
@@ -7652,9 +6410,7 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-submit:hover {
   transform: translateY(-2px);
-
-  box-shadow:
-    0 16px 35px rgba(37, 99, 235, 0.32);
+  box-shadow: 0 16px 35px rgba(37, 99, 235, 0.32);
 }
 
 
@@ -7665,16 +6421,13 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-submit:disabled {
   opacity: 0.55;
-
   cursor: not-allowed;
-
   transform: none;
 }
 
 
 .booking-whatsapp-icon {
   display: flex;
-
   align-items: center;
 }
 
@@ -7683,34 +6436,25 @@ html:not(.dark) .highlight-option input:checked+span {
 
 .booking-error {
   margin: 5px 0 0;
-
   text-align: center;
-
   color: #fb7185;
-
   font-size: 11px;
-
   font-weight: 600;
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* ====   RESPONSIVE ====  */
 
 @media (max-width: 1000px) {
 
   .booking-container {
     grid-template-columns: 1fr;
-
     max-width: 720px;
-
     gap: 55px;
   }
 
   .booking-intro {
     text-align: center;
-
     padding-right: 0;
   }
 
@@ -7724,10 +6468,8 @@ html:not(.dark) .highlight-option input:checked+span {
 
   .booking-steps {
     max-width: 500px;
-
     margin-left: auto;
     margin-right: auto;
-
     text-align: left;
   }
 
@@ -7737,9 +6479,7 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
+/* ==== MOBILE ====  */
 
 @media (max-width: 600px) {
 
@@ -7749,19 +6489,16 @@ html:not(.dark) .highlight-option input:checked+span {
 
   .booking-intro h2 {
     font-size: 40px;
-
     letter-spacing: -1.5px;
   }
 
   .booking-description {
     font-size: 13px;
-
     line-height: 1.8;
   }
 
   .booking-card {
     padding: 22px 18px;
-
     border-radius: 22px;
   }
 
@@ -7771,7 +6508,6 @@ html:not(.dark) .highlight-option input:checked+span {
 
   .booking-two-column {
     grid-template-columns: 1fr;
-
     gap: 15px;
   }
 
@@ -7786,9 +6522,7 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
+/* ==== SMALL MOBILE ====  */
 
 @media (max-width: 380px) {
 
@@ -7806,6 +6540,7 @@ html:not(.dark) .highlight-option input:checked+span {
 
 }
 
+/* ------------------------------------------------------ booking section ends ------------------------------------------------------ */
 
 
 
@@ -7816,71 +6551,12 @@ html:not(.dark) .highlight-option input:checked+span {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================================================
-   GURUDEV TRAVELS
-   PREMIUM OFFERS & UPDATES
-   ========================================================= */
+/* ------------------------------------------------------ PREMIUM OFFERS & UPDATES ------------------------------------------------------ */
 
 .gurudev-updates-section {
   position: relative;
-
   padding: 120px 20px;
-
   overflow: hidden;
-
   background:
     radial-gradient(circle at 8% 15%,
       rgba(37, 99, 235, 0.12),
@@ -7892,136 +6568,94 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
-   BACKGROUND GLOW
-   ========================================================= */
+/* ==== BACKGROUND GLOW ====  */
 
 .updates-glow {
   position: absolute;
-
   width: 420px;
   height: 420px;
-
   border-radius: 50%;
-
   filter: blur(130px);
-
   pointer-events: none;
-
   opacity: .45;
 }
 
 .updates-glow-left {
   top: -220px;
   left: -180px;
-
   background: rgba(37, 99, 235, .22);
 }
 
 .updates-glow-right {
   right: -180px;
   bottom: -220px;
-
   background: rgba(6, 182, 212, .16);
 }
 
 
-/* =========================================================
-   MAIN CONTAINER
-   ========================================================= */
+/* ==== MAIN CONTAINER ====  */
 
 .updates-container {
   position: relative;
-
   z-index: 2;
-
   max-width: 1180px;
-
   margin: auto;
 }
 
 
-/* =========================================================
-   TOP AREA
-   ========================================================= */
+/* ==== TOP AREA ====  */
 
 .updates-top {
   display: grid;
-
   grid-template-columns: 1fr .9fr;
-
   gap: 70px;
-
   align-items: center;
-
   padding: 55px;
-
   border: 1px solid rgba(56, 189, 248, .18);
-
   border-radius: 30px;
-
   background:
     linear-gradient(135deg,
       rgba(9, 27, 52, .92),
       rgba(3, 13, 29, .98));
-
   box-shadow:
     0 35px 90px rgba(0, 0, 0, .42),
     inset 0 1px 0 rgba(255, 255, 255, .03);
 }
 
 
-/* =========================================================
-   INTRO
-   ========================================================= */
+/* ==== INTRO ====  */
 
 .updates-label {
   display: flex;
-
   align-items: center;
-
   gap: 9px;
-
   color: #38bdf8;
-
   font-size: 10px;
-
   font-weight: 800;
-
   letter-spacing: 2.5px;
 }
 
 .updates-label-dot {
   width: 7px;
   height: 7px;
-
   border-radius: 50%;
-
   background: #22d3ee;
-
-  box-shadow:
-    0 0 12px rgba(34, 211, 238, .8);
+  box-shadow:  0 0 12px rgba(34, 211, 238, .8);
 }
 
 .updates-label-line {
   width: 35px;
   height: 1px;
-
   background: #38bdf8;
 }
 
 
 .updates-intro h2 {
   margin: 18px 0;
-
   color: #f8fafc;
-
   font-size: clamp(42px, 5vw, 65px);
-
   line-height: 1.02;
-
   font-weight: 900;
-
   letter-spacing: -2.5px;
 }
 
@@ -8050,10 +6684,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    STATS
-   ========================================================= */
-
+   ====  */
 .updates-stats {
   display: flex;
 
@@ -8101,10 +6734,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    SUBSCRIBE CARD
-   ========================================================= */
-
+   ====  */
 .updates-subscribe-card {
   position: relative;
 
@@ -8192,10 +6824,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    FORM
-   ========================================================= */
-
+   ====  */
 .gurudev-subscribe-form {
   display: flex;
 
@@ -8325,10 +6956,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TRAVEL OFFERS HEADING
-   ========================================================= */
-
+   ====  */
 .travel-offer-heading {
   display: flex;
 
@@ -8375,10 +7005,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    OFFER CARDS
-   ========================================================= */
-
+   ====  */
 .travel-offers-grid {
   display: grid;
 
@@ -8418,10 +7047,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    CARD IMAGE
-   ========================================================= */
-
+   ====  */
 .offer-card-image {
   position: relative;
 
@@ -8510,10 +7138,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    CARD CONTENT
-   ========================================================= */
-
+   ====  */
 .offer-card-content {
   padding: 20px;
 }
@@ -8595,10 +7222,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TRUST BAR
-   ========================================================= */
-
+   ====  */
 .updates-trust-bar {
   display: grid;
 
@@ -8682,10 +7308,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TABLET
-   ========================================================= */
-
+   ====  */
 @media (max-width: 950px) {
 
   .updates-top {
@@ -8734,10 +7359,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    MOBILE
-   ========================================================= */
-
+   ====  */
 @media (max-width: 650px) {
 
   .gurudev-updates-section {
@@ -8833,10 +7457,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    SMALL MOBILE
-   ========================================================= */
-
+   ====  */
 @media (max-width: 380px) {
 
   .updates-intro h2 {
@@ -8936,12 +7559,11 @@ html:not(.dark) .highlight-option input:checked+span {
 /* contact section start */
 
 
-/* =========================================================
+/* ====  
    GURUDEV TRAVELS
    PREMIUM CONTACT SECTION
    DARK NAVY / BLACK
-   ========================================================= */
-
+   ====  */
 .gurudev-contact-section {
   position: relative;
 
@@ -8953,10 +7575,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    BACKGROUND GLOWS
-   ========================================================= */
-
+   ====  */
 .contact-glow {
   position: absolute;
 
@@ -8989,10 +7610,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    MAIN CONTAINER
-   ========================================================= */
-
+   ====  */
 .contact-container {
   position: relative;
 
@@ -9004,10 +7624,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    MAIN GRID
-   ========================================================= */
-
+   ====  */
 .contact-main {
   display: grid;
 
@@ -9020,10 +7639,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    LEFT INFO
-   ========================================================= */
-
+   ====  */
 .contact-info {
   position: relative;
 
@@ -9031,10 +7649,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    KICKER
-   ========================================================= */
-
+   ====  */
 .contact-kicker {
   display: flex;
 
@@ -9080,10 +7697,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TITLE
-   ========================================================= */
-
+   ====  */
 .contact-title {
   margin: 20px 0 18px;
 
@@ -9111,10 +7727,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    DESCRIPTION
-   ========================================================= */
-
+   ====  */
 .contact-description {
   max-width: 570px;
 
@@ -9128,10 +7743,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    CONTACT DETAILS
-   ========================================================= */
-
+   ====  */
 .contact-details {
   max-width: 580px;
 
@@ -9248,10 +7862,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    QUICK CONTACT
-   ========================================================= */
-
+   ====  */
 .quick-contact-title {
   margin-top: 25px;
 
@@ -9390,10 +8003,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    JOURNEY VISUAL
-   ========================================================= */
-
+   ====  */
 .journey-visual {
   position: relative;
 
@@ -9575,10 +8187,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    OFFICE LOCATION CARD
-   ========================================================= */
-
+   ====  */
 .office-location-card {
   display: flex;
 
@@ -9692,10 +8303,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    FORM CARD
-   ========================================================= */
-
+   ====  */
 .contact-form-card {
   position: relative;
 
@@ -9717,10 +8327,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    FORM TOP
-   ========================================================= */
-
+   ====  */
 .form-status-row {
   display: flex;
 
@@ -9769,10 +8378,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    RESPONSE BADGE
-   ========================================================= */
-
+   ====  */
 .response-badge {
   display: inline-flex;
 
@@ -9827,10 +8435,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    FORM TITLE
-   ========================================================= */
-
+   ====  */
 .contact-form-card h3 {
   margin: 21px 0 10px;
 
@@ -9861,10 +8468,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    FORM
-   ========================================================= */
-
+   ====  */
 .gurudev-contact-form {
   display: flex;
 
@@ -9876,10 +8482,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    INPUT
-   ========================================================= */
-
+   ====  */
 .contact-input-group label {
   display: block;
 
@@ -9965,10 +8570,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TEXTAREA
-   ========================================================= */
-
+   ====  */
 .contact-textarea-wrapper {
   align-items: flex-start;
 
@@ -9998,10 +8602,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    QUICK TOPICS
-   ========================================================= */
-
+   ====  */
 .contact-quick-topics {
   display: flex;
 
@@ -10072,10 +8675,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    SUBMIT
-   ========================================================= */
-
+   ====  */
 .contact-submit-btn {
   width: 100%;
 
@@ -10150,10 +8752,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TRUST BAR
-   ========================================================= */
-
+   ====  */
 .contact-trust-bar {
   display: grid;
 
@@ -10244,10 +8845,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TABLET
-   ========================================================= */
-
+   ====  */
 @media (max-width: 1000px) {
 
   .contact-main {
@@ -10321,10 +8921,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    MOBILE
-   ========================================================= */
-
+   ====  */
 @media (max-width: 650px) {
 
   .gurudev-contact-section {
@@ -10467,10 +9066,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    SMALL MOBILE
-   ========================================================= */
-
+   ====  */
 @media (max-width: 380px) {
 
   .contact-title {
@@ -10563,11 +9161,10 @@ html:not(.dark) .highlight-option input:checked+span {
 
 /* footer section start */
 
-/* =========================================================
+/* ====  
    GURUDEV TRAVELS
    LUXURY PREMIUM FOOTER
-   ========================================================= */
-
+   ====  */
 .luxury-footer {
   position: relative;
 
@@ -10591,10 +9188,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    BACKGROUND GLOW
-   ========================================================= */
-
+   ====  */
 .footer-glow {
   position: absolute;
 
@@ -10627,10 +9223,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    CONTAINER
-   ========================================================= */
-
+   ====  */
 .luxury-footer-container {
   position: relative;
 
@@ -10642,10 +9237,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TOP CTA
-   ========================================================= */
-
+   ====  */
 .footer-cta {
   display: flex;
 
@@ -10831,10 +9425,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    MAIN FOOTER GRID
-   ========================================================= */
-
+   ====  */
 .luxury-footer-main {
   display: grid;
 
@@ -10847,10 +9440,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    BRAND
-   ========================================================= */
-
+   ====  */
 .footer-brand {
   display: inline-flex;
 
@@ -11024,10 +9616,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    COLUMN HEADINGS
-   ========================================================= */
-
+   ====  */
 .footer-column-heading {
   margin-bottom: 7px;
 
@@ -11052,10 +9643,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    LINKS
-   ========================================================= */
-
+   ====  */
 .footer-link-column ul {
   display: flex;
 
@@ -11123,10 +9713,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    CONTACT COLUMN
-   ========================================================= */
-
+   ====  */
 .footer-contact-column {
   min-width: 0;
 }
@@ -11204,10 +9793,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    DESTINATION STRIP
-   ========================================================= */
-
+   ====  */
 .footer-destination-strip {
   display: flex;
 
@@ -11264,10 +9852,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    BOTTOM
-   ========================================================= */
-
+   ====  */
 .luxury-footer-bottom {
   display: flex;
 
@@ -11320,10 +9907,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    LUXURY SCROLL UP
-   ========================================================= */
-
+   ====  */
 .luxury-scrollup {
   position: fixed;
 
@@ -11400,10 +9986,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    TABLET
-   ========================================================= */
-
+   ====  */
 @media (max-width: 1000px) {
 
   .footer-cta {
@@ -11430,10 +10015,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    MOBILE
-   ========================================================= */
-
+   ====  */
 @media (max-width: 650px) {
 
   .luxury-footer {
@@ -11528,10 +10112,9 @@ html:not(.dark) .highlight-option input:checked+span {
 }
 
 
-/* =========================================================
+/* ====  
    SMALL MOBILE
-   ========================================================= */
-
+   ====  */
 @media (max-width: 380px) {
 
   .footer-brand-name {
@@ -11600,17 +10183,16 @@ html:not(.dark) .highlight-option input:checked+span {
 
 
 
-/* ============================================================
+/* ====  
    GURUDEV TRAVELS NAVBAR
    LIGHT MODE COLORS
    Existing DARK MODE remains unchanged
-   ============================================================ */
+   ==== *\ 
 
-/* ============================================================
+/* ====  
    NAVBAR GLASS CAPSULE — LIGHT MODE
    DARK MODE REMAINS UNCHANGED
-   ==========================html:not(.dark) .gurudev-subscribe-form================================== */
-
+   ==========================html:not(.dark) .gurudev-subscribe-form========= ===== */
 html:not(.dark) #navbar nav {
   background: linear-gradient(135deg,
       rgba(255, 255, 255, 0.92),
@@ -11640,6 +10222,7 @@ html:not(.dark) #navbar .logo-text {
 }
 
 html:not(.dark) #navbar .nav-link {
+
   color: #0f172a;
 }
 
@@ -11679,9 +10262,6 @@ html:not(.dark) #navbar.nav-scrolled #themeToggle {
   border-color: #e2e8f0;
 }
 
-/* ============================================================
-   GURUDEV LOGO — LIGHT MODE GLOSSY EFFECT
-   ============================================================ */
 
 html:not(.dark) #navbar .logo-text {
   font-weight: 800;
@@ -11726,17 +10306,15 @@ html:not(.dark) #navbar .logo-text:hover {
 
 
 
-/* =========================================================
+/* ====  
    GURUDEV TRAVELS
    LIGHT MODE — EXPERIENCE / BOOKING / UPDATES / CONTACT
    DARK MODE REMAINS UNCHANGED
-   ========================================================= */
+   ====  */
 
-
-/* =========================================================
+/* ====  
    1. EXPERIENCE SECTION
-   ========================================================= */
-
+   ====  */
 html:not(.dark) .experience-section {
   background:
     radial-gradient(circle at 10% 20%,
@@ -11830,10 +10408,9 @@ html:not(.dark) .experience-floating p {
 
 
 
-/* =========================================================
+/* ====  
    2. BOOKING SECTION
-   ========================================================= */
-
+   ====  */
 html:not(.dark) .booking-section {
   background:
     radial-gradient(circle at 8% 25%,
@@ -11939,9 +10516,9 @@ html:not(.dark) .booking-field textarea:focus {
 }
 
 
-/* =========================================================
+/* ====  
    3. UPDATES / OFFERS SECTION
-   ========================================================= */
+   ====  */
 /* Travel Day Updates - Light Mode */
 html:not(.dark) .gurudev-subscribe-form {
   border: 10px red;
@@ -12072,14 +10649,13 @@ html:not(.dark) .trust-item small {
 }
 
 
-/* =========================================================
+/* ====  
    4. CONTACT SECTION
-   ========================================================= */
-/* =========================================================
+   ====  */
+/* ====  
    CONTACT FORM - LIGHT MODE
    Remove dark/grey background behind form icons
-   ========================================================= */
-
+   ====  */
 /* Contact form - Light Mode */
 html:not(.dark) .contact-input-wrapper,
 html:not(.dark) .contact-textarea-wrapper {
@@ -12092,10 +10668,9 @@ html:not(.dark) .contact-textarea-wrapper>span {
   background: transparent !important;
 }
 
-/* =========================================================
+/* ====  
    CONTACT LOCATION CARD — LIGHT MODE
-   ========================================================= */
-
+   ====  */
 html:not(.dark) .office-location-card {
   background: transparent !important;
   border-color: rgba(148, 163, 184, 0.22) !important;
@@ -12216,10 +10791,10 @@ html:not(.dark) .contact-trust-item small {
 }
 
 
-/* =========================================================
+/* ====  
    DARK MODE
    NO CHANGES — ORIGINAL DARK DESIGN REMAINS
-   ========================================================= */
+   ====  */
 
 
 
@@ -12227,26 +10802,17 @@ html:not(.dark) .contact-trust-item small {
 
 
 
-
-/* ============================================================
-   FOOTER — LIGHT / DARK MODE
-   Existing dark mode remains unchanged
-   ============================================================ */
+/* ==== FOOTER — LIGHT / DARK MODE Existing dark mode remains unchanged ==== *\ 
 
 
-/* =========================================================
-   FOOTER CTA — LIGHT MODE
-   ========================================================= */
+/* ==== FOOTER CTA — LIGHT MODE ====  */
 
 html:not(.dark) .footer-cta {
   background:
     linear-gradient(135deg,
       rgba(255, 255, 255, 0.92),
       rgba(239, 246, 255, 0.88)) !important;
-
-  border-color:
-    rgba(148, 163, 184, 0.28) !important;
-
+  border-color: rgba(148, 163, 184, 0.28) !important;
   box-shadow:
     0 20px 50px rgba(15, 23, 42, 0.10),
     inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
@@ -12279,4 +10845,36 @@ html:not(.dark) .luxury-footer a:hover {
 /* DARK MODE — existing design stays */
 .dark .luxury-footer {
   background: #020617;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Align all sections below the fixed navbar */
+section[id] {
+  scroll-margin-top: 30px;
 }
