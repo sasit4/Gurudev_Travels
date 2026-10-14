@@ -442,6 +442,24 @@ html {
   background: rgb(30 41 59);
 }
 
+
+
+
+/* Calendar icon color changes with theme */
+
+/* Dark Mode — White calendar icon */
+html.dark .date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 1;
+}
+
+/* Light Mode — Dark calendar icon */
+html:not(.dark) .date-input::-webkit-calendar-picker-indicator {
+    filter: invert(0);
+    opacity: 1;
+}
+
+
 /*------------------------------------------------------------ booking section ends ---------------------------------------------------------*/
 
 
@@ -530,6 +548,9 @@ html {
 
 
 /* ===== PREMIUM HERO TITLE======= */
+
+
+
 
 .hero-title {
   width: 100%;
@@ -879,6 +900,68 @@ html {
     height: 2.8rem;
   }
 }
+
+
+
+
+
+
+
+
+/* Hero Background Hover Zoom */
+#home .hero-bg {
+    transition: transform 0.8s ease;
+}
+
+#home:hover .hero-bg {
+    transform: scale(1.04);
+}
+
+/* Center Hero Heading */
+#home .hero-title-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    text-align: center;
+    transition: transform 0.4s ease;
+}
+
+#home .hero-title {
+    width: 100%;
+    margin-inline: auto;
+    text-align: center;
+}
+
+#home .hero-title-main,
+#home .hero-title-sub {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+/* Move Text Slightly Up on Hover */
+#home .hero-title-wrapper:hover {
+    transform: translateY(-8px);
+}
+
+/* Keep Motion Smooth */
+@media (prefers-reduced-motion: reduce) {
+    #home .hero-bg,
+    #home .hero-title-wrapper {
+        transition: none;
+    }
+
+    #home:hover .hero-bg {
+        transform: none;
+    }
+
+    #home .hero-title-wrapper:hover {
+        transform: none;
+    }
+}
+
+
+
 
 
 /*  ------------------------------------------------------------  HOME / HERO section ends --------------------------------------------------*/
@@ -1446,11 +1529,20 @@ html {
     justify-content: space-between;
     gap: 8px;
     margin-top: 14px;
+    padding-bottom: 8px;
     color: #2480eb;
     font-size: 0.82rem;
     font-weight: 700;
     text-decoration: none;
 }
+#about .about-vehicle-link {
+    margin-bottom: 0;
+}
+
+#about .about-vehicle-content {
+    padding-bottom: 0 !important;
+}
+
 
 .about-vehicle-link span {
     transition: transform 0.2s ease;
@@ -1551,6 +1643,69 @@ html.dark .about-vehicle-card:hover {
         transition: none;
     }
 }
+
+
+
+
+
+
+
+
+
+/* ===== Equal Car Image Area ===== */
+
+@media (min-width: 1001px) {
+    #about .about-container {
+        grid-template-columns: 1fr 1.2fr;
+        gap: 40px;
+    }
+
+    #about .about-vehicles-visual {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+/* Same image height for all four vehicles */
+#about .about-vehicle-image {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    flex: 0 0 220px;
+    overflow: hidden;
+}
+
+/* Fill the complete image area */
+#about .about-vehicle-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Content stays below the image */
+#about .about-vehicle-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: auto;
+    padding: 25px;
+    padding-bottom: 20px !important;
+    
+}
+
+/* Mobile image height */
+@media (max-width: 640px) {
+    #about .about-vehicle-image {
+        height: 200px;
+        flex-basis: 200px;
+    }
+}
+
+
+
 
 
 
@@ -1990,9 +2145,11 @@ html:not(.dark) .about-journey-card div span {
 }
 
 .fleet-car-image {
+   object-fit: contain;
+    border-radius: 20px;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  /* object-fit: cover; */
   display: block;
   filter: drop-shadow(0 22px 20px rgba(15, 23, 42, .18));
   transition: transform .45s ease;
@@ -2334,14 +2491,15 @@ html:not(.dark) .about-journey-card div span {
     border-radius: 25px;
   }
 
-  .fleet-car-side {
-    min-height: 310px;
-  }
+ .fleet-car-side {
+    min-height: 350px;
+    border-radius: 25px 25px 0 0;
+}
 
   .fleet-image-wrap {
     width: 94%;
-    height: 245px;
-  }
+    height: 290px;
+}
 
   .fleet-car-number {
     top: 20px;
@@ -3648,6 +3806,42 @@ html.dark .trip-calculator-section {
   color: var(--trip-text);
 }
 
+.hill-station-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.hill-station-label input[type="checkbox"] {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+#tripHillStation {
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px;
+    margin: 0 !important;
+    flex: 0 0 16px;
+}
+
+label[for="tripHillStation"] {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px;
+    width: auto !important;
+}
+
+label[for="tripHillStation"] span {
+    display: inline-block;
+    width: auto !important;
+}
+
+
 /* Add Stop */
 
 .trip-stop-row {
@@ -3911,6 +4105,250 @@ html.dark .trip-calculator-message.trip-success {
     padding: 15px 12px;
   }
 }
+
+
+
+
+
+
+/* Trip Calculator Location and Map Button */
+.trip-location-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.trip-location-input-wrap input {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.trip-map-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 8px;
+    /* background: #2480eb; */
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.trip-map-button:hover {
+    background: #1768c5;
+}
+
+.trip-location-suggestions {
+    position: relative;
+    z-index: 1000;
+    width: 100%;
+    background: #ffffff;
+    color: #222222;
+    border-radius: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+}
+
+.trip-location-suggestions li {
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.trip-location-suggestions li:hover {
+    background: #eeeeee;
+}
+
+
+
+
+
+/* Trip Calculator Map Popup */
+.trip-map-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.trip-map-modal.hidden {
+    display: none;
+}
+
+.trip-map-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 12, 25, 0.60);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+}
+
+.trip-map-dialog {
+    position: relative;
+    z-index: 1;
+    width: min(650px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    background: var(--card-bg, #ffffff);
+    color: var(--text-color, #172033);
+    border: 1px solid rgba(120, 140, 165, 0.45);
+    border-radius: 18px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.trip-map-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.trip-map-header h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+#tripMapClose {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#tripMapCanvas {
+    width: 100%;
+    height: 360px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #e8edf2;
+}
+
+#tripMapStatus {
+    margin: 12px 0;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+}
+
+.trip-map-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.trip-map-actions button {
+    padding: 11px 16px;
+    border: 0;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#tripMapConfirm {
+    background: #2480eb;
+    color: #ffffff;
+}
+
+#tripMapConfirm:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .trip-map-modal {
+        padding: 12px;
+    }
+
+    .trip-map-dialog {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    #tripMapCanvas {
+        height: 300px;
+    }
+}
+
+
+
+/* Trip Map Search Box */
+#tripMapSearch {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    margin: 0 0 12px;
+    border: 1px solid #b8c5d6;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #172033;
+    font-size: 16px;
+    line-height: 1.4;
+    outline: none;
+}
+
+#tripMapSearch:focus {
+    border-color: #2480eb;
+    box-shadow: 0 0 0 3px rgba(36, 128, 235, 0.15);
+}
+
+#tripMapSearch::placeholder {
+    color: #68778b;
+    opacity: 1;
+}
+
+.trip-map-results {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0 0 12px;
+    list-style: none;
+    background: #ffffff;
+    color: #172033;
+    border: 1px solid #d5deea;
+    border-radius: 10px;
+}
+
+.trip-map-results.hidden {
+    display: none;
+}
+
+.trip-map-results li {
+    padding: 12px 14px;
+    border-bottom: 1px solid #e5eaf1;
+    cursor: pointer;
+    overflow-wrap: anywhere;
+}
+
+.trip-map-results li:hover {
+    background: #edf5ff;
+}
+
+#tripMapCurrentLocation {
+    background: #edf5ff;
+    color: #1459a8;
+}
+
+
+
 
 /*----------------------------------------------------------- trip calculation end ----------------------------------------------------------*/
 
@@ -4791,7 +5229,7 @@ html:not(.dark) .safety-highlight-content h3 {
   }
 
   .safety-title {
-    font-size: 40px;
+    font-size: 4000px;
     letter-spacing: -1.8px;
   }
 
@@ -4800,10 +5238,12 @@ html:not(.dark) .safety-highlight-content h3 {
     line-height: 1.7;
   }
 
-  .safety-grid {
-    grid-template-columns: 1fr;
+   .safety-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 14px;
   }
+
 
   .safety-card {
     min-height: auto;
@@ -5495,11 +5935,61 @@ html:not(.dark) .safety-highlight-content h3 {
 }
 
 
+
+
+
+
+
 .review-form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
 }
+
+.review-form-row > .review-form-group,
+.review-form-row > .trip-field {
+    min-width: 0;
+    margin: 0;
+}
+
+.review-form-row > .trip-field > label:first-child:not(.hill-station-label) {
+    display: block;
+    margin-bottom: 7px;
+}
+
+.review-options-row {
+    align-items: center;
+}
+
+.hill-station-label {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row !important;
+    gap: 8px;
+    width: auto !important;
+    margin: 0 !important;
+    cursor: pointer;
+}
+
+.hill-station-label input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px;
+    min-width: 16px;
+    margin: 0;
+    padding: 0;
+    flex: 0 0 16px;
+}
+
+.hill-station-label span {
+    display: inline-block;
+    width: auto;
+}
+
+
+
+
 
 
 /* Rating selector */
@@ -5870,15 +6360,40 @@ html:not(.dark) .highlight-option input:checked+span {
     margin-bottom: 40px !important;
   }
 
-  .review-form-row {
-    grid-template-columns: 1fr;
-  }
+ 
+  
+
+  
+.review-form-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.review-form-row select,
+.review-form-row input[type="text"] {
+    min-width: 0;
+}
+
+
+
 
   .share-review-intro h3 {
     font-size: 36px;
   }
 
 }
+
+
+/* Pick Up Method label alignment fix */
+.review-form-row > .trip-field > label:first-child:not(.hill-station-label) {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: normal;
+}
+
 
 
 @media (max-width: 420px) {
@@ -5905,6 +6420,8 @@ html:not(.dark) .highlight-option input:checked+span {
   }
 
 }
+
+
 
 
 /* ------------------------------------------------------------ reviews section ends ------------------------------------------------------------ */
@@ -6359,9 +6876,80 @@ html:not(.dark) .highlight-option input:checked+span {
 
 /* Date */
 
+
+
+/* Date input - Light Mode */
 .date-input {
-  color-scheme: dark;
+    min-height: 3rem;
+    color-scheme: light;
+    font-weight: 600;
+    color: rgb(30, 41, 59);
 }
+
+/* Date input - Dark Mode */
+.dark .date-input {
+    color-scheme: dark;
+    color: rgb(226, 232, 240);
+}
+
+/* Calendar icon - Light Mode */
+.date-input::-webkit-calendar-picker-indicator {
+    opacity: 1;
+    cursor: pointer;
+    filter: none;
+}
+
+/* Calendar icon - Dark Mode */
+.dark .date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+
+
+
+/* Light Mode: Black calendar icon */
+html:not(.dark) .booking-section .date-input::-webkit-calendar-picker-indicator {
+    filter: brightness(0) !important;
+    opacity: 1 !important;
+    cursor: pointer;
+}
+
+/* Dark Mode: White calendar icon */
+html.dark .booking-section .date-input::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(1) !important;
+    opacity: 1 !important;
+    cursor: pointer;
+}
+
+
+
+
+
+
+/* Calendar icon - Light Mode */
+html:not(.dark) #booking input[type="date"] {
+    color-scheme: light !important;
+}
+
+/* Calendar icon - Dark Mode */
+html.dark #booking input[type="date"] {
+    color-scheme: dark !important;
+}
+
+
+/* Light Mode - Black calendar icon */
+html:not(.dark) .date-input::-webkit-calendar-picker-indicator {
+    filter: none !important;
+    opacity: 1;
+}
+
+/* Dark Mode - White calendar icon */
+html.dark .date-input::-webkit-calendar-picker-indicator {
+    filter: invert(1) !important;
+    opacity: 1;
+}
+
+
 
 
 /* Two columns */
@@ -6539,6 +7127,128 @@ html:not(.dark) .highlight-option input:checked+span {
   }
 
 }
+
+
+
+
+/* Booking map picker */
+.map-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.map-modal.hidden {
+  display: none;
+}
+
+.map-modal-content {
+  width: min(700px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff;
+  color: #172033;
+}
+
+.map-modal-header,
+.map-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+#mapSearch {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#mapCanvas {
+  width: 100%;
+  height: 350px;
+  margin: 12px 0;
+  border-radius: 10px;
+  background: #eee;
+}
+
+#mapResults {
+  position: relative;
+  z-index: 100000;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+}
+
+#mapResults li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+#mapResults li:hover {
+  background: #edf5ff;
+}
+
+.map-modal-actions button,
+#mapClose {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #2480eb;
+  color: #fff;
+}
+
+#mapConfirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+
+
+/* Map search dropdown - keep text readable in both themes */
+#mapResults,
+#mapResults li {
+    color: #000000 !important;
+}
+
+#mapResults {
+    background-color: #ffffff !important;
+}
+
+#mapResults li {
+    background-color: #ffffff !important;
+}
+
+#mapResults li:hover {
+    background-color: #f0f0f0 !important;
+}
+
+
+@media (max-width: 480px) {
+  #mapCanvas {
+    height: 300px;
+  }
+
+  .map-modal-content {
+    padding: 12px;
+  }
+}
+
 
 /* ------------------------------------------------------ booking section ends ------------------------------------------------------ */
 

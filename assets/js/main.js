@@ -115,11 +115,18 @@ function whatsappLink(message, to) {
 })();
 
 /* ===================== FLEET ===================== */
+
+/* ===================== FLEET ===================== */
 function renderFleet() {
-    // The fleet grid is replaced by a static feature section in index.html.
-    // We only need to update the car selection dropdown.
-    $("car").innerHTML = FLEET.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} · ${c.seats} seats</option>`).join("");
+    $("car").innerHTML = `
+        <option value="" selected disabled>Select Your Car</option>
+        <option value="etios">Etios Sedan</option>
+        <option value="ertiga">Ertiga / Rumion</option>
+        <option value="crysta">Innova Crysta</option>
+        <option value="tempo">Tempo Traveller</option>
+    `;
 }
+
 
 /* ===================== OPEN-SOURCE MAPS (Leaflet + OpenStreetMap + Nominatim) ===================== */
 // No API key needed. Geocoding/search via the free Nominatim service.
@@ -171,12 +178,17 @@ async function resolveCoords(r) {
 
 // Free-form place search -> array of results [{display_name, lat, lon}] (Google ones resolve lat/lon on pick)
 async function geocodeSearch(query) {
-    if (!query || query.trim().length < 3) return [];
+    if (!query || query.trim().length < 1) return [];
     const g = await googleSearch(query.trim());
     if (g) return g;
     try {
         const url = `${NOMINATIM}/search?format=jsonv2&limit=6&addressdetails=0&countrycodes=in&q=${encodeURIComponent(query)}`;
-        const res = await fetch(url, { headers: { "Accept": "application/json" } });
+     
+        const res = await fetch(url);
+if (!res.ok) throw new Error(`Search failed: ${res.status}`);
+const data = await res.json();
+return Array.isArray(data) ? data : [];
+
         return await res.json();
     } catch (e) { console.warn("Search failed:", e); return []; }
 }
@@ -301,7 +313,15 @@ function openMapPicker(field) {
     }
     mapTargetField = field;
     pickedAddress = "";
-    $("mapModalTitle").textContent = field === "pickup" ? "📍 Select pickup location" : "🏁 Select drop location";
+   
+
+    
+$("mapModalTitle").textContent =
+    field === "pickup" || field === "tripPickup"
+        ? "📍 Select pickup location"
+        : "🏁 Select drop location";
+
+   
     $("mapSearch").value = "";
     $("mapResults").classList.add("hidden");
     $("mapPickedAddr").textContent = "—";
@@ -328,8 +348,16 @@ function openMapPicker(field) {
 }
 
 function initMapPicker() {
-    document.querySelectorAll(".map-pick-btn").forEach(btn =>
-        btn.addEventListener("click", () => openMapPicker(btn.dataset.target)));
+   
+    
+document.querySelectorAll(".map-pick-btn").forEach(btn =>
+    btn.addEventListener("click", () => openMapPicker(btn.dataset.target))
+);
+
+
+
+   
+   
     $("mapClose").addEventListener("click", () => hide("mapModal"));
     $("mapModal").addEventListener("click", (e) => { if (e.target.id === "mapModal") hide("mapModal"); });
     $("mapConfirm").addEventListener("click", () => {
@@ -413,8 +441,21 @@ function initBookingForm() {
         }
     });
 
-    $("closeModal").addEventListener("click", () => hide("successModal"));
-    $("successModal").addEventListener("click", (e) => { if (e.target.id === "successModal") hide("successModal"); });
+   
+
+    const closeModal = $("closeModal");
+const successModal = $("successModal");
+
+if (closeModal) {
+    closeModal.addEventListener("click", () => hide("successModal"));
+}
+
+if (successModal) {
+    successModal.addEventListener("click", (e) => {
+        if (e.target.id === "successModal") hide("successModal");
+    });
+}
+
 }
 
 function resetForm(form) { form.reset(); $("passengers").value = 2; pickedCoords.pickup = null; pickedCoords.drop = null; updateMapLink(); }
@@ -3406,7 +3447,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const vehicles = [
         {
-           image: "https://upload.wikimedia.org/wikipedia/commons/6/61/Toyota_Etios_1.5_XLS_Sedan_2019.jpg",
+           image: "assets/img/car_Etios_Sedan.png",
 
             name: "Etios Sedan",
             number: "01",
@@ -3426,7 +3467,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
 
         {
-           image: "https://upload.wikimedia.org/wikipedia/commons/0/01/Maruti_Suzuki_Ertiga%281%29.jpg",
+           image: "assets/img/car_Ertiga_Rumion.png",
 
             name: "Ertiga / Rumion",
             number: "02",
@@ -3446,7 +3487,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
 
         {
-            image: "https://upload.wikimedia.org/wikipedia/commons/6/68/Toyota_Innova_Crysta.jpg",
+            image: "assets/img/car_Innova_Crysta.png",
 
             name: "Innova Crysta",
             number: "03",
@@ -3466,7 +3507,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
 
         {
-            image: "https://upload.wikimedia.org/wikipedia/commons/1/17/ForceTravellerside.JPG",
+            image: "assets/img/car_Tempo_Traveller .png",
             name: "Tempo Traveller",
             number: "04",
             label: "Group Travel",
@@ -3553,7 +3594,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         autoTimer = setInterval(function () {
             showVehicle(currentIndex + 1);
-        }, 6000);
+        }, 3000);
     }
 
     dots.forEach(function (dot, index) {
@@ -3567,3 +3608,425 @@ document.addEventListener("DOMContentLoaded", function () {
     displayVehicle(0);
     restartAutoSlide();
 });
+
+
+
+
+
+
+
+
+
+
+
+/* Trip Calculator Pickup / Drop Autocomplete */
+(() => {
+    const fields = [
+        ["tripPickup", "tripPickupSuggest"],
+        ["tripDrop", "tripDropSuggest"]
+    ];
+
+    fields.forEach(([inputId, listId]) => {
+        const input = document.getElementById(inputId);
+        const list = document.getElementById(listId);
+
+        if (!input || !list) return;
+
+        let timer;
+        let requestId = 0;
+
+        input.addEventListener("input", () => {
+            clearTimeout(timer);
+
+            const query = input.value.trim();
+            const currentRequest = ++requestId;
+
+            list.innerHTML = "";
+            list.classList.add("hidden");
+
+            if (query.length < 3) return;
+
+            timer = setTimeout(async () => {
+                list.innerHTML = "<li>Searching locations...</li>";
+                list.classList.remove("hidden");
+
+                try {
+                    const places = await geocodeSearch(query);
+
+                    if (currentRequest !== requestId) return;
+
+                    list.innerHTML = "";
+
+                    if (!places.length) {
+                        list.innerHTML = "<li>No locations found</li>";
+                        list.classList.remove("hidden");
+                        return;
+                    }
+
+                    places.forEach(place => {
+                        const item = document.createElement("li");
+                        item.textContent = place.display_name;
+
+                        item.addEventListener("click", async () => {
+                            const selected = await resolveCoords(place);
+
+                            if (!selected) return;
+
+                            input.value = selected.display_name || place.display_name;
+
+                            list.classList.add("hidden");
+                            list.innerHTML = "";
+
+                            input.dispatchEvent(
+                                new Event("change", { bubbles: true })
+                            );
+                        });
+
+                        list.appendChild(item);
+                    });
+
+                    list.classList.remove("hidden");
+                } catch (error) {
+                    if (currentRequest !== requestId) return;
+
+                    list.innerHTML = "<li>Search failed. Try again.</li>";
+                    list.classList.remove("hidden");
+                }
+            }, 700);
+        });
+
+        input.addEventListener("blur", () => {
+            setTimeout(() => list.classList.add("hidden"), 200);
+        });
+
+        document.addEventListener("click", event => {
+            if (
+                event.target !== input &&
+                !list.contains(event.target)
+            ) {
+                list.classList.add("hidden");
+            }
+        });
+    });
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// calculator section map
+
+
+
+/* Trip Calculator - Independent Map Popup */
+(() => {
+    const modal = document.getElementById("tripMapModal");
+    const canvas = document.getElementById("tripMapCanvas");
+    const status = document.getElementById("tripMapStatus");
+    const confirmBtn = document.getElementById("tripMapConfirm");
+
+    if (!modal || !canvas || !status || !confirmBtn) return;
+
+    let map = null;
+    let marker = null;
+    let activeInput = null;
+    let selectedAddress = "";
+    let selectedLatLng = null;
+    let selectionVersion = 0;
+
+    function closeTripMap() {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+    }
+
+    function openTripMap(inputId) {
+        if (typeof L === "undefined") {
+            alert("Map is loading. Please try again.");
+            return;
+        }
+
+        activeInput = document.getElementById(inputId);
+        if (!activeInput) return;
+
+        selectedAddress = "";
+        selectedLatLng = null;
+        confirmBtn.disabled = true;
+        status.textContent = "Click on the map to select a location.";
+
+        document.getElementById("tripMapTitle").textContent =
+            inputId === "tripPickup"
+                ? "📍 Select Pickup Location"
+                : "🏁 Select Drop Location";
+
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+
+        if (!map) {
+            map = L.map(canvas).setView([9.9252, 78.1198], 7);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "&copy; OpenStreetMap contributors"
+            }).addTo(map);
+
+            map.on("click", async (event) => {
+                const lat = event.latlng.lat;
+                const lon = event.latlng.lng;
+                const version = ++selectionVersion;
+
+                selectedLatLng = { lat, lon };
+                selectedAddress = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+
+                if (marker) {
+                    marker.setLatLng([lat, lon]);
+                } else {
+                    marker = L.marker([lat, lon]).addTo(map);
+                }
+
+                status.textContent = "Finding location...";
+                confirmBtn.disabled = false;
+
+                try {
+                    const url =
+                        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error("Location lookup failed");
+
+                    const data = await response.json();
+
+                    if (version !== selectionVersion) return;
+
+                    if (data.display_name) {
+                        selectedAddress = data.display_name;
+                    }
+
+                    status.textContent = "Selected: " + selectedAddress;
+                } catch (error) {
+                    if (version === selectionVersion) {
+                        status.textContent =
+                            "Location selected. You can confirm this point.";
+                    }
+                }
+            });
+        }
+
+        setTimeout(() => map.invalidateSize(), 200);
+    }
+
+
+
+    
+    // Trip Calculator Map Search Suggestions
+    const tripSearch = document.getElementById("tripMapSearch");
+    const tripResults = document.getElementById("tripMapResults");
+
+    let tripSearchTimer;
+
+    tripSearch?.addEventListener("input", () => {
+        clearTimeout(tripSearchTimer);
+
+        const query = tripSearch.value.trim();
+
+        tripResults.innerHTML = "";
+        tripResults.classList.add("hidden");
+
+        if (query.length < 3) return;
+
+        tripResults.innerHTML =
+            '<li>Searching locations...</li>';
+        tripResults.classList.remove("hidden");
+
+        tripSearchTimer = setTimeout(async () => {
+            try {
+                const url =
+                    "https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=in&q=" +
+                    encodeURIComponent(query);
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("Search failed");
+                }
+
+                const places = await response.json();
+
+                tripResults.innerHTML = "";
+
+                if (!places.length) {
+                    tripResults.innerHTML =
+                        "<li>No locations found. Try another name.</li>";
+                    tripResults.classList.remove("hidden");
+                    return;
+                }
+
+                places.forEach((place) => {
+                    const item = document.createElement("li");
+                    item.textContent = place.display_name;
+                    item.addEventListener("click", () => {
+                        if (!map) return;
+
+                        const lat = Number(place.lat);
+                        const lon = Number(place.lon);
+
+                        selectedLatLng = { lat, lon };
+                        selectedAddress = place.display_name;
+                        selectionVersion++;
+
+                        if (marker) {
+                            marker.setLatLng([lat, lon]);
+                        } else {
+                            marker = L.marker([lat, lon]).addTo(map);
+                        }
+
+                        map.setView([lat, lon], 13);
+                        confirmBtn.disabled = false;
+                        status.textContent =
+                            "Selected: " + selectedAddress;
+
+                        tripResults.classList.add("hidden");
+                        tripSearch.value = place.display_name;
+
+                        setTimeout(() => map.invalidateSize(), 100);
+                    });
+
+                    tripResults.appendChild(item);
+                });
+
+                tripResults.classList.remove("hidden");
+            } catch (error) {
+                tripResults.innerHTML =
+                    "<li>Search failed. Please try again.</li>";
+                tripResults.classList.remove("hidden");
+            }
+        }, 1000);
+    });
+
+
+
+    
+
+    document.getElementById("tripPickupMapBtn")
+        ?.addEventListener("click", () => openTripMap("tripPickup"));
+
+    document.getElementById("tripDropMapBtn")
+        ?.addEventListener("click", () => openTripMap("tripDrop"));
+
+    document.getElementById("tripMapClose")
+        ?.addEventListener("click", closeTripMap);
+
+    document.getElementById("tripMapCancel")
+        ?.addEventListener("click", closeTripMap);
+
+
+
+
+        
+document.getElementById("tripMapCurrentLocation")
+    ?.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+            status.textContent =
+                "Your browser does not support location access.";
+            return;
+        }
+
+        status.textContent = "Getting your current location...";
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const version = ++selectionVersion;
+
+                selectedLatLng = { lat, lon };
+                selectedAddress = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+                confirmBtn.disabled = false;
+
+                map.setView([lat, lon], 15);
+
+                if (marker) {
+                    marker.setLatLng([lat, lon]);
+                } else {
+                    marker = L.marker([lat, lon]).addTo(map);
+                }
+
+                status.textContent =
+                    "Current location selected. Getting address...";
+
+                try {
+                    const url =
+                        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error("Address lookup failed");
+
+                    const data = await response.json();
+
+                    if (version !== selectionVersion) return;
+
+                    if (data.display_name) {
+                        selectedAddress = data.display_name;
+                    }
+
+                    status.textContent =
+                        "Selected: " + selectedAddress;
+                } catch (error) {
+                    if (version === selectionVersion) {
+                        status.textContent =
+                            "Current location selected. You can confirm it.";
+                    }
+                }
+
+                setTimeout(() => map.invalidateSize(), 100);
+            },
+            (error) => {
+                const messages = {
+                    1: "Location permission denied. Allow location access in your browser.",
+                    2: "Your current location is unavailable. Please try again.",
+                    3: "Location request timed out. Please try again."
+                };
+
+                status.textContent =
+                    messages[error.code] ||
+                    "Unable to get your location. Please try again.";
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            }
+        );
+    });
+
+
+
+    
+
+    modal.querySelector(".trip-map-backdrop")
+        ?.addEventListener("click", closeTripMap);
+
+    confirmBtn.addEventListener("click", () => {
+        if (!activeInput || !selectedLatLng) return;
+
+        activeInput.value = selectedAddress;
+        activeInput.dispatchEvent(new Event("change", { bubbles: true }));
+
+        closeTripMap();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.classList.contains("hidden")) {
+            closeTripMap();
+        }
+    });
+})();
