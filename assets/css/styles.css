@@ -1654,17 +1654,30 @@ html.dark .about-vehicle-card:hover {
 
 /* ===== Equal Car Image Area ===== */
 
+
+
 @media (min-width: 1001px) {
     #about .about-container {
-        grid-template-columns: 1fr 1.2fr;
-        gap: 40px;
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    #about .about-content {
+        width: 100%;
+        max-width: none;
     }
 
     #about .about-vehicles-visual {
         width: 100%;
         max-width: none;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    #about .about-vehicles-heading {
+        grid-column: 1 / -1;
     }
 }
+
 
 /* Same image height for all four vehicles */
 #about .about-vehicle-image {
@@ -3940,6 +3953,41 @@ label[for="tripHillStation"] span {
 html.dark .trip-calculator-message.trip-success {
   color: #58dca2;
 }
+
+
+.trip-booking-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.trip-booking-actions button {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.trip-booking-actions button:hover {
+    transform: translateY(-2px);
+}
+
+.trip-booking-actions .trip-whatsapp-button {
+    background: #25D366;
+    color: #fff;
+    border: none;
+}
+
+.trip-booking-actions .trip-continue-button {
+    background: #2480eb;
+    color: #fff;
+    border: none;
+}
+
 
 /* Result Card */
 
@@ -7718,33 +7766,30 @@ html.dark .date-input::-webkit-calendar-picker-indicator {
 /* ====  
    OFFER CARDS
    ====  */
+
 .travel-offers-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  align-items: stretch;
 }
+
+
+
 
 
 .travel-offer-card {
-  overflow: hidden;
-
-  border: 1px solid rgba(96, 165, 250, .12);
-
-  border-radius: 20px;
-
-  background:
-    linear-gradient(145deg,
-      rgba(12, 29, 51, .95),
-      rgba(4, 15, 30, .98));
-
-  transition:
-    transform .3s ease,
-    border-color .3s ease,
-    box-shadow .3s ease;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
 }
+
 
 .travel-offer-card:hover {
   transform: translateY(-7px);
@@ -7804,24 +7849,14 @@ html.dark .date-input::-webkit-calendar-picker-indicator {
 
 
 .offer-badge {
-  position: absolute;
-
-  top: 15px;
-  left: 15px;
-
+   position: static;
+  flex-shrink: 0;
   padding: 6px 9px;
-
   border-radius: 7px;
-
-  background:
-    rgba(37, 99, 235, .9);
-
-  color: white;
-
+  background: rgba(37, 99, 235, 0.9);
+  color: #ffffff;
   font-size: 8px;
-
   font-weight: 800;
-
   letter-spacing: 1px;
 }
 
@@ -8045,17 +8080,15 @@ html.dark .date-input::-webkit-calendar-picker-indicator {
     justify-content: center;
   }
 
-  .travel-offers-grid {
-    grid-template-columns:
-      repeat(2, 1fr);
+.travel-offers-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
   }
 
   .travel-offer-card:last-child {
-    grid-column: 1 / -1;
-
-    max-width: 50%;
-
-    margin: auto;
+    grid-column: auto;
+    max-width: none;
+    margin: 0;
   }
 
   .updates-trust-bar {
@@ -8138,8 +8171,9 @@ html.dark .date-input::-webkit-calendar-picker-indicator {
     font-size: 21px;
   }
 
-  .travel-offers-grid {
+ .travel-offers-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .travel-offer-card:last-child {
@@ -8194,6 +8228,148 @@ html.dark .date-input::-webkit-calendar-picker-indicator {
 
 
 
+/* =========================================
+   TOUR PACKAGES BUTTON
+========================================= */
+
+.all-packages-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 35px;
+  width: 100%;
+}
+
+.all-packages-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 26px;
+  border: 1px solid #2480eb;
+  border-radius: 10px;
+  background: #2480eb;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s ease,
+              transform 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+.all-packages-btn:hover {
+  background: #1768c5;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(36, 128, 235, 0.25);
+}
+
+.all-packages-btn span {
+  transition: transform 0.3s ease;
+}
+
+.all-packages-btn:hover span {
+  transform: translateX(4px);
+}
+
+/* Package card links */
+
+.offer-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Mobile responsive */
+
+@media (max-width: 576px) {
+  .all-packages-action {
+    margin-top: 25px;
+  }
+
+  .all-packages-btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Package image badge and price */
+
+.offer-image-top {
+    position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: auto;
+  z-index: 2;
+}
+
+.offer-package-price {
+   flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #2480eb;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+
+}
+
+/* Package duration and passenger details */
+
+.package-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 14px 0;
+  font-size: 13px;
+}
+
+.package-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* View package links */
+
+.offer-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .offer-image-top {
+    gap: 6px;
+  }
+
+  .offer-package-price {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .package-meta {
+    gap: 12px;
+  }
+}
 
 
 
@@ -8213,13 +8389,68 @@ html.dark .date-input::-webkit-calendar-picker-indicator {
 
 
 
+/* Tour Packages - Fix Card Alignment */
 
+.travel-offers-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 25px !important;
 
+    width: 100% !important;
+    max-width: 1200px !important;
 
+    margin: 30px auto !important;
+    padding: 0 20px !important;
 
+    box-sizing: border-box !important;
+}
 
+.travel-offer-card {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
 
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
 
+.travel-offer-card .offer-card-image {
+    width: 100% !important;
+    height: 220px !important;
+}
+
+.travel-offer-card .offer-card-content {
+    width: 100% !important;
+    padding: 22px !important;
+    box-sizing: border-box !important;
+}
+
+/* Center View All Button */
+
+.all-packages-action {
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 35px auto !important;
+}
+
+/* Tablet */
+
+@media (max-width: 950px) {
+    .travel-offers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+    .travel-offers-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        padding: 0 15px !important;
+    }
+}
 
 
 
@@ -11555,6 +11786,16 @@ html:not(.dark) .luxury-footer a:hover {
 /* DARK MODE — existing design stays */
 .dark .luxury-footer {
   background: #020617;
+}
+
+
+/* Footer heading - Light Mode */
+html:not(.dark) .luxury-footer .footer-cta h2 {
+    color: #172033;
+}
+
+html:not(.dark) .luxury-footer .footer-cta h2 span {
+    color: #2563eb;
 }
 
 

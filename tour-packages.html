@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Explore Gurudev Travels tour packages across Tamil Nadu, Kerala and nearby destinations.">
+    <title>Tour Packages | Gurudev Travels</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --page: #f5f8fd;
+            --surface: #ffffff;
+            --surface-soft: #f8fbff;
+            --text: #102344;
+            --muted: #5d7396;
+            --line: #e3ebf6;
+            --blue: #247cf0;
+            --blue-dark: #0759d7;
+            --shadow: 0 12px 32px rgba(28, 70, 130, .09);
+            --badge-bg: rgba(255, 255, 255, .96);
+            --badge-text: #0759d7;
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --page: #07111f;
+            --surface: #0e1b2d;
+            --surface-soft: #12233a;
+            --text: #eef5ff;
+            --muted: #a7bad6;
+            --line: #263b56;
+            --blue: #62a5ff;
+            --blue-dark: #2e82ff;
+            --shadow: 0 14px 35px rgba(0, 0, 0, .24);
+            --badge-bg: rgba(7, 17, 31, .93);
+            --badge-text: #8fc0ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: var(--page);
+            color: var(--text);
+            transition: background .25s, color .25s;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: color-mix(in srgb, var(--surface) 92%, transparent);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(14px);
+        }
+
+        .nav {
+            width: min(1240px, calc(100% - 36px));
+            margin: auto;
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            font-size: 1.08rem;
+            font-weight: 800;
+            letter-spacing: -.4px;
+        }
+
+        .brand span {
+            color: var(--blue);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .home-link,
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 10px 15px;
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 650;
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            font-size: 1.1rem;
+        }
+
+        .hero {
+            width: min(1240px, calc(100% - 36px));
+            margin: 0 auto;
+            padding: 56px 0 26px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            color: var(--blue);
+            font-size: .78rem;
+            letter-spacing: 2px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 12px 0;
+            font-size: clamp(2rem, 4.5vw, 3.5rem);
+            line-height: 1.1;
+            letter-spacing: -1.8px;
+        }
+
+        .hero p {
+            max-width: 690px;
+            margin: 0 auto;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .toolbar {
+            width: min(1240px, calc(100% - 36px));
+            margin: 20px auto 30px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search {
+            flex: 1 1 260px;
+            max-width: 440px;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 13px;
+            border: 1px solid var(--line);
+            background: var(--surface);
+            color: var(--text);
+            outline: none;
+        }
+
+        .search input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 15%, transparent);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter {
+            border: 1px solid var(--line);
+            color: var(--muted);
+            background: var(--surface);
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: .86rem;
+            font-weight: 650;
+        }
+
+        .filter.active {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+        }
+
+        .packages {
+            width: min(1240px, calc(100% - 36px));
+            margin: 0 auto 54px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .package-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            min-width: 0;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .package-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 42px rgba(28, 70, 130, .15);
+        }
+
+        .photo {
+            height: 300px;
+            position: relative;
+            background: linear-gradient(135deg, #c9e4ff, #6689b8);
+            overflow: hidden;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, .12), transparent 42%, rgba(0, 0, 0, .06));
+            pointer-events: none;
+        }
+
+        .photo-badges {
+            position: absolute;
+            z-index: 1;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 13px;
+            border-radius: 999px;
+            background: #079b55;
+            color: #fff;
+            font-size: .76rem;
+            font-weight: 800;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+        }
+
+        .tag.new {
+            background: #1267e8;
+        }
+
+        .tag.seasonal {
+            background: #ed8a00;
+        }
+
+        .tag.popular {
+            background: #079b55;
+        }
+
+        .price-badge {
+            display: block;
+            min-width: 116px;
+            padding: 9px 13px;
+            border: 2px solid #2d83ff;
+            border-radius: 25px;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .10);
+        }
+
+        .price-badge small {
+            display: block;
+            font-size: .65rem;
+            font-weight: 800;
+            letter-spacing: .6px;
+        }
+
+        .price-badge strong {
+            display: block;
+            font-size: 1.25rem;
+            margin-top: 2px;
+        }
+
+        .card-body {
+            padding: 24px 25px 22px;
+        }
+
+        .category {
+            font-size: .77rem;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            color: var(--blue);
+            font-weight: 800;
+        }
+
+        .card-body h2 {
+            margin: 12px 0;
+            font-size: 1.35rem;
+            line-height: 1.3;
+            letter-spacing: -.45px;
+        }
+
+        .description {
+            color: var(--muted);
+            line-height: 1.7;
+            min-height: 54px;
+            margin: 0 0 20px;
+            font-size: .94rem;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            color: var(--muted);
+            font-size: .86rem;
+            padding-bottom: 19px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .meta span,
+        .location {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .meta svg,
+        .location svg {
+            width: 19px;
+            height: 19px;
+            color: var(--blue);
+            flex: 0 0 auto;
+        }
+
+        .card-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 18px;
+        }
+
+        .location {
+            color: var(--muted);
+            font-size: .84rem;
+            min-width: 0;
+        }
+
+        .location span {
+            overflow-wrap: anywhere;
+        }
+
+        .explore {
+            display: inline-flex;
+            flex: 0 0 auto;
+            align-items: center;
+            gap: 8px;
+            border: 1.5px solid var(--blue);
+            border-radius: 999px;
+            padding: 11px 17px;
+            color: var(--blue);
+            background: transparent;
+            font-weight: 750;
+            transition: background .2s, color .2s;
+        }
+
+        .explore:hover {
+            background: var(--blue);
+            color: white;
+        }
+
+        .view-all-wrap {
+            text-align: center;
+            padding: 0 18px 60px;
+        }
+
+        .view-all {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--blue-dark), #1269e8);
+            color: #fff;
+            border: 0;
+            border-radius: 999px;
+            padding: 16px 30px;
+            font-weight: 750;
+            box-shadow: 0 9px 20px rgba(36, 124, 240, .22);
+        }
+
+        .detail-wrap {
+            width: min(1000px, calc(100% - 36px));
+            margin: 30px auto 70px;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: var(--blue);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 10px 15px;
+            margin-bottom: 18px;
+            font-weight: 700;
+        }
+
+        .detail-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .detail-hero {
+            min-height: 300px;
+            position: relative;
+            background: #b9d8ef;
+        }
+
+        .detail-hero img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+            display: block;
+            padding: 10px;
+            border-radius: 20px;
+        }
+
+        .detail-content {
+            padding: clamp(22px, 4vw, 40px);
+        }
+
+        .detail-content h2 {
+            font-size: clamp(1.7rem, 3vw, 2.5rem);
+            margin: 10px 0;
+        }
+
+        .detail-content>p {
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .detail-panel {
+            border: 1px solid var(--line);
+            background: var(--surface-soft);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .detail-panel h3 {
+            margin: 0 0 12px;
+            font-size: 1.05rem;
+        }
+
+        .detail-panel ul {
+            margin: 0;
+            padding-left: 20px;
+            color: var(--muted);
+            line-height: 1.9;
+        }
+
+        .detail-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .book-btn {
+            background: var(--blue);
+            color: white;
+            border: 0;
+            border-radius: 999px;
+            padding: 13px 20px;
+            font-weight: 750;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            padding: 40px 20px;
+            border: 1px dashed var(--line);
+            border-radius: 18px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 24px 18px;
+            border-top: 1px solid var(--line);
+            font-size: .85rem;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 980px) {
+            .packages {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 340px) {
+            .nav {
+                width: calc(100% - 28px);
+                min-height: 66px;
+            }
+
+            .brand {
+                font-size: .95rem;
+            }
+
+            .home-link {
+                padding: 10px 12px;
+                font-size: .83rem;
+            }
+
+            .hero {
+                padding: 38px 0 20px;
+            }
+
+            .toolbar {
+                margin-top: 14px;
+            }
+
+            .packages {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                width: calc(100% - 28px);
+                gap: 18px;
+            }
+
+            .photo {
+                height: 220px;
+            }
+
+            .card-body {
+                padding: 21px 20px;
+            }
+
+            .description {
+                min-height: auto;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-hero img {
+                height: 250px;
+            }
+
+            .price-badge {
+                min-width: 100px;
+                padding: 8px 10px;
+            }
+
+            .price-badge strong {
+                font-size: 1.08rem;
+            }
+
+            .tag {
+                padding: 8px 10px;
+                font-size: .7rem;
+            }
+        }
+
+        @media (max-width: 370px) {
+            .photo-badges {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+            }
+
+            .tag {
+                font-size: .64rem;
+                padding: 7px 8px;
+            }
+
+            .price-badge {
+                min-width: 88px;
+            }
+
+            .card-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="nav" aria-label="Main navigation">
+            <a class="brand" href="index.html">GURUDEV <span>TRAVELS</span></a>
+            <div class="nav-right">
+                <a href="./index.html">Home</a>
+                <!-- <a class="home-link" href="index.html">← Home</a> -->
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode"
+                    title="Switch theme">☾</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="packagesTop">
+            <div class="eyebrow">Explore South India</div>
+            <h1>Find Your Perfect Tour Package</h1>
+            <p>Beautiful destinations, comfortable cab journeys and flexible tour plans. Choose a package and explore
+                the details before booking your trip.</p>
+        </section>
+
+        <section class="toolbar" aria-label="Search tour packages">
+            <label class="search"><input id="packageSearch" type="search"
+                    placeholder="Search destination or starting city..." aria-label="Search packages"></label>
+            <div class="filters" id="filters">
+                <button class="filter active" data-filter="all" type="button">All Packages</button>
+                <button class="filter" data-filter="1 Day" type="button">1 Day</button>
+                <button class="filter" data-filter="2 Days" type="button">2 Days</button>
+                <button class="filter" data-filter="3 Days" type="button">3 Days</button>
+                <button class="filter" data-filter="4+ Days" type="button">4+ Days</button>
+            </div>
+        </section>
+
+        <section class="packages" id="packageGrid" aria-label="Available tour packages"></section>
+        <div class="view-all-wrap" id="viewAllWrap"><button class="view-all" id="viewAllButton" type="button">View All
+                Packages <span aria-hidden="true">→</span></button></div>
+        <section class="detail-wrap" id="detailView" hidden></section>
+    </main>
+
+    <footer>© <span id="year"></span> Gurudev Travels · Travel comfortably, arrive happily.</footer>
+
+    <script>
+        const packages = [
+            { id: "ooty", route: "Madurai to Ooty", place: "Ooty", start: "Madurai", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹8,000", tag: "Popular", tagType: "popular", category: "Weekend Escape", image: "assets/img/ooty_tea_garden.png", description: "Escape to the hills with comfortable travel and beautiful mountain views.", places: ["Ooty Lake", "Government Botanical Garden", "Doddabetta Peak", "Tea gardens"], itinerary: ["Day 1: Pickup from Madurai, travel to Ooty and visit Ooty Lake and the Botanical Garden.", "Day 2: Visit Doddabetta Peak and tea gardens, then return journey."], notes: "Tour duration and sightseeing order may change based on traffic, weather and your pickup time." },
+            { id: "kodaikanal", route: "Coimbatore to Kodaikanal", place: "Kodaikanal", start: "Coimbatore", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹5,500", tag: "New Route", tagType: "new", category: "Mountain Getaway", image: "assets/img/kodai_majestic_silver.png", description: "Enjoy a peaceful hill-station getaway with family or friends.", places: ["Kodaikanal Lake", "Coaker’s Walk", "Bryant Park", "Pillar Rocks"], itinerary: ["Day 1: Pickup from Coimbatore and explore Kodaikanal Lake and nearby town attractions.", "Day 2: Visit Coaker’s Walk, Bryant Park and Pillar Rocks before returning."], notes: "The final route and included sightseeing can be confirmed when booking." },
+            { id: "kanyakumari", route: "Tirunelveli to Kanyakumari", place: "Kanyakumari", start: "Tirunelveli", duration: "1 Day", days: "1 Day", people: "2–6 People", price: "₹3,000", tag: "Seasonal", tagType: "seasonal", category: "Coastal Trip", image: "assets/img/kanya_beach.png", description: "Discover ocean views, iconic memorials and a relaxing coastal journey.", places: ["Vivekananda Rock Memorial", "Thiruvalluvar Statue viewpoint", "Kanyakumari Beach", "Sunset Point"], itinerary: ["Day trip: Pickup from Tirunelveli, visit Kanyakumari attractions and return after sightseeing."], notes: "Boat services and monument access depend on local operating conditions." },
+            { id: "yercaud", route: "Salem to Yercaud", place: "Yercaud", start: "Salem", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹4,500", tag: "Popular", tagType: "popular", category: "Nature Retreat", image: "assets/img/yercaud_garden.png", description: "Relax among green hills, gardens, viewpoints and calm lake scenery.", places: ["Yercaud Lake", "Anna Park", "Lady’s Seat", "Botanical Garden"], itinerary: ["Day 1: Salem pickup and visit Yercaud Lake, Anna Park and nearby viewpoints.", "Day 2: Explore the garden and viewpoints, then return to Salem."], notes: "Some viewpoints and garden attractions may have separate entry fees." },
+            { id: "thanjavur", route: "Trichy to Thanjavur", place: "Thanjavur", start: "Trichy", duration: "1 Day", days: "1 Day", people: "2–6 People", price: "₹4,000", tag: "Heritage", tagType: "new", category: "Temple & Heritage", image: "assets/img/thanja_bhoma.png", description: "Discover grand temple architecture, local culture and heritage landmarks.", places: ["Brihadeeswarar Temple", "Thanjavur Palace", "Art Gallery"], itinerary: ["Day trip: Pickup from Trichy, explore Thanjavur heritage attractions and return."], notes: "Temple timings and access rules should be checked for your travel date." },
+            { id: "coimbatore", route: "Madurai to Coimbatore", place: "Coimbatore", start: "Madurai", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹6,500", tag: "City Break", tagType: "new", category: "City & Nature", image: "assets/img/coimb_sirvani_waterfall.png", description: "Combine a comfortable city trip with nearby nature and peaceful stops.", places: ["Marudhamalai Temple", "Perur Temple", "Isha area (by request)"], itinerary: ["Day 1: Travel from Madurai to Coimbatore and visit selected city attractions.", "Day 2: Visit nearby attractions based on your preference and return."], notes: "Choose your preferred sightseeing stops while confirming the package." },
+            { id: "trichy", route: "Madurai to Trichy", place: "Trichy", start: "Madurai", duration: "1 Day", days: "1 Day", people: "2–6 People", price: "₹4,500", tag: "Heritage", tagType: "new", category: "Temple & Heritage", image: "assets/img/tichy_kallanai.png", description: "Explore famous temples and historic landmarks on a comfortable day trip.", places: ["Sri Ranganathaswamy Temple", "Rockfort Temple", "Kallanai (Grand Anicut)"], itinerary: ["Day trip: Pickup from Madurai, visit selected Trichy attractions and return."], notes: "The sightseeing order can be adjusted based on temple opening times." },
+            { id: "velankanni", route: "Trichy to Velankanni", place: "Velankanni", start: "Trichy", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹5,500", tag: "Pilgrimage", tagType: "popular", category: "Pilgrimage Trip", image: "assets/img/velan_basilica.png", description: "Plan a peaceful pilgrimage with a relaxed road journey and flexible stops.", places: ["Basilica of Our Lady of Good Health", "Velankanni Beach", "Local devotional sites"], itinerary: ["Day 1: Travel to Velankanni, check in independently and visit the Basilica area.", "Day 2: Spend time at the shrine and beach, then return to Trichy."], notes: "Accommodation is not included unless specifically confirmed." },
+            // { id: "munnar", route: "Kochi to Munnar", place: "Munnar", start: "Kochi", duration: "3 Days / 2 Nights", days: "3 Days", people: "2–6 People", price: "₹7,500", tag: "Hill Escape", tagType: "popular", category: "Hill Station", image: "assets/img/ooty_tea_garden.png", description: "Take in misty mountains, tea plantations and scenic roads through Kerala.", places: ["Tea gardens", "Mattupetty Dam", "Echo Point", "Eravikulam area"], itinerary: ["Day 1: Pickup from Kochi and scenic drive to Munnar with suitable stops.", "Day 2: Explore tea gardens, Mattupetty Dam and Echo Point.", "Day 3: Enjoy a relaxed morning and return towards Kochi."], notes: "Park permits, entry tickets and accommodation are separate unless stated." },
+            { id: "valparai", route: "Coimbatore to Valparai", place: "Valparai", start: "Coimbatore", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹5,000", tag: "Nature", tagType: "new", category: "Forest & Hills", image: "assets/img/coimb_valparai.png", description: "Drive through green landscapes, forest roads and scenic tea estates.", places: ["Aliyar Dam viewpoint", "Monkey Falls area", "Tea estates", "Valparai viewpoints"], itinerary: ["Day 1: Drive from Coimbatore through scenic stops and reach Valparai.", "Day 2: Visit selected viewpoints and tea estates before returning."], notes: "Wildlife sightings are not guaranteed; follow forest and road safety rules." },
+            // { id: "bekal", route: "Kochi to Bekal", place: "Bekal", start: "Kochi", duration: "3 Days / 2 Nights", days: "3 Days", people: "2–6 People", price: "₹12,000", tag: "Coastal", tagType: "seasonal", category: "Beach & Heritage", image: "assets/img/ooty_tea_garden.png", description: "Enjoy coastal views, relaxed beach time and a historic fort visit.", places: ["Bekal Fort", "Bekal Beach", "Local coastal viewpoints"], itinerary: ["Day 1: Travel from Kochi towards Bekal with optional stops.", "Day 2: Explore Bekal Fort and nearby beach areas.", "Day 3: Enjoy a relaxed morning and return to Kochi."], notes: "Long-distance travel timing depends on traffic and chosen stops." },
+            // { id: "mysore", route: "Coimbatore to Mysore", place: "Mysore", start: "Coimbatore", duration: "3 Days / 2 Nights", days: "3 Days", people: "2–6 People", price: "₹8,000", tag: "City Escape", tagType: "new", category: "Culture & Heritage", image: "assets/img/ooty_tea_garden.png", description: "Discover royal architecture, gardens and cultural highlights in Mysore.", places: ["Mysore Palace", "Chamundi Hill", "Brindavan Gardens"], itinerary: ["Day 1: Travel to Mysore and visit a selected city attraction.", "Day 2: Explore Mysore Palace, Chamundi Hill and nearby places.", "Day 3: Visit a garden or local attraction and return."], notes: "Garden illumination and palace entry timings vary by day." },
+            { id: "madurai", route: "Tirunelveli to Madurai", place: "Madurai", start: "Tirunelveli", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹5,500", tag: "Temple Tour", tagType: "popular", category: "Temple & Culture", image: "assets/img/madurai_temple.png", description: "Visit Madurai’s famous temple, markets and cultural landmarks at an easy pace.", places: ["Meenakshi Amman Temple", "Thirumalai Nayakkar Mahal", "Gandhi Memorial Museum"], itinerary: ["Day 1: Arrive in Madurai and visit the temple and nearby city attractions.", "Day 2: Explore selected heritage spots and return to Tirunelveli."], notes: "Temple dress codes, entry rules and opening times apply." },
+            // { id: "tirunelveli", route: "Madurai to Tirunelveli", place: "Tirunelveli", start: "Madurai", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹5,500", tag: "Local Favourite", tagType: "popular", category: "Temple & Nature", image: "assets/img/ooty_tea_garden.png", description: "Explore historic temples, local food stops and nature attractions nearby.", places: ["Nellaiappar Temple", "Papanasam area", "Manimuthar area"], itinerary: ["Day 1: Travel from Madurai and visit Tirunelveli city attractions.", "Day 2: Visit a nearby nature spot if time permits, then return."], notes: "Waterfall and forest-area access may depend on local permissions and weather." },
+            // { id: "dindigul", route: "Madurai to Dindigul", place: "Dindigul", start: "Madurai", duration: "1 Day", days: "1 Day", people: "2–6 People", price: "₹2,500", tag: "Day Trip", tagType: "new", category: "Fort & Temple", image: "assets/img/ooty_tea_garden.png", description: "Take a relaxed short trip for local heritage and scenic hill views nearby.", places: ["Dindigul Fort area", "Abirami Amman Temple", "Nearby local attractions"], itinerary: ["Day trip: Pickup from Madurai, visit selected Dindigul attractions and return."], notes: "Hill visits can be added based on available time and road conditions." },
+            // { id: "salem", route: "Coimbatore to Salem", place: "Salem", start: "Coimbatore", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹6,000", tag: "City Break", tagType: "new", category: "City & Hills", image: "assets/img/ooty_tea_garden.png", description: "Combine Salem city attractions with a relaxed nearby nature visit.", places: ["1008 Lingam Temple", "Mettur Dam area", "Local city attractions"], itinerary: ["Day 1: Travel to Salem and visit selected city attractions.", "Day 2: Visit a nearby viewpoint or attraction and return."], notes: "The final itinerary depends on your preferred stops." },
+            // { id: "erode", route: "Coimbatore to Erode", place: "Erode", start: "Coimbatore", duration: "1 Day", days: "1 Day", people: "2–6 People", price: "₹3,500", tag: "Day Trip", tagType: "new", category: "Local Discovery", image: "assets/img/ooty_tea_garden.png", description: "Plan a simple day outing with local landmarks and flexible pickup options.", places: ["Bhavani Sangameswarar Temple", "Kodiveri Dam area", "Local markets"], itinerary: ["Day trip: Pickup from Coimbatore, visit selected Erode-area attractions and return."], notes: "Check local access conditions before visiting water-side attractions." },
+            // { id: "tiruppur", route: "Coimbatore to Tiruppur", place: "Tiruppur", start: "Coimbatore", duration: "1 Day", days: "1 Day", people: "2–6 People", price: "₹2,500", tag: "Day Trip", tagType: "new", category: "Local Discovery", image: "assets/img/ooty_tea_garden.png", description: "A flexible short journey for local sightseeing, shopping and nearby stops.", places: ["Avinashi Temple", "Local shopping areas", "Nearby attractions by request"], itinerary: ["Day trip: Pickup from Coimbatore, visit your selected stops and return."], notes: "This is a customizable route; confirm the stops before travel." },
+            // { id: "vellore", route: "Chennai to Vellore", place: "Vellore", start: "Chennai", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹5,000", tag: "Heritage", tagType: "new", category: "Fort & Heritage", image: "assets/img/ooty_tea_garden.png", description: "Explore historic forts, temples and local landmarks on a relaxed road trip.", places: ["Vellore Fort", "Jalakandeswarar Temple", "Golden Temple area"], itinerary: ["Day 1: Travel from Chennai and explore Vellore Fort and nearby places.", "Day 2: Visit selected attractions before returning."], notes: "Religious sites may have specific entry and photography rules." },
+            // { id: "tiruvannamalai", route: "Chennai to Tiruvannamalai", place: "Tiruvannamalai", start: "Chennai", duration: "2 Days / 1 Night", days: "2 Days", people: "2–6 People", price: "₹7,000", tag: "Pilgrimage", tagType: "popular", category: "Temple & Pilgrimage", image: "assets/img/ooty_tea_garden.png", description: "Plan a pilgrimage trip with time for temple visits and the sacred hill area.", places: ["Arunachaleswarar Temple", "Ramana Ashram area", "Girivalam path"], itinerary: ["Day 1: Travel from Chennai and visit the temple area.", "Day 2: Complete preferred visits and return."], notes: "Festival dates and full-moon days can be busier than usual." },
+            { id: "ooty-kodaikanal", route: "Ooty to Kodaikanal", place: "Ooty & Kodaikanal", start: "Ooty", duration: "4 Days / 3 Nights", days: "4+ Days", people: "2–6 People", price: "₹12,000", tag: "Multi-Day", tagType: "popular", category: "Hill Station Combo", image: "assets/img/kodai_pillar_rocks.png", description: "Enjoy a longer hill-station holiday with tea gardens, lakes and viewpoints.", places: ["Ooty Lake", "Tea gardens", "Kodaikanal Lake", "Pillar Rocks"], itinerary: ["Day 1: Explore Ooty highlights.", "Day 2: Visit Ooty viewpoints and travel according to the confirmed route.", "Day 3: Explore Kodaikanal Lake and town attractions.", "Day 4: Visit a final viewpoint and complete return journey."], notes: "This multi-destination route needs advance confirmation for driving time and overnight stays." }
+        ];
+
+        const iconClock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+        const iconPeople = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2z"/><circle cx="18" cy="8" r="3"/><path d="M17 14a6 6 0 0 1 5 6v1h-4v-2a8 8 0 0 0-1-5z"/></svg>';
+        const iconPin = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-7.2 8-13a8 8 0 1 0-16 0c0 5.8 8 13 8 13z"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>';
+        const grid = document.getElementById("packageGrid");
+        const detailView = document.getElementById("detailView");
+        const viewAllWrap = document.getElementById("viewAllWrap");
+        const toolbar = document.querySelector(".toolbar");
+        const hero = document.querySelector(".hero");
+        let activeFilter = "all";
+        let query = "";
+
+        function cardTemplate(pkg) {
+            return `<article class="package-card">
+      <div class="photo">
+        <img src="${pkg.image}" alt="${pkg.place} tour destination" loading="lazy" onerror="this.style.display='none'">
+        <div class="photo-badges">
+          <span class="tag ${pkg.tagType}">${pkg.tagType === "popular" ? "★" : pkg.tagType === "seasonal" ? "☼" : "✦"} ${pkg.tag}</span>
+          <span class="price-badge"><small>PACKAGE RATE</small><strong>${pkg.price}</strong></span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="category">${pkg.category}</div>
+        <h2>${pkg.route}</h2>
+        <p class="description">${pkg.description}</p>
+        <div class="meta"><span>${iconClock}${pkg.duration}</span><span>${iconPeople}${pkg.people}</span></div>
+        <div class="card-bottom"><div class="location">${iconPin}<span>${pkg.place}</span></div><button class="explore" type="button" data-open="${pkg.id}">Explore <span aria-hidden="true">→</span></button></div>
+      </div>
+    </article>`;
+        }
+
+        function matchesFilter(pkg) {
+            if (activeFilter === "all") return true;
+            if (activeFilter === "4+ Days") return Number.parseInt(pkg.days, 10) >= 4;
+            return pkg.days === activeFilter;
+        }
+
+        function renderPackages() {
+            const filtered = packages.filter(pkg => matchesFilter(pkg) && `${pkg.route} ${pkg.place} ${pkg.start} ${pkg.category}`.toLowerCase().includes(query.toLowerCase()));
+            grid.innerHTML = filtered.length ? filtered.map(cardTemplate).join("") : '<div class="empty">No packages match your search. Try another destination.</div>';
+            grid.hidden = false;
+            detailView.hidden = true;
+            viewAllWrap.hidden = false;
+            toolbar.hidden = false;
+            hero.hidden = false;
+            document.getElementById("viewAllButton").hidden = false;
+            document.querySelectorAll(".filter").forEach(btn => btn.classList.toggle("active", btn.dataset.filter === activeFilter));
+            history.replaceState({}, "", location.pathname + location.search);
+        }
+
+        function showAllPackages() {
+            activeFilter = "all"; query = "";
+            document.getElementById("packageSearch").value = "";
+            renderPackages();
+            document.getElementById("viewAllButton").hidden = true;
+            document.getElementById("packagesTop").scrollIntoView({ behavior: "smooth" });
+        }
+
+        function showPackage(id, updateUrl = true) {
+            const pkg = packages.find(item => item.id === id);
+            if (!pkg) { renderPackages(); return; }
+            grid.hidden = true; viewAllWrap.hidden = true; toolbar.hidden = true; hero.hidden = true;
+            detailView.hidden = false;
+            detailView.innerHTML = `
+      <button class="back-btn" id="backToPackages" type="button">← All tour packages</button>
+      <article class="detail-card">
+        <div class="detail-hero"><img src="${pkg.image}" alt="${pkg.place} landscape" onerror="this.style.display='none'"></div>
+        <div class="detail-content">
+          <div class="category">${pkg.category} · ${pkg.tag}</div>
+          <h2>${pkg.route}</h2>
+          <p>${pkg.description}</p>
+          <div class="meta"><span>${iconClock}${pkg.duration}</span><span>${iconPeople}${pkg.people}</span><span>${iconPin}${pkg.place}</span></div>
+          <div class="detail-grid">
+            <section class="detail-panel"><h3>Places to Visit</h3><ul>${pkg.places.map(place => `<li>${place}</li>`).join("")}</ul></section>
+            <section class="detail-panel"><h3>Suggested Itinerary</h3><ul>${pkg.itinerary.map(day => `<li>${day}</li>`).join("")}</ul></section>
+            <section class="detail-panel"><h3>Cab & Travel Facilities</h3><ul><li>Comfortable private cab for your group</li><li>Pickup point and drop point confirmed during booking</li><li>Flexible sightseeing stops based on the agreed plan</li><li>Vehicle type and luggage capacity confirmed before payment</li></ul></section>
+            <section class="detail-panel"><h3>Package Rate & Notes</h3><ul><li>Rate: Please contact Gurudev Travels for a quote</li><li>Confirm vehicle, dates, pickup location and passenger count</li><li>Entry tickets, accommodation, parking and special permits are included only if confirmed</li><li>${pkg.notes}</li></ul></section>
+          </div>
+          <div class="detail-actions"><button class="book-btn" id="bookThisPackage" type="button">Book This Package →</button>
+            <button class="back-btn" id="detailAllPackages" type="button">View All Packages</button>
+            </div>
+        </div>
+      </article>`;
+            if (updateUrl) history.pushState({ place: id }, "", `${location.pathname}?place=${encodeURIComponent(id)}`);
+            document.getElementById("backToPackages").addEventListener("click", showAllPackages);
+            document.getElementById("detailAllPackages").addEventListener("click", showAllPackages);
+            document.getElementById("bookThisPackage").addEventListener("click", () => {
+                // Update this path if your booking section uses a different ID.
+                window.location.href = "index.html#booking";
+            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        document.getElementById("filters").addEventListener("click", event => {
+            const button = event.target.closest("[data-filter]");
+            if (!button) return;
+            activeFilter = button.dataset.filter;
+            renderPackages();
+        });
+        document.getElementById("packageSearch").addEventListener("input", event => {
+            query = event.target.value.trim();
+            renderPackages();
+        });
+        grid.addEventListener("click", event => {
+            const button = event.target.closest("[data-open]");
+            if (button) showPackage(button.dataset.open);
+        });
+        document.getElementById("viewAllButton").addEventListener("click", showAllPackages);
+
+        const themeToggle = document.getElementById("themeToggle");
+        function setTheme(theme) {
+            document.documentElement.dataset.theme = theme;
+            themeToggle.textContent = theme === "dark" ? "☀" : "☾";
+            themeToggle.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+            themeToggle.title = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+        }
+        const savedTheme = (() => { try { return localStorage.getItem("gurudev-theme"); } catch (_) { return null; } })();
+        setTheme(savedTheme === "dark" ? "dark" : "light");
+        themeToggle.addEventListener("click", () => {
+            const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+            setTheme(next);
+            try { localStorage.setItem("gurudev-theme", next); } catch (_) { }
+        });
+
+        document.getElementById("year").textContent = new Date().getFullYear();
+        const initialPlace = new URLSearchParams(location.search).get("place");
+        if (initialPlace && packages.some(pkg => pkg.id === initialPlace)) showPackage(initialPlace, false);
+        else renderPackages();
+    </script>
+</body>
+
+</html>

@@ -177,21 +177,41 @@ async function resolveCoords(r) {
 }
 
 // Free-form place search -> array of results [{display_name, lat, lon}] (Google ones resolve lat/lon on pick)
-async function geocodeSearch(query) {
-    if (!query || query.trim().length < 1) return [];
-    const g = await googleSearch(query.trim());
-    if (g) return g;
-    try {
-        const url = `${NOMINATIM}/search?format=jsonv2&limit=6&addressdetails=0&countrycodes=in&q=${encodeURIComponent(query)}`;
-     
-        const res = await fetch(url);
-if (!res.ok) throw new Error(`Search failed: ${res.status}`);
-const data = await res.json();
-return Array.isArray(data) ? data : [];
 
-        return await res.json();
-    } catch (e) { console.warn("Search failed:", e); return []; }
+async function geocodeSearch(query) {
+    if (!query || query.trim().length < 1) {
+        return [];
+    }
+
+    const searchQuery = query.trim();
+
+    // Try Google Places first
+    const googleResults = await googleSearch(searchQuery);
+
+    if (Array.isArray(googleResults) && googleResults.length > 0) {
+        return googleResults;
+    }
+
+    // Fallback to OpenStreetMap
+    try {
+        const url =
+            `${NOMINATIM}/search?format=jsonv2&limit=6&addressdetails=0&countrycodes=in&q=${encodeURIComponent(searchQuery)}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Search failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.warn("Location search failed:", error);
+        return [];
+    }
 }
+
 
 // Coordinates -> human address
 async function reverseGeocode(lat, lon) {
@@ -218,21 +238,63 @@ function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTi
 // so the route link/WhatsApp message can use the exact point instead of guessing from free text.
 const pickedCoords = { pickup: null, drop: null };
 
+
 function renderSuggestions(listEl, results, inputEl, fieldKey) {
-    if (!results.length) { listEl.classList.add("hidden"); listEl.innerHTML = ""; return; }
+    if (!results.length) {
+        listEl.classList.add("hidden");
+        listEl.innerHTML = "";
+        return;
+    }
+
     listEl.innerHTML = results.map((r, i) => {
         const [main, ...rest] = r.display_name.split(", ");
-        return `<li data-i="${i}">📍 <strong>${escapeHtml(main)}</strong><span class="suggest-sub">${rest.length ? ", " + escapeHtml(rest.join(", ")) : ""}</span></li>`;
+
+        return `
+            <li data-i="${i}">
+                📍 <strong>${escapeHtml(main)}</strong>
+                <span class="suggest-sub">
+                    ${rest.length ? ", " + escapeHtml(rest.join(", ")) : ""}
+                </span>
+            </li>
+        `;
     }).join("");
+
     listEl.classList.remove("hidden");
-    listEl.querySelectorAll("li").forEach((li) => li.addEventListener("click", async () => {
-        const r = await resolveCoords(results[li.dataset.i]);
-        inputEl.value = r.display_name;
-        pickedCoords[fieldKey] = { lat: parseFloat(r.lat), lon: parseFloat(r.lon) };
-        listEl.classList.add("hidden");
-        updateMapLink();
-    }));
+
+    listEl.querySelectorAll("li").forEach((li) => {
+        li.addEventListener("pointerdown", async (event) => {
+            event.preventDefault();
+
+            try {
+                const selected = await resolveCoords(results[Number(li.dataset.i)]);
+
+                if (!selected) return;
+
+                inputEl.value = selected.display_name || "";
+
+                pickedCoords[fieldKey] = {
+                    lat: parseFloat(selected.lat),
+                    lon: parseFloat(selected.lon)
+                };
+
+                listEl.classList.add("hidden");
+                listEl.innerHTML = "";
+
+                inputEl.dispatchEvent(
+                    new Event("change", { bubbles: true })
+                );
+
+                updateMapLink();
+
+            } catch (error) {
+                console.error("Booking location selection error:", error);
+
+                alert("Unable to select this location. Please try again.");
+            }
+        });
+    });
 }
+
 
 function initOsmAutocomplete() {
     [["pickup", "pickupSuggest", "pickup"], ["drop", "dropSuggest", "drop"]].forEach(([inputId, listId, fieldKey]) => {
@@ -409,18 +471,56 @@ function initBookingForm() {
             routeFrom: pickedCoords.pickup ? `${pickedCoords.pickup.lat},${pickedCoords.pickup.lon}` : $("pickup").value.trim(),
             routeTo: pickedCoords.drop ? `${pickedCoords.drop.lat},${pickedCoords.drop.lon}` : $("drop").value.trim(),
             dateFrom: $("dateFrom").value, dateTo: $("dateTo").value,
-            passengers: $("passengers").value, phone: $("phone").value.trim(),
+        
+      
+            
+            adults: $("adults").value,
+children: $("children").value,
+
+phone: $("phone").value.trim(),
         };
 
-        if (!b.name || !b.pickup || !b.drop || !b.dateFrom || !b.dateTo || !b.phone)
-            return showError(err, "Please fill in all fields.");
+     
+
+
+        console.log("BOOKING VALUES:", {
+    name: b.name,
+    pickup: b.pickup,
+    drop: b.drop,
+    dateFrom: b.dateFrom,
+    dateTo: b.dateTo,
+    phone: b.phone
+});
+
+
+
+
+
+if (!b.name) return showError(err, "Please enter your name.");
+if (!b.pickup) return showError(err, "Please enter the pickup point.");
+if (!b.drop) return showError(err, "Please enter the drop point.");
+if (!b.car) return showError(err, "Please select your car.");
+if (!b.dateFrom) return showError(err, "Please select the From date.");
+if (!b.dateTo) return showError(err, "Please select the To date.");
+if (!b.adults) return showError(err, "Please enter the number of adults.");
+if (b.children === "" || b.children == null) return showError(err, "Please enter the number of children.");
+if (!b.phone) return showError(err, "Please enter your WhatsApp number.");
+
+
+
+
+    
+     
         if (b.pickup.toLowerCase() === b.drop.toLowerCase())
             return showError(err, "Pickup and drop points can't be the same.");
         if (b.dateTo < b.dateFrom)
             return showError(err, "The 'To' date must be after the 'From' date.");
-        if (!/^[0-9]{10,15}$/.test(b.phone))
-            return showError(err, "Enter a valid WhatsApp number (digits only, with country code).");
+        
 
+        if (!/^[0-9]{10}$/.test(b.phone))
+    return showError(err, "Enter a valid 10-digit WhatsApp number.");
+
+        
         // Build both notifications.
         const ownerUrl = whatsappLink(buildOwnerMessage(b), OWNER_WHATSAPP);
         const customerUrl = whatsappLink(buildCustomerMessage(b), b.phone);
@@ -3663,27 +3763,41 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
 
-                    places.forEach(place => {
-                        const item = document.createElement("li");
-                        item.textContent = place.display_name;
+                   
+places.forEach(place => {
+    const item = document.createElement("li");
+    item.textContent = place.display_name;
 
-                        item.addEventListener("click", async () => {
-                            const selected = await resolveCoords(place);
+    item.addEventListener("pointerdown", async (event) => {
+        event.preventDefault();
 
-                            if (!selected) return;
+        try {
+            const selected = await resolveCoords(place);
 
-                            input.value = selected.display_name || place.display_name;
+            input.value =
+                selected?.display_name ||
+                place.display_name;
 
-                            list.classList.add("hidden");
-                            list.innerHTML = "";
+            list.classList.add("hidden");
+            list.innerHTML = "";
 
-                            input.dispatchEvent(
-                                new Event("change", { bubbles: true })
-                            );
-                        });
+            input.dispatchEvent(
+                new Event("change", { bubbles: true })
+            );
+        } catch (error) {
+            console.error("Location selection error:", error);
 
-                        list.appendChild(item);
-                    });
+            // Coordinates resolve ஆகவில்லை என்றாலும் பெயரை நிரப்பு
+            input.value = place.display_name;
+
+            list.classList.add("hidden");
+            list.innerHTML = "";
+        }
+    });
+
+    list.appendChild(item);
+});
+
 
                     list.classList.remove("hidden");
                 } catch (error) {
@@ -3711,6 +3825,25 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 
 
+
+
+
+
+const continueBookingButton =
+    document.getElementById("tripContinueBooking");
+
+if (continueBookingButton) {
+    continueBookingButton.addEventListener("click", () => {
+        const bookingSection = document.getElementById("booking");
+
+        if (bookingSection) {
+            bookingSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    });
+}
 
 
 
