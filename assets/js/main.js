@@ -718,7 +718,7 @@ const destinationImages = [
 
     {
         image:
-            "https://www.clubmahindra.com/blog/media/section_images/ultimate-o-8ac88a2da056a3d.jpg",
+            "assets/img/ooty_main.png",
 
         name: "Ooty",
 
@@ -729,7 +729,7 @@ const destinationImages = [
 
     {
         image:
-            "https://commons.wikimedia.org/wiki/Special:FilePath/Boating_in_Kodaikanal_Lake_with_Mist.jpg?width=1000",
+            "assets/img/kodai_main.png",
 
         name: "Kodaikanal",
 
@@ -740,7 +740,7 @@ const destinationImages = [
 
     {
         image:
-            "https://www.tamilnadutemples.in/img/madurai-meenakshi/madurai-meenakshi-4.jpg",
+            "assets/img/madurai_main.png",
 
         name: "Madurai",
 
@@ -751,7 +751,7 @@ const destinationImages = [
 
     {
         image:
-            "https://www.daiwikhotels.com/wp-content/uploads/2024/07/Rectangle-18262-3-2048x1262.jpg",
+            "assets/img/ramesh_dhanushkodi.png",
 
         name: "Rameshwaram",
 
@@ -762,7 +762,7 @@ const destinationImages = [
 
     {
         image:
-            "https://commons.wikimedia.org/wiki/Special:FilePath/Vivekananda_Rock_Memorial%2C_Kanyakumari.jpg?width=1000",
+            "assets/img/kanya_beach.png",
 
         name: "Kanyakumari",
 
@@ -773,7 +773,7 @@ const destinationImages = [
 
     {
         image:
-            "https://commons.wikimedia.org/wiki/Special:FilePath/Yercaud_lake.jpg?width=1000",
+            "assets/img/yercaud_main.png",
 
         name: "Yercaud",
 
@@ -784,7 +784,7 @@ const destinationImages = [
 
     {
         image:
-            "https://commons.wikimedia.org/wiki/Special:FilePath/Brihadisvara_Temple_during_Maha_Shivaratri-WUS03611_%28edit%29.jpg?width=1000",
+            "assets/img/thanja_main.png",
 
         name: "Thanjavur",
 
@@ -795,7 +795,7 @@ const destinationImages = [
 
     {
         image:
-            "https://commons.wikimedia.org/wiki/Special:FilePath/Adiyogi_Shiva_steel_burst_2018.jpg?width=1000",
+            "assets/img/coimb_main.png",
 
         name: "Coimbatore",
 
@@ -806,7 +806,7 @@ const destinationImages = [
 
     {
         image:
-            "https://commons.wikimedia.org/wiki/Special:FilePath/Rock_Fortress_-_Tiruchirappalli_-_India.JPG?width=1000",
+            "assets/img/tirchy_main.png",
 
         name: "Trichy",
 
@@ -817,7 +817,7 @@ const destinationImages = [
 
     {
         image:
-            "https://commons.wikimedia.org/wiki/Special:FilePath/Velankanni_Church_2026.jpg?width=1000",
+            "assets/img/velan_main.png",
 
         name: "Velankanni",
 
