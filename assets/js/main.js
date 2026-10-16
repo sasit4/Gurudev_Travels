@@ -1,33 +1,12 @@
-/* ============================================================
-   Gurudev Travels — front-end logic
-   - Innova fleet (replaceable images)
-   - Pick pickup/drop on an interactive OpenStreetMap (Leaflet) — no API key (tap / drag / search)
-   - Submit -> opens WhatsApp with the full booking (sent to your number)
-   - Live "View route on Google Maps" link
-   - Optional Google Apps Script / Google Sheet save (background)
-   - Dark/Light toggle, scroll reveal, success modal
-   ============================================================ */
+/* Gurudev Travels — front-end logic: fleet, booking, maps, WhatsApp, theme, scroll reveal and success modal. */
 
-/* ===================== CONFIG ===================== */
-
-// 🔧 1) The CAB OWNER's WhatsApp number — receives every new booking (digits only, with country code).
+/* CONFIG */
 const OWNER_WHATSAPP = "919688211890"; // +91 96882 11890
-//        (the CUSTOMER's number is taken from the booking form's phone field)
-
-// 🔧 2) Location search. Works with NO key (OpenStreetMap + Nominatim). For Google-quality
-//        suggestions (best coverage of Indian villages/landmarks) paste a Google Maps Platform key
-//        with "Places API (New)" + "Geocoding API" enabled and restricted to your site's domain.
-//        Leave PASTE_ to keep using the free OpenStreetMap search.
+// The customer's number is taken from the booking form's phone field.
 const GOOGLE_MAPS_KEY = "PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE";
-
-// 🔧 3) Optional Apps Script URL to also save bookings to a Google Sheet (leave PASTE_ to skip).
 const API_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
-
-// 🔧 4) Where the map opens by default before a location is chosen (lat,lng + zoom).
 const DEFAULT_MAP_CENTER = { lat: 11.1271, lng: 78.6569 }; // Tamil Nadu, India
 const DEFAULT_MAP_ZOOM = 7;
-
-// 🔧 5) Your fleet.
 const FLEET = [
     {
         id: "rumion", img: "assets/img/rumion.png", name: "Toyota Rumion", seats: 7, bags: 4, fare: "Contact for pricing", tag: "White · Premium", badge: "jade",
@@ -35,8 +14,7 @@ const FLEET = [
     },
 ];
 
-/* ===================== HELPERS ===================== */
-
+/* HELPERS */
 const $ = (id) => document.getElementById(id);
 const todayStr = () => new Date().toISOString().split("T")[0];
 const isConfigured = () => API_URL && !API_URL.startsWith("PASTE_");
@@ -48,7 +26,7 @@ function mapsRouteUrl(from, to) {
     return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(from)}&destination=${encodeURIComponent(to)}`;
 }
 
-// Route link on its own line, with a blank line above it, closing both WhatsApp messages.
+// Adds the route link on its own line with a blank line above it.
 function mapLinkLines(b) {
     if (!b.pickup || !b.drop) return [];
     return ["", `Route map: ${mapsRouteUrl(b.routeFrom || b.pickup, b.routeTo || b.drop)}`];
@@ -56,7 +34,7 @@ function mapLinkLines(b) {
 
 const RULE = "----------------------------";
 
-// Message the CAB OWNER receives (a new booking has come in).
+// Builds the booking message received by the cab owner.
 function buildOwnerMessage(b) {
     const lines = [
         "*GURUDEV TRAVELS*",
@@ -76,7 +54,7 @@ function buildOwnerMessage(b) {
     return lines.join("\n");
 }
 
-// Message the CUSTOMER receives (their booking is confirmed).
+// Builds the booking confirmation message received by the customer.
 function buildCustomerMessage(b) {
     const lines = [
         "*GURUDEV TRAVELS*",
@@ -92,7 +70,7 @@ function buildCustomerMessage(b) {
         `Passengers  : ${b.passengers}`,
         RULE,
     ];
-    // Same route link the owner gets, so both sides open the identical directions.
+    // Both sides receive the same route link.
     lines.push(...mapLinkLines(b), "");
     lines.push(
         "Your driver's details will be shared before pickup.",
@@ -107,16 +85,14 @@ function whatsappLink(message, to) {
     return `https://wa.me/${to}?text=${encodeURIComponent(message)}`;
 }
 
-/* ===================== THEME ===================== */
+/* THEME */
 (function initTheme() {
     const saved = localStorage.getItem("wander-theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     if (saved === "dark" || (!saved && prefersDark)) document.documentElement.classList.add("dark");
 })();
 
-/* ===================== FLEET ===================== */
-
-/* ===================== FLEET ===================== */
+/* FLEET */
 function renderFleet() {
     $("car").innerHTML = `
         <option value="" selected disabled>Select Your Car</option>
@@ -127,12 +103,10 @@ function renderFleet() {
     `;
 }
 
-
-/* ===================== OPEN-SOURCE MAPS (Leaflet + OpenStreetMap + Nominatim) ===================== */
-// No API key needed. Geocoding/search via the free Nominatim service.
+/* OPEN-SOURCE MAPS (Leaflet + OpenStreetMap + Nominatim) */
 const NOMINATIM = "https://nominatim.openstreetmap.org";
 
-/* ----- Optional Google Places (New) — used only when GOOGLE_MAPS_KEY is set and working ----- */
+/* Optional Google Places — used only when GOOGLE_MAPS_KEY is set and working. */
 let googleFailed = false, googleLib = null, placesToken = null;
 window.gm_authFailure = () => { googleFailed = true; console.warn("Google Maps key rejected — using OpenStreetMap search."); };
 
@@ -140,8 +114,12 @@ function loadGooglePlaces() {
     if (!GOOGLE_MAPS_KEY || GOOGLE_MAPS_KEY.startsWith("PASTE_") || googleFailed) return Promise.resolve(null);
     if (!googleLib) googleLib = new Promise((resolve) => {
         window.__gmReady = async () => {
-            try { resolve(await google.maps.importLibrary("places")); }
-            catch (e) { console.warn("Google Places failed to load:", e); resolve(null); }
+            try {
+                resolve(await google.maps.importLibrary("places"));
+            } catch (e) {
+                console.warn("Google Places failed to load:", e);
+                resolve(null);
+            }
         };
         const el = document.createElement("script");
         el.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_KEY)}&loading=async&callback=__gmReady`;
@@ -154,49 +132,49 @@ function loadGooglePlaces() {
 
 async function googleSearch(query) {
     const places = await loadGooglePlaces();
-    if (!places || googleFailed) return null; // null = fall back to Nominatim
+    if (!places || googleFailed) return null; // null means fall back to Nominatim.
     try {
-        placesToken = placesToken || new places.AutocompleteSessionToken(); // one billing session per pick
+        placesToken = placesToken || new places.AutocompleteSessionToken(); // One billing session per pick.
         const { suggestions } = await places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
             input: query, sessionToken: placesToken, includedRegionCodes: ["in"],
         });
         return suggestions.filter(x => x.placePrediction)
             .map(x => ({ display_name: x.placePrediction.text.toString(), _pred: x.placePrediction }));
-    } catch (e) { console.warn("Google search failed:", e); return null; }
+    } catch (e) {
+        console.warn("Google search failed:", e);
+        return null;
+    }
 }
 
-// Google predictions carry no coordinates until one is chosen; fetch them (closes the billing session).
+// Google predictions receive coordinates when selected, which closes the billing session.
 async function resolveCoords(r) {
     if (r.lat != null || !r._pred) return r;
     const place = r._pred.toPlace();
     await place.fetchFields({ fields: ["location", "formattedAddress"] });
-    r.lat = place.location.lat(); r.lon = place.location.lng();
+    r.lat = place.location.lat();
+    r.lon = place.location.lng();
     r.display_name = place.formattedAddress || r.display_name;
     placesToken = null;
     return r;
 }
 
-// Free-form place search -> array of results [{display_name, lat, lon}] (Google ones resolve lat/lon on pick)
-
+// Searches for places and returns an array of results.
 async function geocodeSearch(query) {
     if (!query || query.trim().length < 1) {
         return [];
     }
 
     const searchQuery = query.trim();
-
-    // Try Google Places first
+    // Try Google Places first.
     const googleResults = await googleSearch(searchQuery);
 
     if (Array.isArray(googleResults) && googleResults.length > 0) {
         return googleResults;
     }
 
-    // Fallback to OpenStreetMap
+    // Fall back to OpenStreetMap.
     try {
-        const url =
-            `${NOMINATIM}/search?format=jsonv2&limit=6&addressdetails=0&countrycodes=in&q=${encodeURIComponent(searchQuery)}`;
-
+        const url = `${NOMINATIM}/search?format=jsonv2&limit=6&addressdetails=0&countrycodes=in&q=${encodeURIComponent(searchQuery)}`;
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -204,7 +182,6 @@ async function geocodeSearch(query) {
         }
 
         const data = await response.json();
-
         return Array.isArray(data) ? data : [];
     } catch (error) {
         console.warn("Location search failed:", error);
@@ -212,32 +189,41 @@ async function geocodeSearch(query) {
     }
 }
 
-
-// Coordinates -> human address
+// Converts coordinates into a human-readable address.
 async function reverseGeocode(lat, lon) {
     if (await loadGooglePlaces()) {
         try {
             const { Geocoder } = await google.maps.importLibrary("geocoding");
             const res = await new Geocoder().geocode({ location: { lat, lng: lon } });
             if (res.results && res.results[0]) return res.results[0].formatted_address;
-        } catch (e) { console.warn("Google reverse geocode failed:", e); }
+        } catch (e) {
+            console.warn("Google reverse geocode failed:", e);
+        }
     }
+
     try {
         const url = `${NOMINATIM}/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
         const res = await fetch(url, { headers: { "Accept": "application/json" } });
         const d = await res.json();
         return d && d.display_name ? d.display_name : null;
-    } catch (e) { console.warn("Reverse geocode failed:", e); return null; }
+    } catch (e) {
+        console.warn("Reverse geocode failed:", e);
+        return null;
+    }
 }
 
-// Simple debounce so we respect Nominatim's ~1 request/second policy.
-function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+// Debounces requests to respect Nominatim's approximately one-request-per-second policy.
+function debounce(fn, ms) {
+    let t;
+    return (...a) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...a), ms);
+    };
+}
 
-/* ----- Typing suggestions on the pickup/drop fields (free, via Nominatim) ----- */
-// Confirmed lat/lng for each field — only set once a suggestion (or the map picker) is picked,
-// so the route link/WhatsApp message can use the exact point instead of guessing from free text.
+/* Typing suggestions on the pickup/drop fields. */
+// Exact coordinates are stored only when a suggestion or map location is selected.
 const pickedCoords = { pickup: null, drop: null };
-
 
 function renderSuggestions(listEl, results, inputEl, fieldKey) {
     if (!results.length) {
@@ -248,7 +234,6 @@ function renderSuggestions(listEl, results, inputEl, fieldKey) {
 
     listEl.innerHTML = results.map((r, i) => {
         const [main, ...rest] = r.display_name.split(", ");
-
         return `
             <li data-i="${i}">
                 📍 <strong>${escapeHtml(main)}</strong>
@@ -267,11 +252,9 @@ function renderSuggestions(listEl, results, inputEl, fieldKey) {
 
             try {
                 const selected = await resolveCoords(results[Number(li.dataset.i)]);
-
                 if (!selected) return;
 
                 inputEl.value = selected.display_name || "";
-
                 pickedCoords[fieldKey] = {
                     lat: parseFloat(selected.lat),
                     lon: parseFloat(selected.lon)
@@ -279,22 +262,15 @@ function renderSuggestions(listEl, results, inputEl, fieldKey) {
 
                 listEl.classList.add("hidden");
                 listEl.innerHTML = "";
-
-                inputEl.dispatchEvent(
-                    new Event("change", { bubbles: true })
-                );
-
+                inputEl.dispatchEvent(new Event("change", { bubbles: true }));
                 updateMapLink();
-
             } catch (error) {
                 console.error("Booking location selection error:", error);
-
                 alert("Unable to select this location. Please try again.");
             }
         });
     });
 }
-
 
 function initOsmAutocomplete() {
     [["pickup", "pickupSuggest", "pickup"], ["drop", "dropSuggest", "drop"]].forEach(([inputId, listId, fieldKey]) => {
@@ -303,11 +279,13 @@ function initOsmAutocomplete() {
             const results = await geocodeSearch(input.value);
             renderSuggestions(list, results, input, fieldKey);
         }, 500);
+
         input.addEventListener("input", () => {
-            pickedCoords[fieldKey] = null; // typed freely again — no longer an exact confirmed point
+            pickedCoords[fieldKey] = null; // Typed freely again, so there is no longer an exact confirmed point.
             updateMapLink();
             run();
         });
+
         input.addEventListener("blur", () => setTimeout(() => list.classList.add("hidden"), 150));
         document.addEventListener("click", (e) => {
             if (e.target !== input && !list.contains(e.target)) list.classList.add("hidden");
@@ -315,7 +293,7 @@ function initOsmAutocomplete() {
     });
 }
 
-/* ----- Map picker modal (Leaflet) ----- */
+/* Map picker modal (Leaflet). */
 const LEAFLET_ICON = (typeof L !== "undefined") ? L.icon({
     iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
     iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -330,19 +308,28 @@ function buildPickerMap() {
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19, attribution: "© OpenStreetMap contributors",
     }).addTo(pmap);
+
     pmarker = L.marker([DEFAULT_MAP_CENTER.lat, DEFAULT_MAP_CENTER.lng], { draggable: true, icon: LEAFLET_ICON }).addTo(pmap);
-
     pmap.on("click", (e) => setPicked(e.latlng.lat, e.latlng.lng));
-    pmarker.on("dragend", () => { const ll = pmarker.getLatLng(); setPicked(ll.lat, ll.lng); });
+    pmarker.on("dragend", () => {
+        const ll = pmarker.getLatLng();
+        setPicked(ll.lat, ll.lng);
+    });
 
-    // Search box inside the modal -> results list
+    // Search box inside the modal displays a results list.
     const results = $("mapResults");
     const run = debounce(async () => {
         const list = await geocodeSearch($("mapSearch").value);
-        if (!list.length) { results.classList.add("hidden"); results.innerHTML = ""; return; }
-        results.innerHTML = list.map((r, i) =>
-            `<li data-i="${i}">${escapeHtml(r.display_name)}</li>`).join("");
+
+        if (!list.length) {
+            results.classList.add("hidden");
+            results.innerHTML = "";
+            return;
+        }
+
+        results.innerHTML = list.map((r, i) => `<li data-i="${i}">${escapeHtml(r.display_name)}</li>`).join("");
         results.classList.remove("hidden");
+
         results.querySelectorAll("li").forEach(li => li.addEventListener("click", async () => {
             const r = await resolveCoords(list[li.dataset.i]);
             const lat = parseFloat(r.lat), lon = parseFloat(r.lon);
@@ -352,8 +339,8 @@ function buildPickerMap() {
             $("mapSearch").value = r.display_name;
         }));
     }, 500);
-    $("mapSearch").addEventListener("input", run);
 
+    $("mapSearch").addEventListener("input", run);
     mapBuilt = true;
 }
 
@@ -361,7 +348,13 @@ async function setPicked(lat, lon, knownAddr) {
     pmarker.setLatLng([lat, lon]);
     pickedLatLng = { lat, lon };
     $("mapConfirm").disabled = false;
-    if (knownAddr) { pickedAddress = knownAddr; $("mapPickedAddr").textContent = knownAddr; return; }
+
+    if (knownAddr) {
+        pickedAddress = knownAddr;
+        $("mapPickedAddr").textContent = knownAddr;
+        return;
+    }
+
     $("mapPickedAddr").textContent = "Locating…";
     pickedAddress = await reverseGeocode(lat, lon) || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
     $("mapPickedAddr").textContent = pickedAddress;
@@ -373,17 +366,12 @@ function openMapPicker(field) {
         $(field).focus();
         return;
     }
+
     mapTargetField = field;
     pickedAddress = "";
-   
-
-    
-$("mapModalTitle").textContent =
-    field === "pickup" || field === "tripPickup"
+    $("mapModalTitle").textContent = field === "pickup" || field === "tripPickup"
         ? "📍 Select pickup location"
         : "🏁 Select drop location";
-
-   
     $("mapSearch").value = "";
     $("mapResults").classList.add("hidden");
     $("mapPickedAddr").textContent = "—";
@@ -392,36 +380,45 @@ $("mapModalTitle").textContent =
 
     if (!mapBuilt) buildPickerMap();
 
-    // Leaflet needs a size refresh once the modal is visible.
+    // Refreshes the Leaflet map size after the modal becomes visible.
     setTimeout(async () => {
         pmap.invalidateSize();
         const existing = $(field).value.trim();
+
         if (existing) {
             const first = (await geocodeSearch(existing))[0];
             const r = first && await resolveCoords(first);
-            if (r) { const lat = parseFloat(r.lat), lon = parseFloat(r.lon); pmap.setView([lat, lon], 14); setPicked(lat, lon, r.display_name); }
+
+            if (r) {
+                const lat = parseFloat(r.lat), lon = parseFloat(r.lon);
+                pmap.setView([lat, lon], 14);
+                setPicked(lat, lon, r.display_name);
+            }
         } else if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (pos) => { const { latitude: lat, longitude: lon } = pos.coords; pmap.setView([lat, lon], 14); setPicked(lat, lon); },
-                () => { pmap.setView([DEFAULT_MAP_CENTER.lat, DEFAULT_MAP_CENTER.lng], DEFAULT_MAP_ZOOM); }
+                (pos) => {
+                    const { latitude: lat, longitude: lon } = pos.coords;
+                    pmap.setView([lat, lon], 14);
+                    setPicked(lat, lon);
+                },
+                () => {
+                    pmap.setView([DEFAULT_MAP_CENTER.lat, DEFAULT_MAP_CENTER.lng], DEFAULT_MAP_ZOOM);
+                }
             );
         }
     }, 250);
 }
 
 function initMapPicker() {
-   
-    
-document.querySelectorAll(".map-pick-btn").forEach(btn =>
-    btn.addEventListener("click", () => openMapPicker(btn.dataset.target))
-);
+    document.querySelectorAll(".map-pick-btn").forEach(btn =>
+        btn.addEventListener("click", () => openMapPicker(btn.dataset.target))
+    );
 
-
-
-   
-   
     $("mapClose").addEventListener("click", () => hide("mapModal"));
-    $("mapModal").addEventListener("click", (e) => { if (e.target.id === "mapModal") hide("mapModal"); });
+    $("mapModal").addEventListener("click", (e) => {
+        if (e.target.id === "mapModal") hide("mapModal");
+    });
+
     $("mapConfirm").addEventListener("click", () => {
         if (mapTargetField && pickedAddress) {
             $(mapTargetField).value = pickedAddress;
@@ -430,29 +427,47 @@ document.querySelectorAll(".map-pick-btn").forEach(btn =>
         }
         hide("mapModal");
     });
+
     $("mapUseLocation")?.addEventListener("click", () => {
-        if (!navigator.geolocation) { alert("Your browser doesn't support location access — please pick on the map or type the address."); return; }
+        if (!navigator.geolocation) {
+            alert("Your browser doesn't support location access — please pick on the map or type the address.");
+            return;
+        }
+
         navigator.geolocation.getCurrentPosition(
-            (pos) => { const { latitude: lat, longitude: lon } = pos.coords; pmap.setView([lat, lon], 15); setPicked(lat, lon); },
+            (pos) => {
+                const { latitude: lat, longitude: lon } = pos.coords;
+                pmap.setView([lat, lon], 15);
+                setPicked(lat, lon);
+            },
             () => alert("Couldn't get your location. Please allow location access, or pick the spot on the map.")
         );
     });
 }
 
-// Coordinates (when a suggestion or the map was used) beat loose typed text for the actual route.
+// Selected coordinates take priority over manually typed text for the route.
 function updateMapLink() {
     const pickupText = $("pickup").value.trim(), dropText = $("drop").value.trim();
     const from = pickedCoords.pickup ? `${pickedCoords.pickup.lat},${pickedCoords.pickup.lon}` : pickupText;
     const to = pickedCoords.drop ? `${pickedCoords.drop.lat},${pickedCoords.drop.lon}` : dropText;
     const link = $("mapLink");
-    if (pickupText && dropText) { link.href = mapsRouteUrl(from, to); link.classList.remove("hidden"); link.classList.add("flex"); }
-    else { link.classList.add("hidden"); link.classList.remove("flex"); }
+
+    if (pickupText && dropText) {
+        link.href = mapsRouteUrl(from, to);
+        link.classList.remove("hidden");
+        link.classList.add("flex");
+    } else {
+        link.classList.add("hidden");
+        link.classList.remove("flex");
+    }
 }
 
-/* ===================== BOOKING FORM ===================== */
+/* BOOKING FORM */
 function initBookingForm() {
     const from = $("dateFrom"), to = $("dateTo");
-    from.min = todayStr(); to.min = todayStr();
+    from.min = todayStr();
+    to.min = todayStr();
+
     from.addEventListener("change", () => {
         to.min = from.value || todayStr();
         if (to.value && to.value < from.value) to.value = from.value;
@@ -463,75 +478,59 @@ function initBookingForm() {
 
     $("bookingForm").addEventListener("submit", (e) => {
         e.preventDefault();
-        const err = $("formError"); err.classList.add("hidden");
+        const err = $("formError");
+        err.classList.add("hidden");
+
         const b = {
             name: $("name").value.trim(), car: $("car").value,
             pickup: $("pickup").value.trim(), drop: $("drop").value.trim(),
-            // Exact coordinates when a suggestion/map pin was picked, else the typed text (Google will geocode it).
+            // Use exact coordinates when a suggestion or map pin is selected; otherwise use the typed text.
             routeFrom: pickedCoords.pickup ? `${pickedCoords.pickup.lat},${pickedCoords.pickup.lon}` : $("pickup").value.trim(),
             routeTo: pickedCoords.drop ? `${pickedCoords.drop.lat},${pickedCoords.drop.lon}` : $("drop").value.trim(),
             dateFrom: $("dateFrom").value, dateTo: $("dateTo").value,
-        
-      
-            
             adults: $("adults").value,
-children: $("children").value,
-
-phone: $("phone").value.trim(),
+            children: $("children").value,
+            phone: $("phone").value.trim(),
         };
 
-     
-
-
         console.log("BOOKING VALUES:", {
-    name: b.name,
-    pickup: b.pickup,
-    drop: b.drop,
-    dateFrom: b.dateFrom,
-    dateTo: b.dateTo,
-    phone: b.phone
-});
+            name: b.name,
+            pickup: b.pickup,
+            drop: b.drop,
+            dateFrom: b.dateFrom,
+            dateTo: b.dateTo,
+            phone: b.phone
+        });
 
+        if (!b.name) return showError(err, "Please enter your name.");
+        if (!b.pickup) return showError(err, "Please enter the pickup point.");
+        if (!b.drop) return showError(err, "Please enter the drop point.");
+        if (!b.car) return showError(err, "Please select your car.");
+        if (!b.dateFrom) return showError(err, "Please select the From date.");
+        if (!b.dateTo) return showError(err, "Please select the To date.");
+        if (!b.adults) return showError(err, "Please enter the number of adults.");
+        if (b.children === "" || b.children == null) return showError(err, "Please enter the number of children.");
+        if (!b.phone) return showError(err, "Please enter your WhatsApp number.");
 
-
-
-
-if (!b.name) return showError(err, "Please enter your name.");
-if (!b.pickup) return showError(err, "Please enter the pickup point.");
-if (!b.drop) return showError(err, "Please enter the drop point.");
-if (!b.car) return showError(err, "Please select your car.");
-if (!b.dateFrom) return showError(err, "Please select the From date.");
-if (!b.dateTo) return showError(err, "Please select the To date.");
-if (!b.adults) return showError(err, "Please enter the number of adults.");
-if (b.children === "" || b.children == null) return showError(err, "Please enter the number of children.");
-if (!b.phone) return showError(err, "Please enter your WhatsApp number.");
-
-
-
-
-    
-     
         if (b.pickup.toLowerCase() === b.drop.toLowerCase())
             return showError(err, "Pickup and drop points can't be the same.");
+
         if (b.dateTo < b.dateFrom)
             return showError(err, "The 'To' date must be after the 'From' date.");
-        
 
         if (!/^[0-9]{10}$/.test(b.phone))
-    return showError(err, "Enter a valid 10-digit WhatsApp number.");
+            return showError(err, "Enter a valid 10-digit WhatsApp number.");
 
-        
         // Build both notifications.
         const ownerUrl = whatsappLink(buildOwnerMessage(b), OWNER_WHATSAPP);
         const customerUrl = whatsappLink(buildCustomerMessage(b), b.phone);
 
-        // Open the OWNER's WhatsApp immediately (synchronous = no popup block) so they're notified.
+        // Open the owner's WhatsApp immediately so the browser does not block the popup.
         window.open(ownerUrl, "_blank");
-
         showSuccess(b, ownerUrl, customerUrl);
         resetForm(e.target);
 
-        // ---- Backend: save to Sheet + (if Cloud API configured) auto-send BOTH WhatsApp messages ----
+        // Save to Google Sheet in the background when the backend is configured.
         if (isConfigured()) {
             fetch(API_URL, {
                 method: "POST",
@@ -541,39 +540,47 @@ if (!b.phone) return showError(err, "Please enter your WhatsApp number.");
         }
     });
 
-   
-
     const closeModal = $("closeModal");
-const successModal = $("successModal");
+    const successModal = $("successModal");
 
-if (closeModal) {
-    closeModal.addEventListener("click", () => hide("successModal"));
+    if (closeModal) {
+        closeModal.addEventListener("click", () => hide("successModal"));
+    }
+
+    if (successModal) {
+        successModal.addEventListener("click", (e) => {
+            if (e.target.id === "successModal") hide("successModal");
+        });
+    }
 }
 
-if (successModal) {
-    successModal.addEventListener("click", (e) => {
-        if (e.target.id === "successModal") hide("successModal");
-    });
+function resetForm(form) {
+    form.reset();
+    $("passengers").value = 2;
+    pickedCoords.pickup = null;
+    pickedCoords.drop = null;
+    updateMapLink();
 }
 
+function showError(el, msg) {
+    el.textContent = msg;
+    el.classList.remove("hidden");
 }
 
-function resetForm(form) { form.reset(); $("passengers").value = 2; pickedCoords.pickup = null; pickedCoords.drop = null; updateMapLink(); }
-function showError(el, msg) { el.textContent = msg; el.classList.remove("hidden"); }
 function showSuccess(b, ownerUrl, customerUrl) {
     $("modalSummary").innerHTML = `
-    <div class="flex justify-between gap-4"><span class="text-slate-400">Car</span><span class="font-semibold text-right">${escapeHtml(b.car)}</span></div>
-    <div class="flex justify-between gap-4"><span class="text-slate-400">Route</span><span class="font-semibold text-right">${escapeHtml(b.pickup)} → ${escapeHtml(b.drop)}</span></div>
-    <div class="flex justify-between gap-4"><span class="text-slate-400">Dates</span><span class="font-semibold text-right">${b.dateFrom} → ${b.dateTo}</span></div>
-    <div class="flex justify-between gap-4"><span class="text-slate-400">Passengers</span><span class="font-semibold">${escapeHtml(b.passengers)}</span></div>
-    <div class="flex justify-between gap-4"><span class="text-slate-400">Name</span><span class="font-semibold text-right">${escapeHtml(b.name)}</span></div>
-    <a href="${mapsRouteUrl(b.routeFrom || b.pickup, b.routeTo || b.drop)}" target="_blank" rel="noopener" class="block pt-1 text-brand-600 dark:text-brand-300 font-semibold hover:underline">🗺️ View route on Google Maps</a>`;
+        <div class="flex justify-between gap-4"><span class="text-slate-400">Car</span><span class="font-semibold text-right">${escapeHtml(b.car)}</span></div>
+        <div class="flex justify-between gap-4"><span class="text-slate-400">Route</span><span class="font-semibold text-right">${escapeHtml(b.pickup)} → ${escapeHtml(b.drop)}</span></div>
+        <div class="flex justify-between gap-4"><span class="text-slate-400">Dates</span><span class="font-semibold text-right">${b.dateFrom} → ${b.dateTo}</span></div>
+        <div class="flex justify-between gap-4"><span class="text-slate-400">Passengers</span><span class="font-semibold">${escapeHtml(b.passengers)}</span></div>
+        <div class="flex justify-between gap-4"><span class="text-slate-400">Name</span><span class="font-semibold text-right">${escapeHtml(b.name)}</span></div>
+        <a href="${mapsRouteUrl(b.routeFrom || b.pickup, b.routeTo || b.drop)}" target="_blank" rel="noopener" class="block pt-1 text-brand-600 dark:text-brand-300 font-semibold hover:underline">🗺️ View route on Google Maps</a>`;
     $("waOwnerBtn").href = ownerUrl;
     $("waCustomerBtn").href = customerUrl;
     show("successModal");
 }
 
-/* ===================== CONTACT ===================== */
+/* CONTACT */
 function initContact() {
     $("phoneLink").href = whatsappLink("Hi Gurudev Travels! 👋", OWNER_WHATSAPP);
     $("contactForm").addEventListener("submit", (e) => {
@@ -583,77 +590,105 @@ function initContact() {
     });
 }
 
-/* ===================== SCROLL REVEAL ===================== */
+/* SCROLL REVEAL */
 function initReveal() {
     const io = new IntersectionObserver((entries) => {
-        entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+        entries.forEach(en => {
+            if (en.isIntersecting) {
+                en.target.classList.add("in");
+                io.unobserve(en.target);
+            }
+        });
     }, { threshold: 0.15 });
+
     document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 }
 
-/* ===================== NAVBAR + SCROLL-UP ===================== */
+/* NAVBAR + SCROLL-UP */
 function initScrollUi() {
     const nav = $("navbar");
     const up = document.querySelector(".scrollup");
+
     const onScroll = () => {
         const y = window.scrollY;
         nav?.classList.toggle("nav-scrolled", y > 60);
         up?.classList.toggle("show", y > 400);
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 }
 
-/* ===================== SUBSCRIBE (optional) ===================== */
+/* SUBSCRIBE (optional) */
 function initSubscribe() {
     const f = document.getElementById("subscribeForm");
     if (!f) return;
-    f.addEventListener("submit", (e) => { e.preventDefault(); f.reset(); alert("Thanks for subscribing! 🎉 We'll send offers your way."); });
+
+    f.addEventListener("submit", (e) => {
+        e.preventDefault();
+        f.reset();
+        alert("Thanks for subscribing! 🎉 We'll send offers your way.");
+    });
 }
 
-/* ===================== BOOT ===================== */
+/* DESTINATION CAROUSEL */
 function initCarousel() {
     const el = $("destCarousel");
     if (!el) return;
+
     const step = () => {
         const card = el.querySelector(".dest-card");
         return card ? card.getBoundingClientRect().width + 20 : 260;
     };
+
     const atEnd = () => el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
     const next = () => atEnd() ? el.scrollTo({ left: 0, behavior: "smooth" }) : el.scrollBy({ left: step(), behavior: "smooth" });
     const prev = () => el.scrollLeft <= 4 ? el.scrollTo({ left: el.scrollWidth, behavior: "smooth" }) : el.scrollBy({ left: -step(), behavior: "smooth" });
+
     $("destNext")?.addEventListener("click", next);
     $("destPrev")?.addEventListener("click", prev);
 
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     let timer = null;
-    const start = () => { if (!timer) timer = setInterval(next, 2500); };
-    const stop = () => { clearInterval(timer); timer = null; };
+    const start = () => {
+        if (!timer) timer = setInterval(next, 2500);
+    };
+    const stop = () => {
+        clearInterval(timer);
+        timer = null;
+    };
+
     ["mouseenter", "touchstart", "focusin"].forEach(ev => el.addEventListener(ev, stop, { passive: true }));
     ["mouseleave", "touchend", "focusout"].forEach(ev => el.addEventListener(ev, start, { passive: true }));
     start();
 }
 
+/* BOOT */
 document.addEventListener("DOMContentLoaded", () => {
     $("year").textContent = new Date().getFullYear();
-    // Mobile menu toggle
+
+    // Mobile menu toggle.
     const mobileMenu = $("mobileMenu");
     const mobileMenuBtn = $("mobileMenuBtn");
+
     if (mobileMenu && mobileMenuBtn) {
         mobileMenuBtn.addEventListener("click", () => {
             mobileMenu.classList.toggle("hidden");
         });
-        // Close menu when a link is clicked
+
+        // Close the menu when a link is clicked.
         mobileMenu.querySelectorAll("a").forEach(link => {
             link.addEventListener("click", () => mobileMenu.classList.add("hidden"));
         });
     }
 
-    // Theme toggles
+    // Theme toggles.
     const toggleTheme = () => {
         const isDark = document.documentElement.classList.toggle("dark");
         localStorage.setItem("wander-theme", isDark ? "dark" : "light");
     };
+
     $("themeToggle")?.addEventListener("click", toggleTheme);
     $("themeToggleMobile")?.addEventListener("click", toggleTheme);
 
@@ -668,224 +703,79 @@ document.addEventListener("DOMContentLoaded", () => {
     initCarousel();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================================================
-   DESTINATION CAROUSEL DATA
-   ========================================================= */
-
+/* DESTINATION CAROUSEL DATA */
 const destinationImages = [
-
     {
-        image:
-            "assets/img/ooty_main.png",
-
+        image: "assets/img/ooty_main.png",
         name: "Ooty",
-
-        description:
-            "Escape into misty hills, peaceful lakes and beautiful tea gardens surrounded by nature."
+        description: "Escape into misty hills, peaceful lakes and beautiful tea gardens surrounded by nature."
     },
-
-
     {
-        image:
-            "assets/img/kodai_main.png",
-
+        image: "assets/img/kodai_main.png",
         name: "Kodaikanal",
-
-        description:
-            "Discover cool mountain views, peaceful lakes and charming places surrounded by greenery."
+        description: "Discover cool mountain views, peaceful lakes and charming places surrounded by greenery."
     },
-
-
     {
-        image:
-            "assets/img/madurai_main.png",
-
+        image: "assets/img/madurai_main.png",
         name: "Madurai",
-
-        description:
-            "Experience ancient temples, rich culture and the vibrant traditional beauty of Tamil Nadu."
+        description: "Experience ancient temples, rich culture and the vibrant traditional beauty of Tamil Nadu."
     },
-
-
     {
-        image:
-            "assets/img/ramesh_dhanushkodi.png",
-
+        image: "assets/img/ramesh_dhanushkodi.png",
         name: "Rameshwaram",
-
-        description:
-            "Explore sacred temples, beautiful coastal views and one of Tamil Nadu's iconic destinations."
+        description: "Explore sacred temples, beautiful coastal views and one of Tamil Nadu's iconic destinations."
     },
-
-
     {
-        image:
-            "assets/img/kanya_beach.png",
-
+        image: "assets/img/kanya_beach.png",
         name: "Kanyakumari",
-
-        description:
-            "Enjoy stunning ocean views, beautiful sunsets and the unique meeting point of three seas."
+        description: "Enjoy stunning ocean views, beautiful sunsets and the unique meeting point of three seas."
     },
-
-
     {
-        image:
-            "assets/img/yercaud_main.png",
-
+        image: "assets/img/yercaud_main.png",
         name: "Yercaud",
-
-        description:
-            "Relax among green hills, peaceful lakes and scenic viewpoints in this beautiful hill station."
+        description: "Relax among green hills, peaceful lakes and scenic viewpoints in this beautiful hill station."
     },
-
-
     {
-        image:
-            "assets/img/thanja_main.png",
-
+        image: "assets/img/thanja_main.png",
         name: "Thanjavur",
-
-        description:
-            "Discover magnificent temples, traditional art and the rich cultural heritage of Tamil Nadu."
+        description: "Discover magnificent temples, traditional art and the rich cultural heritage of Tamil Nadu."
     },
-
-
     {
-        image:
-            "assets/img/coimb_main.png",
-
+        image: "assets/img/coimb_main.png",
         name: "Coimbatore",
-
-        description:
-            "Explore waterfalls, temples, greenery and the beautiful natural surroundings of Coimbatore."
+        description: "Explore waterfalls, temples, greenery and the beautiful natural surroundings of Coimbatore."
     },
-
-
     {
-        image:
-            "assets/img/tirchy_main.png",
-
+        image: "assets/img/tirchy_main.png",
         name: "Trichy",
-
-        description:
-            "Visit historic temples, magnificent rock formations and fascinating cultural landmarks."
+        description: "Visit historic temples, magnificent rock formations and fascinating cultural landmarks."
     },
-
-
     {
-        image:
-            "assets/img/velan_main.png",
-
+        image: "assets/img/velan_main.png",
         name: "Velankanni",
-
-        description:
-            "Experience a peaceful coastal destination known for its famous church and spiritual atmosphere."
+        description: "Experience a peaceful coastal destination known for its famous church and spiritual atmosphere."
     }
-
 ];
 
-
-/* =========================================================
-   CURRENT DESTINATION
-   ========================================================= */
-
+/* CURRENT DESTINATION */
 let currentDestination = 2;
 
+/* MAIN CARDS */
+const destinationCards = document.querySelectorAll(".dest-main-card");
 
-/* =========================================================
-   MAIN CARDS
-   ========================================================= */
+/* THUMBNAILS */
+const destinationThumbs = document.querySelectorAll(".dest-thumb");
 
-const destinationCards =
-    document.querySelectorAll(".dest-main-card");
+/* CENTER CONTENT */
+const destinationPlaceName = document.querySelector(".dest-place-name");
+const destinationDescription = document.querySelector(".dest-description");
+const destinationDetailsBtn = document.getElementById("destinationDetailsBtn");
 
-
-/* =========================================================
-   THUMBNAILS
-   ========================================================= */
-
-const destinationThumbs =
-    document.querySelectorAll(".dest-thumb");
-
-
-/* =========================================================
-   CENTER CONTENT
-   ========================================================= */
-
-const destinationPlaceName =
-    document.querySelector(".dest-place-name");
-
-
-const destinationDescription =
-    document.querySelector(".dest-description");
-
-
-const destinationDetailsBtn =
-    document.getElementById("destinationDetailsBtn");
-
-
-/* =========================================================
-   UPDATE CAROUSEL
-   ========================================================= */
-
+/* UPDATE CAROUSEL */
 function updateDestinationCarousel(direction = "") {
-
-
-    /* ==========================================
-       UPDATE MAIN 5 CARDS
-       ========================================== */
-
-
+    // Update the main five cards.
     destinationCards.forEach(card => {
-
-        card.classList.remove(
-            "moving-next",
-            "moving-prev"
-        );
-
+        card.classList.remove("moving-next", "moving-prev");
         void card.offsetWidth;
 
         if (direction === "next") {
@@ -895,230 +785,95 @@ function updateDestinationCarousel(direction = "") {
         if (direction === "prev") {
             card.classList.add("moving-prev");
         }
-
     });
 
+    destinationCards.forEach((card, positionIndex) => {
+        const relativePosition = positionIndex - 2;
+        const imageIndex = (
+            currentDestination +
+            relativePosition +
+            destinationImages.length
+        ) % destinationImages.length;
 
+        const image = card.querySelector("img");
 
-    destinationCards.forEach(
-        (card, positionIndex) => {
+        // Update image.
+        image.src = destinationImages[imageIndex].image;
 
-            const relativePosition =
-                positionIndex - 2;
+        // Update alt text.
+        image.alt = destinationImages[imageIndex].name;
 
+        // Update position.
+        card.setAttribute("data-position", relativePosition);
+    });
 
-            const imageIndex =
-                (
-                    currentDestination +
-                    relativePosition +
-                    destinationImages.length
-                ) %
-                destinationImages.length;
+    // Update the center name.
+    destinationPlaceName.textContent = destinationImages[currentDestination].name;
 
+    // Update the center description.
+    destinationDescription.textContent = destinationImages[currentDestination].description;
 
-            const image =
-                card.querySelector("img");
+    destinationDetailsBtn.href = "destination-details.html?place=" + encodeURIComponent(destinationImages[currentDestination].name);
 
+    // Update the bottom thumbnails.
+    destinationThumbs.forEach((thumb, index) => {
+        const thumbIndex = (
+            currentDestination -
+            2 +
+            index +
+            destinationImages.length
+        ) % destinationImages.length;
 
-            /* UPDATE IMAGE */
+        const image = thumb.querySelector("img");
+        const name = thumb.querySelector("span");
 
-            image.src =
-                destinationImages[imageIndex].image;
+        // Update thumbnail image.
+        image.src = destinationImages[thumbIndex].image;
 
+        // Update alt text.
+        image.alt = destinationImages[thumbIndex].name;
 
-            /* UPDATE ALT */
+        // Update thumbnail name.
+        name.textContent = destinationImages[thumbIndex].name;
 
-            image.alt =
-                destinationImages[imageIndex].name;
+        // Update data index.
+        thumb.setAttribute("data-index", thumbIndex);
 
-
-            /* UPDATE POSITION */
-
-            card.setAttribute(
-                "data-position",
-                relativePosition
-            );
-
+        // Set the active thumbnail.
+        if (thumbIndex === currentDestination) {
+            thumb.classList.add("active");
+        } else {
+            thumb.classList.remove("active");
         }
-    );
-
-
-    /* ==========================================
-       UPDATE CENTER NAME
-       ========================================== */
-
-    destinationPlaceName.textContent =
-        destinationImages[currentDestination].name;
-
-
-    /* ==========================================
-       UPDATE CENTER DESCRIPTION
-       ========================================== */
-
-    destinationDescription.textContent =
-        destinationImages[currentDestination].description;
-
-
-
-
-    destinationDetailsBtn.href =
-        "destination-details.html?place=" +
-        encodeURIComponent(
-            destinationImages[currentDestination].name
-        );
-
-    /* ==========================================
-       UPDATE BOTTOM THUMBNAILS
-       ========================================== */
-
-    destinationThumbs.forEach(
-        (thumb, index) => {
-
-            const thumbIndex =
-                (
-                    currentDestination -
-                    2 +
-                    index +
-                    destinationImages.length
-                ) %
-                destinationImages.length;
-
-
-            const image =
-                thumb.querySelector("img");
-
-
-            const name =
-                thumb.querySelector("span");
-
-
-            /* UPDATE THUMBNAIL IMAGE */
-
-            image.src =
-                destinationImages[thumbIndex].image;
-
-
-            /* UPDATE ALT */
-
-            image.alt =
-                destinationImages[thumbIndex].name;
-
-
-            /* UPDATE NAME */
-
-            name.textContent =
-                destinationImages[thumbIndex].name;
-
-
-            /* UPDATE DATA INDEX */
-
-            thumb.setAttribute(
-                "data-index",
-                thumbIndex
-            );
-
-
-            /* ACTIVE THUMBNAIL */
-
-            if (
-                thumbIndex ===
-                currentDestination
-            ) {
-
-                thumb.classList.add("active");
-
-            } else {
-
-                thumb.classList.remove("active");
-
-            }
-
-        }
-    );
-
+    });
 }
 
+/* NEXT BUTTON */
+document.getElementById("destNext").addEventListener("click", function () {
+    currentDestination = (currentDestination + 1) % destinationImages.length;
+    updateDestinationCarousel("next");
+});
 
-/* =========================================================
-   NEXT BUTTON
-   ========================================================= */
+/* PREVIOUS BUTTON */
+document.getElementById("destPrev").addEventListener("click", function () {
+    currentDestination = (
+        currentDestination -
+        1 +
+        destinationImages.length
+    ) % destinationImages.length;
 
-document
-    .getElementById("destNext")
-    .addEventListener(
-        "click",
-        function () {
+    updateDestinationCarousel("prev");
+});
 
-            currentDestination =
-                (
-                    currentDestination + 1
-                ) %
-                destinationImages.length;
+/* THUMBNAIL CLICK */
+destinationThumbs.forEach(function (thumb) {
+    thumb.addEventListener("click", function () {
+        currentDestination = Number(this.getAttribute("data-index"));
+        updateDestinationCarousel();
+    });
+});
 
-
-            updateDestinationCarousel("next");
-
-        }
-    );
-
-
-/* =========================================================
-   PREVIOUS BUTTON
-   ========================================================= */
-
-document
-    .getElementById("destPrev")
-    .addEventListener(
-        "click",
-        function () {
-
-            currentDestination =
-                (
-                    currentDestination -
-                    1 +
-                    destinationImages.length
-                ) %
-                destinationImages.length;
-
-
-            updateDestinationCarousel("prev");
-
-        }
-    );
-
-
-/* =========================================================
-   THUMBNAIL CLICK
-   ========================================================= */
-
-destinationThumbs.forEach(
-    function (thumb) {
-
-        thumb.addEventListener(
-            "click",
-            function () {
-
-                currentDestination =
-                    Number(
-                        this.getAttribute(
-                            "data-index"
-                        )
-                    );
-
-
-                updateDestinationCarousel();
-
-            }
-        );
-
-    }
-);
-
-
-/* =========================================================
-   INITIAL LOAD
-   ========================================================= */
-
+/* INITIAL LOAD */
 updateDestinationCarousel();
 
 
@@ -1131,284 +886,96 @@ updateDestinationCarousel();
 
 
 
+// ==================== OFFER AND UPDATE SECTION ====================
 
+// GURUDEV TRAVELS — TRAVEL UPDATES SUBSCRIBE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// offer and update section
-
-
-/* =========================================================
-   GURUDEV TRAVELS
-   TRAVEL UPDATES SUBSCRIBE
-   ========================================================= */
-
-const subscribeForm =
-    document.getElementById("subscribeForm");
-
-const subscribeEmail =
-    document.getElementById("subscribeEmail");
-
-const subscribeMessage =
-    document.getElementById("subscribeMessage");
-
-const subscribeBtnText =
-    document.getElementById("subscribeBtnText");
-
+const subscribeForm = document.getElementById("subscribeForm");
+const subscribeEmail = document.getElementById("subscribeEmail");
+const subscribeMessage = document.getElementById("subscribeMessage");
+const subscribeBtnText = document.getElementById("subscribeBtnText");
 
 if (subscribeForm) {
-
     subscribeForm.addEventListener("submit", function (e) {
-
         e.preventDefault();
 
-        const email =
-            subscribeEmail.value.trim();
+        const email = subscribeEmail.value.trim();
 
-
-        /* Empty email */
-
+        // Empty email
         if (!email) {
-
-            subscribeMessage.textContent =
-                "Please enter your email address.";
-
-            subscribeMessage.style.color =
-                "#fb7185";
-
+            subscribeMessage.textContent = "Please enter your email address.";
+            subscribeMessage.style.color = "#fb7185";
             return;
         }
 
-
-        /* Email validation */
-
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailPattern.test(email)) {
-
-            subscribeMessage.textContent =
-                "Please enter a valid email address.";
-
-            subscribeMessage.style.color =
-                "#fb7185";
-
+            subscribeMessage.textContent = "Please enter a valid email address.";
+            subscribeMessage.style.color = "#fb7185";
             return;
         }
 
-
-        /* Loading */
-
-        subscribeBtnText.textContent =
-            "Joining...";
-
-
-        subscribeMessage.textContent =
-            "Connecting you with Gurudev Travels...";
-
-        subscribeMessage.style.color =
-            "#38bdf8";
-
+        // Loading
+        subscribeBtnText.textContent = "Joining...";
+        subscribeMessage.textContent = "Connecting you with Gurudev Travels...";
+        subscribeMessage.style.color = "#38bdf8";
 
         setTimeout(function () {
-
-            subscribeBtnText.textContent =
-                "You're In ✓";
-
-
-            subscribeMessage.textContent =
-                "Welcome to Gurudev Travels! Your latest travel offers are on the way.";
-
-            subscribeMessage.style.color =
-                "#22d3ee";
-
-
+            subscribeBtnText.textContent = "You're In ✓";
+            subscribeMessage.textContent = "Welcome to Gurudev Travels! Your latest travel offers are on the way.";
+            subscribeMessage.style.color = "#22d3ee";
             subscribeEmail.value = "";
 
-
-            /* Reset button text */
-
+            // Reset button text
             setTimeout(function () {
-
-                subscribeBtnText.textContent =
-                    "Get Updates";
-
+                subscribeBtnText.textContent = "Get Updates";
             }, 2500);
-
-
         }, 1000);
-
     });
-
-
 }
 
 
+// ==================== CONTACT SECTION ====================
 
+// GURUDEV TRAVELS — PREMIUM CONTACT + WHATSAPP
 
+// Original phone number
+const gurudevPhone = "919688211890";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// contact section
-
-
-
-
-
-
-
-
-
-
-/* =========================================================
-   GURUDEV TRAVELS
-   PREMIUM CONTACT + WHATSAPP
-   ========================================================= */
-
-
-/* =========================================================
-   ORIGINAL PHONE NUMBER
-   ========================================================= */
-
-const gurudevPhone =
-    "919688211890";
-
-
-/* =========================================================
-   PHONE LINK
-   ========================================================= */
-
-const phoneLink =
-    document.getElementById("phoneLink");
+// Phone link
+const phoneLink = document.getElementById("phoneLink");
 
 if (phoneLink) {
-
-    phoneLink.href =
-        "tel:+919688211890";
-
+    phoneLink.href = "tel:+919688211890";
 }
 
-
-/* =========================================================
-   CONTACT FORM
-   ========================================================= */
-
-const contactForm =
-    document.getElementById("contactForm");
-
-const cName =
-    document.getElementById("cName");
-
-const cMsg =
-    document.getElementById("cMsg");
-
+// Contact form
+const contactForm = document.getElementById("contactForm");
+const cName = document.getElementById("cName");
+const cMsg = document.getElementById("cMsg");
 
 if (contactForm) {
+    contactForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-    contactForm.addEventListener(
-        "submit",
-        function (event) {
+        const name = cName.value.trim();
+        const message = cMsg.value.trim();
 
-            event.preventDefault();
+        // Validation
+        if (!name) {
+            cName.focus();
+            return;
+        }
 
+        if (!message) {
+            cMsg.focus();
+            return;
+        }
 
-            const name =
-                cName.value.trim();
-
-            const message =
-                cMsg.value.trim();
-
-
-            /* =========================
-               VALIDATION
-               ========================= */
-
-            if (!name) {
-
-                cName.focus();
-
-                return;
-            }
-
-
-            if (!message) {
-
-                cMsg.focus();
-
-                return;
-            }
-
-
-            /* =========================
-               WHATSAPP MESSAGE
-               ========================= */
-
-            const whatsappMessage =
-                `Hello Gurudev Travels,
+        // WhatsApp message
+        const whatsappMessage = `Hello Gurudev Travels,
 
 My name is ${name}.
 
@@ -1416,351 +983,118 @@ ${message}
 
 I would like to know more about your travel services.`;
 
+        const whatsappURL =
+            "https://wa.me/" +
+            gurudevPhone +
+            "?text=" +
+            encodeURIComponent(whatsappMessage);
 
-            const whatsappURL =
-                "https://wa.me/" +
-                gurudevPhone +
-                "?text=" +
-                encodeURIComponent(
-                    whatsappMessage
-                );
-
-
-            /* =========================
-               OPEN WHATSAPP
-               ========================= */
-
-            window.open(
-                whatsappURL,
-                "_blank"
-            );
-
-        }
-    );
-
+        // Open WhatsApp
+        window.open(whatsappURL, "_blank");
+    });
 }
 
-
-/* =========================================================
-   QUICK ENQUIRY CHIPS
-   ========================================================= */
-
-const quickTopics =
-    document.querySelectorAll(
-        ".quick-topic"
-    );
-
+// Quick enquiry chips
+const quickTopics = document.querySelectorAll(".quick-topic");
 
 quickTopics.forEach(function (button) {
+    button.addEventListener("click", function () {
+        const message = button.dataset.message;
 
-    button.addEventListener(
-        "click",
-        function () {
-
-            const message =
-                button.dataset.message;
-
-
-            /* Fill message */
-
-            if (cMsg) {
-
-                cMsg.value =
-                    message;
-
-                cMsg.focus();
-
-            }
-
-
-            /* Active state */
-
-            quickTopics.forEach(
-                function (item) {
-
-                    item.classList.remove(
-                        "active"
-                    );
-
-                }
-            );
-
-
-            button.classList.add(
-                "active"
-            );
-
+        // Fill message
+        if (cMsg) {
+            cMsg.value = message;
+            cMsg.focus();
         }
-    );
 
+        // Active state
+        quickTopics.forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+    });
 });
 
 
+// ==================== FOOTER SECTION ====================
 
+// GURUDEV TRAVELS — PREMIUM FOOTER JAVASCRIPT
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// footer section
-
-
-/* =========================================================
-   GURUDEV TRAVELS
-   PREMIUM FOOTER JAVASCRIPT
-   ========================================================= */
-
-
-/* =========================================================
-   DYNAMIC COPYRIGHT YEAR
-   ========================================================= */
-
-const yearElement =
-    document.getElementById("year");
+// Dynamic copyright year
+const yearElement = document.getElementById("year");
 
 if (yearElement) {
-
-    yearElement.textContent =
-        new Date().getFullYear();
-
+    yearElement.textContent = new Date().getFullYear();
 }
 
-
-/* =========================================================
-   LUXURY SCROLL UP BUTTON
-   ========================================================= */
-
-const luxuryScrollup =
-    document.getElementById("luxuryScrollup");
-
+// Luxury scroll up button
+const luxuryScrollup = document.getElementById("luxuryScrollup");
 
 function updateScrollButton() {
-
     if (!luxuryScrollup) {
         return;
     }
 
     if (window.scrollY > 500) {
-
         luxuryScrollup.classList.add("show");
-
     } else {
-
         luxuryScrollup.classList.remove("show");
-
     }
-
 }
 
+// Listen for scroll
+window.addEventListener("scroll", updateScrollButton, { passive: true });
 
-/* Listen for scroll */
-
-window.addEventListener(
-    "scroll",
-    updateScrollButton,
-    { passive: true }
-);
-
-
-/* Initial state */
-
+// Initial state
 updateScrollButton();
 
+// Smooth scroll for internal footer links
+document.querySelectorAll('.luxury-footer a[href^="#"]').forEach(function (link) {
+    link.addEventListener("click", function (event) {
+        const targetId = link.getAttribute("href");
 
-/* =========================================================
-   SMOOTH SCROLL FOR INTERNAL FOOTER LINKS
-   ========================================================= */
+        if (!targetId || targetId === "#") {
+            return;
+        }
 
-document
-    .querySelectorAll('.luxury-footer a[href^="#"]')
-    .forEach(function (link) {
+        const target = document.querySelector(targetId);
 
-        link.addEventListener(
-            "click",
-            function (event) {
+        if (!target) {
+            return;
+        }
 
-                const targetId =
-                    link.getAttribute("href");
+        event.preventDefault();
 
-
-                if (
-                    !targetId ||
-                    targetId === "#"
-                ) {
-                    return;
-                }
-
-
-                const target =
-                    document.querySelector(
-                        targetId
-                    );
-
-
-                if (!target) {
-                    return;
-                }
-
-
-                event.preventDefault();
-
-
-                target.scrollIntoView({
-
-                    behavior: "smooth",
-
-                    block: "start"
-
-                });
-
-            }
-        );
-
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
     });
+});
 
-
-/* =========================================================
-   FOOTER CTA BUTTON FEEDBACK
-   ========================================================= */
-
-const footerBookButton =
-    document.querySelector(
-        ".footer-book-btn"
-    );
-
+// Footer CTA button feedback
+const footerBookButton = document.querySelector(".footer-book-btn");
 
 if (footerBookButton) {
+    footerBookButton.addEventListener("click", function () {
+        footerBookButton.classList.add("footer-button-clicked");
 
-    footerBookButton.addEventListener(
-        "click",
-        function () {
-
-            footerBookButton.classList.add(
-                "footer-button-clicked"
-            );
-
-            setTimeout(
-                function () {
-
-                    footerBookButton.classList.remove(
-                        "footer-button-clicked"
-                    );
-
-                },
-                350
-            );
-
-        }
-    );
-
+        setTimeout(function () {
+            footerBookButton.classList.remove("footer-button-clicked");
+        }, 350);
+    });
 }
 
 
 
 
 
+// ==================== ABOUT SECTION ====================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// about section
-
-
-
-
-
-
-/* ============================================================
-   ABOUT SECTION — SOFT REVEAL
-   ============================================================ */
+// ABOUT SECTION — SOFT REVEAL
 
 document.addEventListener("DOMContentLoaded", () => {
-
     const aboutSection = document.querySelector("#about");
 
     if (!aboutSection) return;
@@ -1771,16 +1105,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const observer = new IntersectionObserver(
         (entries, obs) => {
-
             entries.forEach((entry) => {
-
                 if (!entry.isIntersecting) return;
 
                 entry.target.classList.add("about-visible");
-
                 obs.unobserve(entry.target);
             });
-
         },
         {
             threshold: 0.15
@@ -1791,61 +1121,20 @@ document.addEventListener("DOMContentLoaded", () => {
         item.classList.add("about-reveal");
         observer.observe(item);
     });
-
 });
 
 
+// ==================== REVIEW SECTION ====================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// review section
-/* ============================================================
-   GURUDEV TRAVELS — REVIEWS SYSTEM
-   Static Frontend + LocalStorage
-============================================================ */
+// GURUDEV TRAVELS — REVIEWS SYSTEM — STATIC FRONTEND + LOCALSTORAGE
 
 (function initReviews() {
-
     const reviewForm = document.getElementById("reviewForm");
     const reviewsCards = document.getElementById("reviewsCards");
 
     if (!reviewForm || !reviewsCards) return;
 
-
-    /* ========================================================
-       SAMPLE REVIEWS
-       These are demo/sample reviews, not real customer reviews.
-    ======================================================== */
-
+    // Sample reviews — These are demo/sample reviews, not real customer reviews.
     const defaultReviews = [
         {
             name: "Arun",
@@ -1862,7 +1151,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ],
             createdAt: Date.now() - (2 * 60 * 60 * 1000)
         },
-
         {
             name: "Meena",
             route: "Tirunelveli → Kanyakumari",
@@ -1877,7 +1165,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ],
             createdAt: Date.now() - (8 * 60 * 60 * 1000)
         },
-
         {
             name: "Karthik",
             route: "Chennai → Ooty",
@@ -1894,81 +1181,53 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-
-    /* ========================================================
-       LOAD REVIEWS
-    ======================================================== */
-
+    // Load reviews
     let reviews;
 
     try {
-
-        const savedReviews =
-            localStorage.getItem("gurudevTravelsReviews");
+        const savedReviews = localStorage.getItem("gurudevTravelsReviews");
 
         reviews = savedReviews
             ? JSON.parse(savedReviews)
             : defaultReviews;
-
     } catch (error) {
-
         reviews = defaultReviews;
-
     }
 
-
-    /* ========================================================
-       SAVE REVIEWS
-    ======================================================== */
-
+    // Save reviews
     function saveReviews() {
-
         localStorage.setItem(
             "gurudevTravelsReviews",
             JSON.stringify(reviews)
         );
-
     }
 
-
-    /* ========================================================
-       INITIAL SAVE
-    ======================================================== */
-
+    // Initial save
     if (!localStorage.getItem("gurudevTravelsReviews")) {
         saveReviews();
     }
 
-
-    /* ========================================================
-       RELATIVE TIME
-    ======================================================== */
-
+    // Relative time
     function getRelativeTime(timestamp) {
-
-        const seconds =
-            Math.floor((Date.now() - timestamp) / 1000);
+        const seconds = Math.floor((Date.now() - timestamp) / 1000);
 
         if (seconds < 60) {
             return "Just Now";
         }
 
-        const minutes =
-            Math.floor(seconds / 60);
+        const minutes = Math.floor(seconds / 60);
 
         if (minutes < 60) {
             return `${minutes} min ago`;
         }
 
-        const hours =
-            Math.floor(minutes / 60);
+        const hours = Math.floor(minutes / 60);
 
         if (hours < 24) {
             return `${hours} hour${hours > 1 ? "s" : ""} ago`;
         }
 
-        const days =
-            Math.floor(hours / 24);
+        const days = Math.floor(hours / 24);
 
         if (days === 1) {
             return "Yesterday";
@@ -1977,502 +1236,267 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${days} days ago`;
     }
 
-
-    /* ========================================================
-       CREATE STARS
-    ======================================================== */
-
+    // Create stars
     function createStars(rating) {
-
         let stars = "";
 
         for (let i = 1; i <= 5; i++) {
-
             stars += i <= rating ? "★" : "☆";
-
         }
 
         return stars;
     }
 
-
-    /* ========================================================
-       CREATE AVATAR
-    ======================================================== */
-
+    // Create avatar
     function getInitial(name) {
-
         return name
             .trim()
             .charAt(0)
             .toUpperCase();
-
     }
 
-
-    /* ========================================================
-       RENDER REVIEWS
-       Latest 3 only
-    ======================================================== */
-
+    // Render reviews — Latest 3 only
     function renderReviews() {
+        reviews.sort((a, b) => b.createdAt - a.createdAt);
 
-        reviews.sort(
-            (a, b) => b.createdAt - a.createdAt
-        );
+        const latestReviews = reviews.slice(0, 3);
 
+        reviewsCards.innerHTML = latestReviews.map((review, index) => {
+            const highlights = review.highlights || [];
 
-        const latestReviews =
-            reviews.slice(0, 3);
+            const highlightHTML = highlights
+                .map(
+                    item =>
+                        `<span class="review-highlight-tag">
+                            ${escapeHTML(item)}
+                        </span>`
+                )
+                .join("");
 
-
-        reviewsCards.innerHTML =
-            latestReviews.map((review, index) => {
-
-                const highlights =
-                    review.highlights || [];
-
-
-                const highlightHTML =
-                    highlights
-                        .map(
-                            item =>
-                                `<span class="review-highlight-tag">
-                                    ${escapeHTML(item)}
-                                </span>`
-                        )
-                        .join("");
-
-
-                return `
-
-                    <article class="review-card">
-
-                        ${index === 0
+            return `
+                <article class="review-card">
+                    ${index === 0
                         ? `
-                                <div class="latest-review-badge">
-                                    ✨ LATEST TRAVELLER
-                                </div>
-                                `
+                            <div class="latest-review-badge">
+                                ✨ LATEST TRAVELLER
+                            </div>
+                        `
                         : ""
                     }
 
-
-                        <div class="review-card-header">
-
-                            <div class="reviewer-info">
-
-                                <div class="reviewer-avatar">
-                                    ${escapeHTML(
-                        getInitial(review.name)
-                    )}
-                                </div>
-
-                                <div>
-
-                                    <strong>
-                                        ${escapeHTML(review.name)}
-                                    </strong>
-
-                                    <small>
-                                        ${getRelativeTime(
-                        review.createdAt
-                    )}
-                                    </small>
-
-                                </div>
-
+                    <div class="review-card-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                ${escapeHTML(getInitial(review.name))}
                             </div>
 
+                            <div>
+                                <strong>
+                                    ${escapeHTML(review.name)}
+                                </strong>
 
-                            <div class="review-stars">
-                                ${createStars(review.rating)}
+                                <small>
+                                    ${getRelativeTime(review.createdAt)}
+                                </small>
                             </div>
-
                         </div>
 
-
-                        <div class="review-route">
-
-                            <span>
-                                📍 ${escapeHTML(review.route)}
-                            </span>
-
-                            <span>
-                                ${escapeHTML(review.tripType)}
-                            </span>
-
+                        <div class="review-stars">
+                            ${createStars(review.rating)}
                         </div>
+                    </div>
 
+                    <div class="review-route">
+                        <span>
+                            📍 ${escapeHTML(review.route)}
+                        </span>
 
-                        <div class="review-text-content">
+                        <span>
+                            ${escapeHTML(review.tripType)}
+                        </span>
+                    </div>
 
-                            "${escapeHTML(
-                        review.experience
-                    )}"
+                    <div class="review-text-content">
+                        "${escapeHTML(review.experience)}"
+                    </div>
 
-                        </div>
+                    <div class="review-highlights-display">
+                        ${highlightHTML}
+                    </div>
 
+                    <div class="review-completed">
+                        <span>
+                            🚗 ${escapeHTML(review.vehicle)}
+                        </span>
 
-                        <div class="review-highlights-display">
-
-                            ${highlightHTML}
-
-                        </div>
-
-
-                        <div class="review-completed">
-
-                            <span>
-                                🚗 ${escapeHTML(review.vehicle)}
-                            </span>
-
-                            <strong>
-                                ✓ TRIP COMPLETED
-                            </strong>
-
-                        </div>
-
-                    </article>
-
-                `;
-
-            })
-                .join("");
-
+                        <strong>
+                            ✓ TRIP COMPLETED
+                        </strong>
+                    </div>
+                </article>
+            `;
+        }).join("");
 
         updateRatingSummary();
     }
 
-
-    /* ========================================================
-       UPDATE RATING
-    ======================================================== */
-
+    // Update rating
     function updateRatingSummary() {
-
         if (!reviews.length) return;
 
+        const total = reviews.reduce(
+            (sum, review) => sum + Number(review.rating || 0),
+            0
+        );
 
-        const total =
-            reviews.reduce(
-                (sum, review) =>
-                    sum + Number(review.rating || 0),
-                0
-            );
+        const average = total / reviews.length;
 
-
-        const average =
-            total / reviews.length;
-
-
-        const averageElement =
-            document.getElementById("averageRating");
-
+        const averageElement = document.getElementById("averageRating");
 
         if (averageElement) {
-
-            averageElement.textContent =
-                average.toFixed(1);
-
+            averageElement.textContent = average.toFixed(1);
         }
 
-
-        const countElement =
-            document.getElementById("reviewCountText");
-
+        const countElement = document.getElementById("reviewCountText");
 
         if (countElement) {
-
             countElement.textContent =
                 `Based on ${reviews.length} traveller ${reviews.length === 1
                     ? "experience"
                     : "experiences"
                 }`;
-
         }
-
     }
 
-
-    /* ========================================================
-       HTML SAFETY
-    ======================================================== */
-
+    // HTML safety
     function escapeHTML(value) {
-
         return String(value)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
-
-    /* ========================================================
-       RATING SELECTOR
-    ======================================================== */
-
-    const ratingButtons =
-        document.querySelectorAll(
-            "#ratingSelector button"
-        );
-
-    const ratingInput =
-        document.getElementById("reviewRating");
-
+    // Rating selector
+    const ratingButtons = document.querySelectorAll("#ratingSelector button");
+    const ratingInput = document.getElementById("reviewRating");
 
     function updateRating(selectedRating) {
-
         ratingInput.value = selectedRating;
 
-
         ratingButtons.forEach(button => {
-
-            const value =
-                Number(button.dataset.rating);
+            const value = Number(button.dataset.rating);
 
             button.classList.toggle(
                 "active",
                 value <= selectedRating
             );
-
         });
-
     }
 
-
     ratingButtons.forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                updateRating(
-                    Number(button.dataset.rating)
-                );
-
-            }
-        );
-
+        button.addEventListener("click", () => {
+            updateRating(Number(button.dataset.rating));
+        });
     });
-
 
     updateRating(5);
 
+    // Character count
+    const experienceInput = document.getElementById("reviewExperience");
+    const charCount = document.getElementById("reviewCharCount");
 
-    /* ========================================================
-       CHARACTER COUNT
-    ======================================================== */
+    experienceInput.addEventListener("input", () => {
+        charCount.textContent = experienceInput.value.length;
+    });
 
-    const experienceInput =
-        document.getElementById(
-            "reviewExperience"
+    // Submit review
+    reviewForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("reviewName").value.trim();
+        const route = document.getElementById("reviewRoute").value.trim();
+        const tripType = document.getElementById("reviewTripType").value;
+        const vehicle = document.getElementById("reviewVehicle").value;
+
+        const rating = Number(
+            document.getElementById("reviewRating").value
         );
 
-    const charCount =
-        document.getElementById(
-            "reviewCharCount"
-        );
+        const experience = document.getElementById("reviewExperience").value.trim();
 
+        const selectedHighlights = Array.from(
+            document.querySelectorAll(".highlight-option input:checked")
+        ).map(checkbox => checkbox.value);
 
-    experienceInput.addEventListener(
-        "input",
-        () => {
-
-            charCount.textContent =
-                experienceInput.value.length;
-
+        if (
+            !name ||
+            !route ||
+            !tripType ||
+            !vehicle ||
+            !rating ||
+            !experience
+        ) {
+            return;
         }
-    );
 
+        // New review
+        const newReview = {
+            name,
+            route,
+            tripType,
+            vehicle,
+            rating,
+            experience,
+            highlights: selectedHighlights,
+            createdAt: Date.now()
+        };
 
-    /* ========================================================
-       SUBMIT REVIEW
-    ======================================================== */
+        // Add latest review FIRST
+        reviews.unshift(newReview);
 
-    reviewForm.addEventListener(
-        "submit",
-        function (event) {
+        saveReviews();
 
-            event.preventDefault();
+        // Animate cards
+        reviewsCards.classList.add("is-changing");
 
+        setTimeout(() => {
+            renderReviews();
 
-            const name =
-                document.getElementById(
-                    "reviewName"
-                ).value.trim();
+            reviewsCards.classList.remove("is-changing");
+        }, 250);
 
+        // Reset form
+        reviewForm.reset();
 
-            const route =
-                document.getElementById(
-                    "reviewRoute"
-                ).value.trim();
+        updateRating(5);
+        charCount.textContent = "0";
 
+        // Success
+        const successMessage = document.getElementById("reviewSuccess");
 
-            const tripType =
-                document.getElementById(
-                    "reviewTripType"
-                ).value;
+        successMessage.classList.add("show");
 
+        setTimeout(() => {
+            successMessage.classList.remove("show");
+        }, 4000);
 
-            const vehicle =
-                document.getElementById(
-                    "reviewVehicle"
-                ).value;
+        // Scroll to latest reviews
+        setTimeout(() => {
+            reviewsCards.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }, 350);
+    });
 
-
-            const rating =
-                Number(
-                    document.getElementById(
-                        "reviewRating"
-                    ).value
-                );
-
-
-            const experience =
-                document.getElementById(
-                    "reviewExperience"
-                ).value.trim();
-
-
-            const selectedHighlights =
-                Array.from(
-                    document.querySelectorAll(
-                        ".highlight-option input:checked"
-                    )
-                ).map(
-                    checkbox => checkbox.value
-                );
-
-
-            if (
-                !name ||
-                !route ||
-                !tripType ||
-                !vehicle ||
-                !rating ||
-                !experience
-            ) {
-
-                return;
-
-            }
-
-
-            /* NEW REVIEW */
-            const newReview = {
-
-                name,
-                route,
-                tripType,
-                vehicle,
-                rating,
-                experience,
-
-                highlights:
-                    selectedHighlights,
-
-                createdAt:
-                    Date.now()
-
-            };
-
-
-            /* Add latest review FIRST */
-            reviews.unshift(newReview);
-
-
-            saveReviews();
-
-
-            /* Animate cards */
-            reviewsCards.classList.add(
-                "is-changing"
-            );
-
-
-            setTimeout(() => {
-
-                renderReviews();
-
-                reviewsCards.classList.remove(
-                    "is-changing"
-                );
-
-            }, 250);
-
-
-            /* Reset form */
-            reviewForm.reset();
-
-
-            updateRating(5);
-
-            charCount.textContent = "0";
-
-
-            /* Success */
-            const successMessage =
-                document.getElementById(
-                    "reviewSuccess"
-                );
-
-
-            successMessage.classList.add(
-                "show"
-            );
-
-
-            setTimeout(() => {
-
-                successMessage.classList.remove(
-                    "show"
-                );
-
-            }, 4000);
-
-
-            /* Scroll to latest reviews */
-            setTimeout(() => {
-
-                reviewsCards.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-
-            }, 350);
-
-        }
-    );
-
-
-    /* ========================================================
-       REVIEW NAVIGATION
-       Shows latest 3, then rotates older reviews
-    ======================================================== */
-
-    /* ========================================================
-   REVIEW NAVIGATION
-   - Always keeps newest review as #1
-   - Older reviews stay stored
-   - Shows only 3 reviews at a time
-   - Arrows move through older reviews
-======================================================== */
-
+    // Review navigation — Always keeps newest review as #1; older reviews stay stored; shows only 3 reviews at a time; arrows move through older reviews.
     let reviewPage = 0;
-
     const REVIEWS_PER_PAGE = 3;
 
-
-    /* --------------------------------------------------------
-       RENDER CURRENT 3 REVIEWS
-    -------------------------------------------------------- */
-
+    // Render current 3 reviews
     function renderReviewPage() {
-
         const sortedReviews = [...reviews].sort(
             (a, b) => b.createdAt - a.createdAt
         );
@@ -2494,84 +1518,59 @@ document.addEventListener("DOMContentLoaded", () => {
             reviewPage = 0;
         }
 
+        const start = reviewPage * REVIEWS_PER_PAGE;
 
-        const start =
-            reviewPage * REVIEWS_PER_PAGE;
+        const visibleReviews = sortedReviews.slice(
+            start,
+            start + REVIEWS_PER_PAGE
+        );
 
-        const visibleReviews =
-            sortedReviews.slice(
-                start,
-                start + REVIEWS_PER_PAGE
-            );
+        reviewsCards.innerHTML = visibleReviews.map((review, index) => {
+            const highlights = review.highlights || [];
 
+            const highlightHTML = highlights
+                .map(
+                    item =>
+                        `<span class="review-highlight-tag">
+                            ${escapeHTML(item)}
+                        </span>`
+                )
+                .join("");
 
-        reviewsCards.innerHTML =
-            visibleReviews.map((review, index) => {
-
-                const highlights =
-                    review.highlights || [];
-
-                const highlightHTML =
-                    highlights
-                        .map(
-                            item =>
-                                `<span class="review-highlight-tag">
-                                ${escapeHTML(item)}
-                            </span>`
-                        )
-                        .join("");
-
-
-                return `
-
+            return `
                 <article class="review-card">
-
                     ${reviewPage === 0 && index === 0
                         ? `
-                                <div class="latest-review-badge">
-                                    ✨ LATEST TRAVELLER
-                                </div>
-                            `
+                            <div class="latest-review-badge">
+                                ✨ LATEST TRAVELLER
+                            </div>
+                        `
                         : ""
                     }
 
-
                     <div class="review-card-header">
-
                         <div class="reviewer-info">
-
                             <div class="reviewer-avatar">
-                                ${escapeHTML(
-                        getInitial(review.name)
-                    )}
+                                ${escapeHTML(getInitial(review.name))}
                             </div>
 
                             <div>
-
                                 <strong>
                                     ${escapeHTML(review.name)}
                                 </strong>
 
                                 <small>
-                                    ${getRelativeTime(
-                        review.createdAt
-                    )}
+                                    ${getRelativeTime(review.createdAt)}
                                 </small>
-
                             </div>
-
                         </div>
-
 
                         <div class="review-stars">
                             ${createStars(review.rating)}
                         </div>
-
                     </div>
 
-
                     <div class="review-route">
-
                         <span>
                             📍 ${escapeHTML(review.route)}
                         </span>
@@ -2579,28 +1578,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span>
                             ${escapeHTML(review.tripType)}
                         </span>
-
                     </div>
-
 
                     <div class="review-text-content">
-
-                        "${escapeHTML(
-                        review.experience
-                    )}"
-
+                        "${escapeHTML(review.experience)}"
                     </div>
-
 
                     <div class="review-highlights-display">
-
                         ${highlightHTML}
-
                     </div>
 
-
                     <div class="review-completed">
-
                         <span>
                             🚗 ${escapeHTML(review.vehicle)}
                         </span>
@@ -2608,71 +1596,39 @@ document.addEventListener("DOMContentLoaded", () => {
                         <strong>
                             ✓ TRIP COMPLETED
                         </strong>
-
                     </div>
-
                 </article>
-
             `;
-
-            }).join("");
-
+        }).join("");
 
         updateRatingSummary();
-
-        updateReviewButtons(
-            sortedReviews.length
-        );
+        updateReviewButtons(sortedReviews.length);
     }
 
-
-    /* --------------------------------------------------------
-       UPDATE ARROWS
-    -------------------------------------------------------- */
-
+    // Update arrows
     function updateReviewButtons(totalReviews) {
-
-        const previousButton =
-            document.getElementById("reviewPrev");
-
-        const nextButton =
-            document.getElementById("reviewNext");
+        const previousButton = document.getElementById("reviewPrev");
+        const nextButton = document.getElementById("reviewNext");
 
         if (!previousButton || !nextButton) {
             return;
         }
 
+        const totalPages = Math.ceil(
+            totalReviews / REVIEWS_PER_PAGE
+        );
 
-        const totalPages =
-            Math.ceil(
-                totalReviews / REVIEWS_PER_PAGE
-            );
+        // Left arrow — Go back towards newer reviews
+        previousButton.disabled = reviewPage === 0;
 
-
-        /*
-           LEFT ARROW
-           Go back towards newer reviews
-        */
-
-        previousButton.disabled =
-            reviewPage === 0;
-
-
-        /*
-           RIGHT ARROW
-           Go forward towards older reviews
-        */
-
-        nextButton.disabled =
-            reviewPage >= totalPages - 1;
-
+        // Right arrow — Go forward towards older reviews
+        nextButton.disabled = reviewPage >= totalPages - 1;
 
         previousButton.style.opacity =
             previousButton.disabled ? "0.35" : "1";
 
         nextButton.style.opacity =
             nextButton.disabled ? "0.35" : "1";
-
 
         previousButton.style.pointerEvents =
             previousButton.disabled ? "none" : "auto";
@@ -2681,114 +1637,53 @@ document.addEventListener("DOMContentLoaded", () => {
             nextButton.disabled ? "none" : "auto";
     }
 
-
-    /* --------------------------------------------------------
-       LEFT ARROW → NEWER REVIEWS
-    -------------------------------------------------------- */
-
-    const previousButton =
-        document.getElementById("reviewPrev");
+    // Left arrow → Newer reviews
+    const previousButton = document.getElementById("reviewPrev");
 
     if (previousButton) {
+        previousButton.addEventListener("click", function () {
+            if (reviewPage > 0) {
+                reviewPage--;
 
-        previousButton.addEventListener(
-            "click",
-            function () {
+                reviewsCards.classList.add("is-changing");
 
-                if (reviewPage > 0) {
+                setTimeout(() => {
+                    renderReviewPage();
 
-                    reviewPage--;
-
-                    reviewsCards.classList.add(
-                        "is-changing"
-                    );
-
-
-                    setTimeout(() => {
-
-                        renderReviewPage();
-
-                        reviewsCards.classList.remove(
-                            "is-changing"
-                        );
-
-                    }, 200);
-
-                }
-
+                    reviewsCards.classList.remove("is-changing");
+                }, 200);
             }
-        );
-
+        });
     }
 
-
-    /* --------------------------------------------------------
-       RIGHT ARROW → OLDER REVIEWS
-    -------------------------------------------------------- */
-
-    const nextButton =
-        document.getElementById("reviewNext");
+    // Right arrow → Older reviews
+    const nextButton = document.getElementById("reviewNext");
 
     if (nextButton) {
+        nextButton.addEventListener("click", function () {
+            const totalPages = Math.ceil(
+                reviews.length / REVIEWS_PER_PAGE
+            );
 
-        nextButton.addEventListener(
-            "click",
-            function () {
+            if (reviewPage < totalPages - 1) {
+                reviewPage++;
 
-                const totalPages =
-                    Math.ceil(
-                        reviews.length /
-                        REVIEWS_PER_PAGE
-                    );
+                reviewsCards.classList.add("is-changing");
 
+                setTimeout(() => {
+                    renderReviewPage();
 
-                if (reviewPage < totalPages - 1) {
-
-                    reviewPage++;
-
-                    reviewsCards.classList.add(
-                        "is-changing"
-                    );
-
-
-                    setTimeout(() => {
-
-                        renderReviewPage();
-
-                        reviewsCards.classList.remove(
-                            "is-changing"
-                        );
-
-                    }, 200);
-
-                }
-
+                    reviewsCards.classList.remove("is-changing");
+                }, 200);
             }
-        );
-
+        });
     }
 
-
-
-
-    /* ========================================================
-       INITIAL RENDER
-    ======================================================== */
-
+    // Initial render
     renderReviewPage();
 
-
-    /* ========================================================
-       UPDATE RELATIVE TIME
-       Every 60 seconds
-    ======================================================== */
-
-    setInterval(
-        renderReviews,
-        60000
-    );
-
-
+    // Update relative time every 60 seconds
+    setInterval(renderReviews, 60000);
 })();
 
 
@@ -2799,156 +1694,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+// ==================== SCROLL REVEAL SECTION ====================
 
+const revealSections = document.querySelectorAll(".scroll-reveal");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const revealSections =
-    document.querySelectorAll(".scroll-reveal");
-
-const revealObserver =
-    new IntersectionObserver(
-        (entries) => {
-
-            entries.forEach((entry) => {
-
-                if (entry.isIntersecting) {
-
-                    entry.target.classList.add(
-                        "scroll-visible"
-                    );
-
-                } else {
-
-                    entry.target.classList.remove(
-                        "scroll-visible"
-                    );
-
-                }
-
-            });
-
-        },
-        {
-            threshold: 0.15
-        }
-    );
+const revealObserver = new IntersectionObserver(
+    (entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("scroll-visible");
+            } else {
+                entry.target.classList.remove("scroll-visible");
+            }
+        });
+    },
+    {
+        threshold: 0.15
+    }
+);
 
 revealSections.forEach((section) => {
     revealObserver.observe(section);
 });
 
 
+// ==================== TRIP COST CALCULATOR SECTION ====================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// trip calculation start
-
-
-/* =====================================================
-   GURUDEV TRAVELS - TRIP COST CALCULATOR
-===================================================== */
-
-// trip calculation start
-
-/* =====================================================
-   GURUDEV TRAVELS - TRIP COST CALCULATOR
-===================================================== */
+// GURUDEV TRAVELS - TRIP COST CALCULATOR
 
 (() => {
     "use strict";
 
+    // HTML ELEMENTS
     const calculator = document.getElementById("trip-calculator");
 
     if (!calculator) return;
-
-    /* ===================== HTML ELEMENTS ===================== */
 
     const pickupInput = document.getElementById("tripPickup");
     const dropInput = document.getElementById("tripDrop");
@@ -2960,7 +1740,7 @@ revealSections.forEach((section) => {
     const pricingMethodSelect = document.getElementById("tripPricingMethod");
     const hillStationCheckbox = document.getElementById("tripHillStation");
     const calculateButton = document.getElementById("calculateTripCost");
-    const whatsappButton = document.getElementById("tripWhatsAppBooking");
+    // const whatsappButton = document.getElementById("tripWhatsAppBooking");
     const messageElement = document.getElementById("tripCalculatorMessage");
 
     const output = {
@@ -2973,8 +1753,7 @@ revealSections.forEach((section) => {
         total: document.getElementById("tripTotalResult")
     };
 
-    /* Check required HTML elements */
-
+    // Check required HTML elements
     const requiredElements = [
         pickupInput,
         dropInput,
@@ -2986,7 +1765,7 @@ revealSections.forEach((section) => {
         pricingMethodSelect,
         hillStationCheckbox,
         calculateButton,
-        whatsappButton,
+        // whatsappButton,
         messageElement,
         ...Object.values(output)
     ];
@@ -2998,8 +1777,7 @@ revealSections.forEach((section) => {
         return;
     }
 
-    /* ===================== VEHICLE RATES ===================== */
-
+    // VEHICLE RATES
     const vehicleRates = {
         etios: {
             name: "Etios Sedan",
@@ -3034,8 +1812,8 @@ revealSections.forEach((section) => {
         }
     };
 
-    /* Business WhatsApp number */
-    const WHATSAPP_NUMBER = "919688211890";
+    // Business WhatsApp number
+    // const WHATSAPP_NUMBER = "919688211890";
 
     let lastEstimate = null;
 
@@ -3049,8 +1827,7 @@ revealSections.forEach((section) => {
         return currencyFormatter.format(amount);
     }
 
-    /* ===================== MESSAGE ===================== */
-
+    // MESSAGE
     function showMessage(message, type = "") {
         messageElement.textContent = message;
         messageElement.className = "trip-calculator-message";
@@ -3060,11 +1837,10 @@ revealSections.forEach((section) => {
         }
     }
 
-    /* ===================== CLEAR OLD ESTIMATE ===================== */
-
+    // CLEAR OLD ESTIMATE
     function clearEstimate() {
         lastEstimate = null;
-        whatsappButton.disabled = true;
+        // whatsappButton.disabled = true;
 
         output.distance.textContent = "-- KM";
         output.days.textContent = "--";
@@ -3075,8 +1851,7 @@ revealSections.forEach((section) => {
         output.total.textContent = "₹0";
     }
 
-    /* ===================== ADDITIONAL STOPS ===================== */
-
+    // ADDITIONAL STOPS
     function getStops() {
         return Array.from(
             stopsContainer.querySelectorAll(".trip-stop-input")
@@ -3133,8 +1908,7 @@ revealSections.forEach((section) => {
         showMessage("Additional stop added.");
     });
 
-    /* ===================== RESET WHEN INPUT CHANGES ===================== */
-
+    // RESET WHEN INPUT CHANGES
     [
         pickupInput,
         dropInput,
@@ -3148,8 +1922,7 @@ revealSections.forEach((section) => {
         element.addEventListener("change", clearEstimate);
     });
 
-    /* ===================== LOCATION SEARCH ===================== */
-
+    // LOCATION SEARCH
     async function geocodePlace(place) {
         const url =
             "https://nominatim.openstreetmap.org/search?" +
@@ -3185,8 +1958,7 @@ revealSections.forEach((section) => {
         };
     }
 
-    /* ===================== ROAD DISTANCE ===================== */
-
+    // ROAD DISTANCE
     async function getDrivingDistance(from, to) {
         const coordinates =
             `${from.lon},${from.lat};${to.lon},${to.lat}`;
@@ -3218,8 +1990,7 @@ revealSections.forEach((section) => {
         return data.routes[0].distance / 1000;
     }
 
-    /* ===================== COMPLETE ROUTE ===================== */
-
+    // COMPLETE ROUTE
     async function calculateRouteDistance(placeNames) {
         const locations = [];
 
@@ -3243,8 +2014,7 @@ revealSections.forEach((section) => {
         return totalDistance;
     }
 
-    /* ===================== CALCULATE TRIP ===================== */
-
+    // CALCULATE TRIP
     calculateButton.addEventListener("click", async () => {
         clearEstimate();
         showMessage("");
@@ -3309,16 +2079,7 @@ revealSections.forEach((section) => {
             const distance =
                 await calculateRouteDistance(routePlaces);
 
-            /*
-              Daily Rental + Fuel:
-              (Daily rent × days) + (Distance × Fuel rate)
-
-              Per-KM Fare:
-              Distance × Per-KM fare
-
-              Hill charge is added only when selected.
-            */
-
+            // Daily Rental + Fuel: (Daily rent × days) + (Distance × Fuel rate). Per-KM Fare: Distance × Per-KM fare. Hill charge is added only when selected.
             const vehicleRent =
                 pricingMethod === "daily"
                     ? rate.dailyRent * days
@@ -3358,8 +2119,7 @@ revealSections.forEach((section) => {
                 total
             };
 
-            /* ===================== DISPLAY RESULTS ===================== */
-
+            // DISPLAY RESULTS
             output.distance.textContent =
                 `${distance.toFixed(1)} KM` +
                 (tripType === "roundtrip" ? " (round trip)" : "");
@@ -3383,7 +2143,7 @@ revealSections.forEach((section) => {
             output.total.textContent =
                 formatCurrency(total);
 
-            whatsappButton.disabled = false;
+            // whatsappButton.disabled = false;
 
             showMessage(
                 "Estimate calculated successfully. Final charges may vary.",
@@ -3405,68 +2165,67 @@ revealSections.forEach((section) => {
         }
     });
 
-    /* ===================== WHATSAPP BOOKING ===================== */
-
-    whatsappButton.addEventListener("click", () => {
-        if (!lastEstimate) {
-            showMessage(
-                "Please calculate your trip first.",
-                "error"
-            );
-            return;
-        }
-
-        const estimate = lastEstimate;
-
-        const message = [
-            "Hello Gurudev Travels!",
-            "",
-            "I would like to enquire about this trip:",
-            `Pickup: ${estimate.pickup}`,
-            `Drop: ${estimate.drop}`,
-            `Additional Stops: ${
-                estimate.stops.length
-                    ? estimate.stops.join(", ")
-                    : "None"
-            }`,
-            `Trip Type: ${
-                estimate.tripType === "roundtrip"
-                    ? "Round Trip"
-                    : "One-Way Trip"
-            }`,
-            `Vehicle: ${estimate.vehicle}`,
-            `Duration: ${estimate.days} day(s)`,
-            `Estimated Road Distance: ${estimate.distance.toFixed(1)} KM`,
-            `Pricing Method: ${
-                estimate.pricingMethod === "daily"
-                    ? "Daily Rental + Fuel"
-                    : "Per-KM Fare"
-            }`,
-            `Vehicle Rent: ${
-                estimate.vehicleRent > 0
-                    ? formatCurrency(estimate.vehicleRent)
-                    : "Not included"
-            }`,
-            `${
-                estimate.pricingMethod === "daily"
-                    ? "Fuel Charge"
-                    : "Per-KM Distance Fare"
-            }: ${formatCurrency(estimate.distanceCharge)}`,
-            `Hill Station Charge: ${formatCurrency(estimate.hillStationCharge)}`,
-            `Estimated Total: ${formatCurrency(estimate.total)}`,
-            "",
-            "Please confirm the final fare and availability."
-        ].join("\n");
-
-        const whatsappURL =
-            `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-
-        window.open(
-            whatsappURL,
-            "_blank",
-            "noopener,noreferrer"
-        );
-    });
+    // WHATSAPP BOOKING
+    // whatsappButton.addEventListener("click", () => {
+    //     if (!lastEstimate) {
+    //         showMessage(
+    //             "Please calculate your trip first.",
+    //             "error"
+    //         );
+    //         return;
+    //     }
+    //
+    //     const estimate = lastEstimate;
+    //
+    //     const message = [
+    //         "Hello Gurudev Travels!",
+    //         "",
+    //         "I would like to enquire about this trip:",
+    //         `Pickup: ${estimate.pickup}`,
+    //         `Drop: ${estimate.drop}`,
+    //         `Additional Stops: ${
+    //             estimate.stops.length
+    //                 ? estimate.stops.join(", ")
+    //                 : "None"
+    //         }`,
+    //         `Trip Type: ${
+    //             estimate.tripType === "roundtrip"
+    //                 ? "Round Trip"
+    //                 : "One-Way Trip"
+    //         }`,
+    //         `Vehicle: ${estimate.vehicle}`,
+    //         `Duration: ${estimate.days} day(s)`,
+    //         `Estimated Road Distance: ${estimate.distance.toFixed(1)} KM`,
+    //         `Pricing Method: ${
+    //             estimate.pricingMethod === "daily"
+    //                 ? "Daily Rental + Fuel"
+    //                 : "Per-KM Fare"
+    //         }`,
+    //         `Vehicle Rent: ${
+    //             estimate.vehicleRent > 0
+    //                 ? formatCurrency(estimate.vehicleRent)
+    //                 : "Not included"
+    //         }`,
+    //         `${
+    //             estimate.pricingMethod === "daily"
+    //                 ? "Fuel Charge"
+    //                 : "Per-KM Distance Fare"
+    //         }: ${formatCurrency(estimate.distanceCharge)}`,
+    //         `Hill Station Charge: ${formatCurrency(estimate.hillStationCharge)}`,
+    //         `Estimated Total: ${formatCurrency(estimate.total)}`,
+    //         "",
+    //         "Please confirm the final fare and availability."
+    //     ].join("\n");
+    //
+    //     const whatsappURL =
+    //         `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    //
+    //     window.open(
+    //         whatsappURL,
+    //         "_blank",
+    //         "noopener,noreferrer"
+    //     );
+    // });
 
 })();
 
@@ -3475,42 +2234,9 @@ revealSections.forEach((section) => {
 
 
 
+// ==================== FLEET SECTION ====================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// fleet ssection
-
-
-/* =====================================================
-   GURUDEV TRAVELS - FOUR VEHICLE FLEET CAROUSEL
-===================================================== */
+// GURUDEV TRAVELS - FOUR VEHICLE FLEET CAROUSEL
 
 document.addEventListener("DOMContentLoaded", function () {
     const fleet = document.getElementById("fleet");
@@ -3543,12 +2269,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    /* Vehicle information */
-
+    // Vehicle information
     const vehicles = [
         {
-           image: "assets/img/car_Etios_Sedan.png",
-
+            image: "assets/img/car_Etios_Sedan.png",
             name: "Etios Sedan",
             number: "01",
             label: "Sedan Ride",
@@ -3565,10 +2289,8 @@ document.addEventListener("DOMContentLoaded", function () {
             ],
             perfectFor: "City & Outstation Trips"
         },
-
         {
-           image: "assets/img/car_Ertiga_Rumion.png",
-
+            image: "assets/img/car_Ertiga_Rumion.png",
             name: "Ertiga / Rumion",
             number: "02",
             label: "Family Ride",
@@ -3585,10 +2307,8 @@ document.addEventListener("DOMContentLoaded", function () {
             ],
             perfectFor: "Family & Group Trips"
         },
-
         {
             image: "assets/img/car_Innova_Crysta.png",
-
             name: "Innova Crysta",
             number: "03",
             label: "Premium Ride",
@@ -3605,7 +2325,6 @@ document.addEventListener("DOMContentLoaded", function () {
             ],
             perfectFor: "Family & Outstation Trips"
         },
-
         {
             image: "assets/img/car_Tempo_Traveller .png",
             name: "Tempo Traveller",
@@ -3704,22 +2423,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    /* Show the first car immediately */
+    // Show the first car immediately
     displayVehicle(0);
     restartAutoSlide();
 });
 
 
+// ==================== TRIP CALCULATOR PICKUP / DROP AUTOCOMPLETE SECTION ====================
 
+// Trip Calculator Pickup / Drop Autocomplete
 
-
-
-
-
-
-
-
-/* Trip Calculator Pickup / Drop Autocomplete */
 (() => {
     const fields = [
         ["tripPickup", "tripPickupSuggest"],
@@ -3763,41 +2476,39 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
 
-                   
-places.forEach(place => {
-    const item = document.createElement("li");
-    item.textContent = place.display_name;
+                    places.forEach(place => {
+                        const item = document.createElement("li");
+                        item.textContent = place.display_name;
 
-    item.addEventListener("pointerdown", async (event) => {
-        event.preventDefault();
+                        item.addEventListener("pointerdown", async (event) => {
+                            event.preventDefault();
 
-        try {
-            const selected = await resolveCoords(place);
+                            try {
+                                const selected = await resolveCoords(place);
 
-            input.value =
-                selected?.display_name ||
-                place.display_name;
+                                input.value =
+                                    selected?.display_name ||
+                                    place.display_name;
 
-            list.classList.add("hidden");
-            list.innerHTML = "";
+                                list.classList.add("hidden");
+                                list.innerHTML = "";
 
-            input.dispatchEvent(
-                new Event("change", { bubbles: true })
-            );
-        } catch (error) {
-            console.error("Location selection error:", error);
+                                input.dispatchEvent(
+                                    new Event("change", { bubbles: true })
+                                );
+                            } catch (error) {
+                                console.error("Location selection error:", error);
 
-            // Coordinates resolve ஆகவில்லை என்றாலும் பெயரை நிரப்பு
-            input.value = place.display_name;
+                                // Coordinates resolve ஆகவில்லை என்றாலும் பெயரை நிரப்பு
+                                input.value = place.display_name;
 
-            list.classList.add("hidden");
-            list.innerHTML = "";
-        }
-    });
+                                list.classList.add("hidden");
+                                list.innerHTML = "";
+                            }
+                        });
 
-    list.appendChild(item);
-});
-
+                        list.appendChild(item);
+                    });
 
                     list.classList.remove("hidden");
                 } catch (error) {
@@ -3825,9 +2536,7 @@ places.forEach(place => {
 })();
 
 
-
-
-
+// ==================== TRIP CALCULATOR CONTINUE BOOKING SECTION ====================
 
 const continueBookingButton =
     document.getElementById("tripContinueBooking");
@@ -3846,24 +2555,10 @@ if (continueBookingButton) {
 }
 
 
+// ==================== TRIP CALCULATOR MAP SECTION ====================
 
+// Trip Calculator - Independent Map Popup
 
-
-
-
-
-
-
-
-
-
-
-
-// calculator section map
-
-
-
-/* Trip Calculator - Independent Map Popup */
 (() => {
     const modal = document.getElementById("tripMapModal");
     const canvas = document.getElementById("tripMapCanvas");
@@ -3891,6 +2586,7 @@ if (continueBookingButton) {
         }
 
         activeInput = document.getElementById(inputId);
+
         if (!activeInput) return;
 
         selectedAddress = "";
@@ -3933,8 +2629,12 @@ if (continueBookingButton) {
                 try {
                     const url =
                         `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
                     const response = await fetch(url);
-                    if (!response.ok) throw new Error("Location lookup failed");
+
+                    if (!response.ok) {
+                        throw new Error("Location lookup failed");
+                    }
 
                     const data = await response.json();
 
@@ -3957,9 +2657,6 @@ if (continueBookingButton) {
         setTimeout(() => map.invalidateSize(), 200);
     }
 
-
-
-    
     // Trip Calculator Map Search Suggestions
     const tripSearch = document.getElementById("tripMapSearch");
     const tripResults = document.getElementById("tripMapResults");
@@ -3976,8 +2673,7 @@ if (continueBookingButton) {
 
         if (query.length < 3) return;
 
-        tripResults.innerHTML =
-            '<li>Searching locations...</li>';
+        tripResults.innerHTML = '<li>Searching locations...</li>';
         tripResults.classList.remove("hidden");
 
         tripSearchTimer = setTimeout(async () => {
@@ -3999,6 +2695,7 @@ if (continueBookingButton) {
                 if (!places.length) {
                     tripResults.innerHTML =
                         "<li>No locations found. Try another name.</li>";
+
                     tripResults.classList.remove("hidden");
                     return;
                 }
@@ -4006,6 +2703,7 @@ if (continueBookingButton) {
                 places.forEach((place) => {
                     const item = document.createElement("li");
                     item.textContent = place.display_name;
+
                     item.addEventListener("click", () => {
                         if (!map) return;
 
@@ -4024,6 +2722,7 @@ if (continueBookingButton) {
 
                         map.setView([lat, lon], 13);
                         confirmBtn.disabled = false;
+
                         status.textContent =
                             "Selected: " + selectedAddress;
 
@@ -4040,14 +2739,11 @@ if (continueBookingButton) {
             } catch (error) {
                 tripResults.innerHTML =
                     "<li>Search failed. Please try again.</li>";
+
                 tripResults.classList.remove("hidden");
             }
         }, 1000);
     });
-
-
-
-    
 
     document.getElementById("tripPickupMapBtn")
         ?.addEventListener("click", () => openTripMap("tripPickup"));
@@ -4061,89 +2757,84 @@ if (continueBookingButton) {
     document.getElementById("tripMapCancel")
         ?.addEventListener("click", closeTripMap);
 
-
-
-
-        
-document.getElementById("tripMapCurrentLocation")
-    ?.addEventListener("click", () => {
-        if (!navigator.geolocation) {
-            status.textContent =
-                "Your browser does not support location access.";
-            return;
-        }
-
-        status.textContent = "Getting your current location...";
-
-        navigator.geolocation.getCurrentPosition(
-            async (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                const version = ++selectionVersion;
-
-                selectedLatLng = { lat, lon };
-                selectedAddress = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-                confirmBtn.disabled = false;
-
-                map.setView([lat, lon], 15);
-
-                if (marker) {
-                    marker.setLatLng([lat, lon]);
-                } else {
-                    marker = L.marker([lat, lon]).addTo(map);
-                }
-
+    document.getElementById("tripMapCurrentLocation")
+        ?.addEventListener("click", () => {
+            if (!navigator.geolocation) {
                 status.textContent =
-                    "Current location selected. Getting address...";
+                    "Your browser does not support location access.";
+                return;
+            }
 
-                try {
-                    const url =
-                        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+            status.textContent = "Getting your current location...";
 
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error("Address lookup failed");
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const version = ++selectionVersion;
 
-                    const data = await response.json();
+                    selectedLatLng = { lat, lon };
+                    selectedAddress = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+                    confirmBtn.disabled = false;
 
-                    if (version !== selectionVersion) return;
+                    map.setView([lat, lon], 15);
 
-                    if (data.display_name) {
-                        selectedAddress = data.display_name;
+                    if (marker) {
+                        marker.setLatLng([lat, lon]);
+                    } else {
+                        marker = L.marker([lat, lon]).addTo(map);
                     }
 
                     status.textContent =
-                        "Selected: " + selectedAddress;
-                } catch (error) {
-                    if (version === selectionVersion) {
+                        "Current location selected. Getting address...";
+
+                    try {
+                        const url =
+                            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+                        const response = await fetch(url);
+
+                        if (!response.ok) {
+                            throw new Error("Address lookup failed");
+                        }
+
+                        const data = await response.json();
+
+                        if (version !== selectionVersion) return;
+
+                        if (data.display_name) {
+                            selectedAddress = data.display_name;
+                        }
+
                         status.textContent =
-                            "Current location selected. You can confirm it.";
+                            "Selected: " + selectedAddress;
+                    } catch (error) {
+                        if (version === selectionVersion) {
+                            status.textContent =
+                                "Current location selected. You can confirm it.";
+                        }
                     }
+
+                    setTimeout(() => map.invalidateSize(), 100);
+                },
+                (error) => {
+                    const messages = {
+                        1: "Location permission denied. Allow location access in your browser.",
+                        2: "Your current location is unavailable. Please try again.",
+                        3: "Location request timed out. Please try again."
+                    };
+
+                    status.textContent =
+                        messages[error.code] ||
+                        "Unable to get your location. Please try again.";
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
                 }
-
-                setTimeout(() => map.invalidateSize(), 100);
-            },
-            (error) => {
-                const messages = {
-                    1: "Location permission denied. Allow location access in your browser.",
-                    2: "Your current location is unavailable. Please try again.",
-                    3: "Location request timed out. Please try again."
-                };
-
-                status.textContent =
-                    messages[error.code] ||
-                    "Unable to get your location. Please try again.";
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 15000,
-                maximumAge: 0
-            }
-        );
-    });
-
-
-
-    
+            );
+        });
 
     modal.querySelector(".trip-map-backdrop")
         ?.addEventListener("click", closeTripMap);
