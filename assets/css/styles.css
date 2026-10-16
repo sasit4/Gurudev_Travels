@@ -9780,6 +9780,20 @@ html:not(.dark) .luxury-footer .footer-cta h2 span {
   color: #cbd8e7;
 }
 
+
+/* Contact Details - Light Mode */
+html:not(.dark) .gurudev-contact-section .contact-detail-content p,
+html:not(.dark) .gurudev-contact-section .contact-detail-content a {
+  color: #111827 !important;
+}
+
+/* Dark Mode */
+html.dark .gurudev-contact-section .contact-detail-content p,
+html.dark .gurudev-contact-section .contact-detail-content a {
+  color: #ffffff !important;
+}
+
+
 /* Align all sections below the fixed navbar */
 section[id] {
   scroll-margin-top: 30px;
